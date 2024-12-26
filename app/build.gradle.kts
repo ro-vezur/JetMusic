@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -62,6 +63,9 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
+    implementation(libs.googleid)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -86,4 +90,14 @@ dependencies {
     ksp(libs.dagger)
     implementation(libs.hilt)
     implementation(libs.hilt.navigation.compose)
+
+    //firebase auth
+    implementation(libs.firebase.auth)
+
+    //firebase fireStore
+    implementation(libs.firebase.firestore)
+
+    //google auth
+    implementation(libs.google.services)
+    implementation(libs.googleid)
 }

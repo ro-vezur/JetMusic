@@ -15,6 +15,10 @@ sdpCompose = "1.1.0"
 kspPlugin = "1.9.0-1.0.12"
 hiltPlugin = "2.49"
 hiltNavigationCompose = "1.2.0"
+googleServices = "4.4.2"
+firebaseAuth = "23.1.0"
+firebaseFirestore = "25.1.1"
+googleid = "1.1.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -39,6 +43,10 @@ extended-icons = {module = "androidx.compose.material:material-icons-extended",v
 hilt = { module = "com.google.dagger:hilt-android",version.ref = "hiltPlugin" }
 dagger = { module = "com.google.dagger:hilt-compiler",version.ref = "hiltPlugin" }
 hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose",version.ref = "hiltNavigationCompose"}
+google-services = { group = "com.google.gms", name = "google-services", version.ref = "googleServices" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
+googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
