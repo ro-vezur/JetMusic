@@ -22,17 +22,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.jetmusic.DTOs.UserDTOs.User
 import com.example.jetmusic.R
+import com.example.jetmusic.Repositories.Auth.OtherPlatforms.GoogleManager
 import com.example.jetmusic.View.Components.Buttons.TextButton
 import com.example.jetmusic.View.ScreensRoutes
+import com.example.jetmusic.ViewModels.StartScreenViewModels.WelcomeViewModel
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
 import ir.kaaveh.sdpcompose.ssp
 
 @Composable
 fun WelcomeScreen(
-    navController: NavController
+    navController: NavController,
+    setUser: (newUser: User) -> Unit,
+    welcomeViewModel: WelcomeViewModel = hiltViewModel(),
 ) {
 
     Column(
@@ -92,7 +98,13 @@ fun WelcomeScreen(
             TextButton(
                 modifier = Modifier,
                 text = "Continue With Google",
-                onClick = {},
+                onClick = {
+                    welcomeViewModel.logInWithGoogle(
+                        onSuccess = { newUser ->
+                            setUser(newUser)
+                        }
+                    )
+                },
                 background = Color.Transparent,
                 textColor = Color.White,
                 leadingIcon = { modifier ->
