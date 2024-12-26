@@ -2,22 +2,33 @@ package com.example.jetmusic.ViewModels.StartScreenViewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.jetmusic.Helpers.Validation.Email.Email
+import com.example.jetmusic.DTOs.UserDTOs.User
+import com.example.jetmusic.Firebase.Collections.UsersCollectionInterface
+import com.example.jetmusic.Firebase.Auth.FirebaseAuthInterface
+import com.example.jetmusic.Helpers.Validation.Email.EmailValidation
 import com.example.jetmusic.Helpers.Validation.Name.NameValidation
 import com.example.jetmusic.Helpers.Validation.Password.PasswordValidation
 import com.example.jetmusic.Helpers.Validation.PasswordConfirmValidation.PasswordConfirmValidation
 import com.example.jetmusic.Helpers.Validation.Result.ValidationResults
+import com.example.jetmusic.Resources.ResultResource
+import com.google.firebase.auth.AuthResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
-
+    private val authRepository: FirebaseAuthInterface,
+    private val usersCollectionRepository: UsersCollectionInterface
 ): ViewModel() {
+
+    private val _registerResult: MutableStateFlow<ResultResource<AuthResult>> =
+        MutableStateFlow(ResultResource.Loading())
+    val registerResult: StateFlow<ResultResource<AuthResult>> = _registerResult.asStateFlow()
 
     private val _nameValidation: MutableStateFlow<ValidationResults> =
         MutableStateFlow(ValidationResults.NONE)
@@ -35,27 +46,71 @@ class SignUpViewModel @Inject constructor(
         MutableStateFlow(ValidationResults.NONE)
     val passwordValidationConfirm: StateFlow<ValidationResults> = _passwordConfirmValidation.asStateFlow()
 
-    fun isValid(
+    suspend fun isValid(
         name: String,
         email: String,
         password: String,
         passwordConfirm: String
     ): Boolean {
 
-        val nameValidation = NameValidation.validate(name)
-        val emailValidation = Email.validate(email)
-        val passwordValidation = PasswordValidation.validate(password)
-        val passwordConfirmValidation = PasswordConfirmValidation.validate(password,passwordConfirm)
+        val validateName = NameValidation.validate(name)
+        val validateEmail = EmailValidation.validate(
+            email = email,
+            additionalValidators = checkIsEmailRegistered(email) || !checkIsCustomProviderUsed(email)
+        )
+        val validatePassword = PasswordValidation.validate(password)
+        val validatePasswordConfirm = PasswordConfirmValidation.validate(password,passwordConfirm)
 
-        setNameResult(nameValidation)
-        setEmailResult(emailValidation)
-        setPasswordResult(passwordValidation)
-        setPasswordConfirmResult(passwordConfirmValidation)
+        setNameResult(validateName)
+        setEmailResult(validateEmail)
+        setPasswordResult(validatePassword)
+        setPasswordConfirmResult(validatePasswordConfirm)
 
-        return nameValidation == ValidationResults.CORRECT &&
-                emailValidation == ValidationResults.CORRECT &&
-                passwordValidation == ValidationResults.CORRECT &&
-                passwordConfirmValidation == ValidationResults.CORRECT
+        return validateName == ValidationResults.CORRECT &&
+                validateEmail == ValidationResults.CORRECT &&
+                validatePassword == ValidationResults.CORRECT &&
+                validatePasswordConfirm == ValidationResults.CORRECT
+    }
+
+    fun signUp(
+        name: String,
+        email: String,
+        password: String,
+        onSuccess: (newUser: User) -> Unit,
+    ) = viewModelScope.launch {
+        authRepository.signUp(
+            name = name,
+            email = email,
+            password = password,
+        ).collectLatest { result ->
+            _registerResult.emit(result)
+
+            when(result) {
+                is ResultResource.Loading -> {}
+                is ResultResource.Success -> {
+                    result.data?.user?.let { firebaseUser ->
+                        val newUser = User(
+                            id = firebaseUser.uid,
+                            fullName = name,
+                            email = email,
+                            password = password,
+                            customProviderUsed = true
+                        )
+
+                        usersCollectionRepository.addUser(user = newUser).collectLatest { result ->
+                            when(result) {
+                                is ResultResource.Loading -> {}
+                                is ResultResource.Success -> {
+                                    result.data?.let(onSuccess)
+                                }
+                                is ResultResource.Error -> {}
+                            }
+                        }
+                    }
+                }
+                is ResultResource.Error -> {}
+            }
+        }
     }
 
     fun setNameResult(result: ValidationResults) = viewModelScope.launch {
@@ -72,5 +127,13 @@ class SignUpViewModel @Inject constructor(
 
     fun setPasswordConfirmResult(result: ValidationResults) = viewModelScope.launch {
         _passwordConfirmValidation.emit(result)
+    }
+
+    private suspend fun checkIsEmailRegistered(email: String): Boolean {
+        return usersCollectionRepository.checkIsEmailRegistered(email)
+    }
+
+    private suspend fun checkIsCustomProviderUsed(email: String) : Boolean {
+        return usersCollectionRepository.checkIsCustomProviderUsed(email)
     }
 }

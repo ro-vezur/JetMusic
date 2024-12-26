@@ -39,37 +39,38 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.jetmusic.DTOs.UserDTOs.User
 import com.example.jetmusic.Helpers.Validation.Result.ValidationResults
 import com.example.jetmusic.View.Components.Buttons.TextButton
 import com.example.jetmusic.View.Components.Buttons.TurnBackButton
-import com.example.jetmusic.View.Components.InputFields.TextInputField
+import com.example.jetmusic.View.Components.InputFields.ValidationTextInputField
 import com.example.jetmusic.View.ScreensRoutes
 import com.example.jetmusic.ViewModels.StartScreenViewModels.SignUpViewModel
-import com.example.jetmusic.ui.theme.orangeGradient
+import com.example.jetmusic.ui.theme.tidalGradient
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun SignUpScreen(
     navController: NavController,
+    setUser: (newUser: User) -> Unit,
     signUpViewModel: SignUpViewModel = hiltViewModel(),
 ) {
 
     val nameValidationResult by signUpViewModel.nameValidation.collectAsStateWithLifecycle()
     var fullName by remember { mutableStateOf("") }
-    val isNameError = nameValidationResult == ValidationResults.ERROR
 
     val emailValidationResult by signUpViewModel.emailValidation.collectAsStateWithLifecycle()
     var email by remember { mutableStateOf("") }
-    val isEmailError = emailValidationResult == ValidationResults.ERROR
 
     val passwordValidationResult by signUpViewModel.passwordValidation.collectAsStateWithLifecycle()
     var password by remember { mutableStateOf("") }
-    val isPasswordError = passwordValidationResult == ValidationResults.ERROR
 
     val passwordConfirmValidationResult by signUpViewModel.passwordValidationConfirm.collectAsStateWithLifecycle()
     var passwordConfirm by remember { mutableStateOf("") }
-    val isPasswordConfirmError = passwordConfirmValidationResult == ValidationResults.ERROR
 
     var showPassword by remember { mutableStateOf(false) }
 
@@ -114,41 +115,43 @@ fun SignUpScreen(
                 .padding(top = 50.sdp),
             verticalArrangement = Arrangement.spacedBy(13.sdp)
         ){
-            TextInputField(
+            ValidationTextInputField(
                 text = fullName,
                 onTextChange = { value ->
                     fullName = value
+                    signUpViewModel.setNameResult(ValidationResults.NONE)
                 },
                 placeHolder = "Full Name",
-                isError = isNameError,
+                validationResults = nameValidationResult,
                 leadingIcon = Icons.Filled.Person,
                 )
 
-            TextInputField(
+            ValidationTextInputField(
                 text = email,
                 onTextChange = { value ->
                     email = value
+                    signUpViewModel.setEmailResult(ValidationResults.NONE)
                 },
                 placeHolder = "Email",
-                isError = isEmailError,
+                validationResults = emailValidationResult,
                 leadingIcon = Icons.Filled.Email,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             )
 
-            TextInputField(
+            ValidationTextInputField(
                 text = password,
                 onTextChange = { value ->
                     password = value
+                    signUpViewModel.setPasswordResult(ValidationResults.NONE)
                 },
                 placeHolder = "Password",
-                isError = isPasswordError,
+                validationResults = passwordValidationResult,
                 leadingIcon = Icons.Filled.Lock,
                 trailingIcon = {
                    Icon(
                        imageVector = if(showPassword) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                        contentDescription = "visibility",
                        modifier = Modifier
-                           .padding(end = 14.sdp)
                            .clip(RoundedCornerShape(10.sdp))
                            .size(24.sdp)
                            .clickable { showPassword = !showPassword }
@@ -158,20 +161,20 @@ fun SignUpScreen(
                 visualTransformation = if(showPassword) VisualTransformation.None else PasswordVisualTransformation()
             )
 
-            TextInputField(
+            ValidationTextInputField(
                 text = passwordConfirm,
                 onTextChange = { value ->
                     passwordConfirm = value
+                    signUpViewModel.setPasswordConfirmResult(ValidationResults.NONE)
                 },
                 placeHolder = "Password Confirm",
-                isError = isPasswordConfirmError,
+                validationResults = passwordConfirmValidationResult,
                 leadingIcon = Icons.Filled.Lock,
                 trailingIcon = {
                     Icon(
                         imageVector = if(showPassword) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                         contentDescription = "visibility",
                         modifier = Modifier
-                            .padding(end = 14.sdp)
                             .clip(RoundedCornerShape(10.sdp))
                             .size(24.sdp)
                             .clickable { showPassword = !showPassword }
@@ -187,15 +190,25 @@ fun SignUpScreen(
                 .padding(top = 40.sdp),
             text = "Sign Up",
             onClick = {
-                val isValid = signUpViewModel.isValid(
-                    name = fullName,
-                    email = email,
-                    password = password,
-                    passwordConfirm = passwordConfirm,
-                )
+                CoroutineScope(Dispatchers.IO).launch {
+                    val isValid = signUpViewModel.isValid(
+                        name = fullName,
+                        email = email,
+                        password = password,
+                        passwordConfirm = passwordConfirm,
+                    )
 
-                if(isValid) {
-
+                    if (isValid) {
+                        signUpViewModel.signUp(
+                            name = fullName,
+                            email = email,
+                            password = password,
+                            onSuccess = { newUser ->
+                                setUser(newUser)
+                                //  navController.navigate(ScreensRoutes.HomeRoute)
+                            }
+                        )
+                    }
                 }
             }
         )
@@ -218,7 +231,7 @@ fun SignUpScreen(
                     .clickable { navController.navigate(ScreensRoutes.StartScreens.LogInRoute) },
                 text = "Log In",
                 style = typography().bodyLarge.copy(
-                    brush = orangeGradient
+                    brush = tidalGradient
                 ),
                 textDecoration = TextDecoration.Underline
             )
