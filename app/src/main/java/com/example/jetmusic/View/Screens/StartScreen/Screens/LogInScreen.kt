@@ -35,21 +35,33 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.jetmusic.DTOs.UserDTOs.User
+import com.example.jetmusic.Helpers.Validation.Result.ValidationResults
 import com.example.jetmusic.View.Components.Buttons.TextButton
 import com.example.jetmusic.View.Components.Buttons.TurnBackButton
-import com.example.jetmusic.View.Components.InputFields.TextInputField
+import com.example.jetmusic.View.Components.InputFields.ValidationTextInputField
 import com.example.jetmusic.View.ScreensRoutes
-import com.example.jetmusic.ui.theme.orangeGradient
+import com.example.jetmusic.ViewModels.StartScreenViewModels.LogInViewModel
+import com.example.jetmusic.ui.theme.tidalGradient
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun LogInScreen(
-    navController: NavController
+    navController: NavController,
+    setUser: (newUser: User) -> Unit,
+    logInViewModel: LogInViewModel = hiltViewModel(),
 ) {
+    val emailValidationResult by logInViewModel.emailValidation.collectAsStateWithLifecycle()
     var email by remember { mutableStateOf("") }
 
+    val passwordValidationResult by logInViewModel.passwordValidation.collectAsStateWithLifecycle()
     var password by remember { mutableStateOf("") }
 
     var showPassword by remember { mutableStateOf(false) }
@@ -63,7 +75,7 @@ fun LogInScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 10.sdp,top = 18.sdp),
+                .padding(start = 10.sdp, top = 18.sdp),
             contentAlignment = Alignment.CenterStart,
         ) {
             TurnBackButton(
@@ -95,29 +107,32 @@ fun LogInScreen(
                 .padding(top = 112.sdp),
             verticalArrangement = Arrangement.spacedBy(13.sdp)
         ){
-            TextInputField(
+            ValidationTextInputField(
                 text = email,
                 onTextChange = { value ->
                     email = value
+                    logInViewModel.setEmailResult(ValidationResults.NONE)
                 },
                 placeHolder = "Email",
+                validationResults = emailValidationResult,
                 leadingIcon = Icons.Filled.Email,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
             )
 
-            TextInputField(
+            ValidationTextInputField(
                 text = password,
                 onTextChange = { value ->
                     password = value
+                    logInViewModel.setPasswordResult(ValidationResults.NONE)
                 },
                 placeHolder = "Password",
+                validationResults = passwordValidationResult,
                 leadingIcon = Icons.Filled.Lock,
                 trailingIcon = {
                     Icon(
                         imageVector = if(showPassword) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                         contentDescription = "visibility",
                         modifier = Modifier
-                            .padding(end = 14.sdp)
                             .clip(RoundedCornerShape(10.sdp))
                             .size(24.sdp)
                             .clickable { showPassword = !showPassword }
@@ -133,7 +148,22 @@ fun LogInScreen(
                 .padding(top = 40.sdp),
             text = "Log In",
             onClick = {
+                CoroutineScope(Dispatchers.IO).launch {
+                    val isValid = logInViewModel.isValid(
+                        email = email,
+                        password = password,
+                    )
 
+                    if(isValid) {
+                        logInViewModel.logIn(
+                            email = email,
+                            password = password,
+                            onSuccess = { newUser ->
+                                setUser(newUser)
+                            }
+                        )
+                    }
+                }
             }
         )
 
@@ -155,7 +185,7 @@ fun LogInScreen(
                     .clickable { navController.navigate(ScreensRoutes.StartScreens.SignUpRoute) },
                 text = "Sign up",
                 style = typography().bodyLarge.copy(
-                    brush = orangeGradient
+                    brush = tidalGradient
                 ),
                 textDecoration = TextDecoration.Underline
             )
