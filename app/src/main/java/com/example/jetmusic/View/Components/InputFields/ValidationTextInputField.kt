@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -18,6 +19,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,10 +50,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import com.example.jetmusic.BASE_BUTTON_HEIGHT
 import com.example.jetmusic.BASE_BUTTON_WIDTH
-import com.example.jetmusic.ui.theme.orangeGradient
+import com.example.jetmusic.Helpers.Validation.Result.ValidationResults
+import com.example.jetmusic.ui.theme.tidalGradient
 
 @Composable
-fun TextInputField(
+fun ValidationTextInputField(
     modifier: Modifier = Modifier,
     text: String,
     onTextChange: (value: String) -> Unit,
@@ -63,11 +67,11 @@ fun TextInputField(
     background: Color = colorScheme.background,
     errorBorder: BorderStroke = BorderStroke(1.sdp, colorScheme.error),
     unfocusedBorder: BorderStroke = BorderStroke(1.sdp,Color.White),
-    focusedBorder: BorderStroke = BorderStroke(1.sdp, orangeGradient),
+    focusedBorder: BorderStroke = BorderStroke(1.sdp, tidalGradient),
     textPadding: PaddingValues = PaddingValues(),
     singleLine: Boolean = true,
     readOnly: Boolean = false,
-    isError: Boolean = false,
+    validationResults: ValidationResults = ValidationResults.NONE,
     placeHolder: String = "",
     leadingIcon: ImageVector? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
@@ -79,6 +83,9 @@ fun TextInputField(
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
+
+    val isError = validationResults == ValidationResults.ERROR
+    val isCorrect = validationResults == ValidationResults.CORRECT
 
     val contentColor = if(!readOnly) {
         if (isError) colorScheme.error else {
@@ -172,8 +179,27 @@ fun TextInputField(
 
                         innerTextField()
                     }
-                    if (trailingIcon != null) {
-                        trailingIcon()
+
+                    Row(
+                        modifier = Modifier
+                            .padding(end = 14.sdp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(7.sdp)
+                    ) {
+                        if (trailingIcon != null) {
+                            trailingIcon()
+                        }
+
+                        if(isCorrect) {
+                            Icon(
+                                imageVector = Icons.Default.Check,
+                                contentDescription = "check",
+                                tint = Color.Green,
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(10.sdp))
+                                    .size(24.sdp)
+                            )
+                        }
                     }
                 }
             }
