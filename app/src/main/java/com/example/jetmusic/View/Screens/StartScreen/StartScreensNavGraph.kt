@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.example.jetmusic.DTOs.UserDTOs.User
 import com.example.jetmusic.View.Screens.StartScreen.Screens.LogInScreen
 import com.example.jetmusic.View.Screens.StartScreen.Screens.SignUpScreen
 import com.example.jetmusic.View.Screens.StartScreen.Screens.WelcomeScreen
@@ -11,28 +12,38 @@ import com.example.jetmusic.View.ScreensRoutes
 
 fun NavGraphBuilder.startScreensGraph(
     navController: NavController,
-    showBottomBar: (show: Boolean) -> Unit
+    showBottomBar: (show: Boolean) -> Unit,
+    setUser: (newUser: User) -> Unit
 ) {
-    showBottomBar(false)
 
     navigation<ScreensRoutes.StartScreens>(
-        startDestination = ScreensRoutes.StartScreens.SignUpRoute
+        startDestination = ScreensRoutes.StartScreens.WelcomeRoute
     ) {
+
         composable<ScreensRoutes.StartScreens.WelcomeRoute> {
+            showBottomBar(false)
+
             WelcomeScreen(
-                navController = navController
+                navController = navController,
+                setUser = setUser,
             )
         }
 
         composable<ScreensRoutes.StartScreens.SignUpRoute> {
+            showBottomBar(false)
+
             SignUpScreen(
-                navController = navController
+                navController = navController,
+                setUser = setUser,
             )
         }
 
         composable<ScreensRoutes.StartScreens.LogInRoute> {
+            showBottomBar(false)
+
             LogInScreen(
-                navController = navController
+                navController = navController,
+                setUser = setUser
             )
         }
     }
