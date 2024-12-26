@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "440481563482",
+    "project_id": "jetfilms-a52bb",
+    "storage_bucket": "jetfilms-a52bb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:440481563482:android:c6cc9f32284b465d972963",
+        "android_client_info": {
+          "package_name": "com.example.jetmusic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "440481563482-7f8vou4o3slh8n3mmgcrpii9lhhvu3sc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJnWWSN8Hsek_k4rf6r9lo5V3hYNtzj6E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "440481563482-7f8vou4o3slh8n3mmgcrpii9lhhvu3sc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
