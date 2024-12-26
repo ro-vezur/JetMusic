@@ -17,6 +17,7 @@ import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
     background = background,
+    error = errorColor,
     outline = borderColor,
     primary = Purple80,
     secondary = PurpleGrey80,

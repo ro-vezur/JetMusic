@@ -15,6 +15,8 @@ val background = Color(0xFF0d0d0d)
 
 val borderColor = Color(0xFFE0E0E0)
 
-val orangeGradient = Brush.horizontalGradient(
-    colors = listOf(Color(0xFFD17234), Color(0xFFDF7E4A))
+val errorColor = Color(0xFFe85151)
+
+val tidalGradient = Brush.horizontalGradient(
+    colors = listOf(Color(0xFF56C49B), Color(0xFF80E8C2))
 )
