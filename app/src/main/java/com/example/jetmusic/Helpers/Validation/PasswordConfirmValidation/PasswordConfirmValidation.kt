@@ -8,7 +8,7 @@ class PasswordConfirmValidation {
             return when {
                 password.isBlank() -> ValidationResults.ERROR
                 passwordToConfirm.isBlank() -> ValidationResults.ERROR
-                passwordToConfirm == password -> ValidationResults.ERROR
+                passwordToConfirm != password -> ValidationResults.ERROR
                 else -> ValidationResults.CORRECT
             }
         }

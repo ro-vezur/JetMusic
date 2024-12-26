@@ -7,13 +7,14 @@ import com.example.jetmusic.Helpers.Validation.Result.ValidationResults
 
 class PasswordValidation {
     companion object {
-        fun validate(password: String): ValidationResults {
+        fun validate(password: String,additionalValidators: Boolean = false): ValidationResults {
             return when {
                 password.isBlank() -> ValidationResults.ERROR
                 password.length < 8 -> ValidationResults.ERROR
                 !password.containsLowerCase() -> ValidationResults.ERROR
                 !password.containsUpperCases() -> ValidationResults.ERROR
                 !password.containsNumbers() -> ValidationResults.ERROR
+                additionalValidators -> ValidationResults.ERROR
                 else -> ValidationResults.CORRECT
             }
         }
