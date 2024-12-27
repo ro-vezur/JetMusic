@@ -66,6 +66,7 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
     implementation(libs.googleid)
+    implementation(files("E:\\spotify-app-remote-release-0.8.0.aar"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -91,6 +92,9 @@ dependencies {
     implementation(libs.hilt)
     implementation(libs.hilt.navigation.compose)
 
+    //Retrofit
+    implementation(libs.retrofit2.retrofit)
+
     //firebase auth
     implementation(libs.firebase.auth)
 
@@ -100,4 +104,11 @@ dependencies {
     //google auth
     implementation(libs.google.services)
     implementation(libs.googleid)
+
+    //gson
+    implementation(libs.gson)
+    implementation(libs.gson.converter)
+
+    //coil
+    implementation(libs.coil)
 }

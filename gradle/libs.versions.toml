@@ -10,6 +10,7 @@ activityCompose = "1.9.3"
 composeBom = "2023.08.00"
 composeNavigation = "2.8.5"
 materialIconsExtended = "1.7.6"
+retrofitVersion = "2.9.0"
 serialization = "1.6.3"
 sdpCompose = "1.1.0"
 kspPlugin = "1.9.0-1.0.12"
@@ -19,6 +20,8 @@ googleServices = "4.4.2"
 firebaseAuth = "23.1.0"
 firebaseFirestore = "25.1.1"
 googleid = "1.1.1"
+gson = "2.8.8"
+coil = "2.7.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -38,6 +41,8 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization"}
+retrofit2-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofitVersion" }
+gson-converter = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofitVersion"}
 sdp-compose = {module = "com.github.Kaaveh:sdp-compose",version.ref = "sdpCompose"}
 extended-icons = {module = "androidx.compose.material:material-icons-extended",version.ref = "composeBom"}
 hilt = { module = "com.google.dagger:hilt-android",version.ref = "hiltPlugin" }
@@ -47,6 +52,8 @@ google-services = { group = "com.google.gms", name = "google-services", version.
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson"}
+coil = { module = "io.coil-kt:coil-compose", version.ref = "coil"}
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
