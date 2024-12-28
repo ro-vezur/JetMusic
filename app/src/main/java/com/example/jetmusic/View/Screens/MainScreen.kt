@@ -1,5 +1,6 @@
 package com.example.jetmusic.View.Screens
 
+import android.media.MediaPlayer
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -11,14 +12,21 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.jetmusic.View.Components.Buttons.TextButton
-import com.example.jetmusic.View.Screens.StartScreen.HomeScreen.HomeScreen
+import androidx.navigation.toRoute
+import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
+import com.example.jetmusic.View.Screens.DetailedScreens.MusicDetailedScreen
+import com.example.jetmusic.View.Screens.HomeScreen.HomeScreen
+import com.example.jetmusic.View.Screens.SearchScreen.SearchScreen
 import com.example.jetmusic.View.Screens.StartScreen.startScreensGraph
 import com.example.jetmusic.View.ScreensRoutes
-import com.example.jetmusic.ViewModels.StartScreenViewModels.UserViewModel
+import com.example.jetmusic.ViewModels.DetailedScreensViewModels.MusicDetailedViewModel
+import com.example.jetmusic.ViewModels.MainScreensViewModels.SearchViewModel
+import com.example.jetmusic.ViewModels.UserViewModel
 
 @Composable
 fun MainScreen() {
@@ -32,6 +40,10 @@ fun MainScreen() {
     val firebaseUser by userViewModel.firebaseUser.collectAsStateWithLifecycle()
 
     val initialRoute = if(firebaseUser != null) ScreensRoutes.HomeRoute else ScreensRoutes.StartScreens
+
+    val viewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current) {
+        "No ViewModelStoreOwner was provided via LocalViewModelStoreOwner"
+    }
 
     Scaffold(
         containerColor = colors.background,
@@ -60,15 +72,40 @@ fun MainScreen() {
             composable<ScreensRoutes.HomeRoute> {
                 showBottomBar = true
 
-                TextButton(
-                    text = "Log Out",
-                    onClick = {
-                        userViewModel.logOut()
-                    }
+                val user by userViewModel.user.collectAsStateWithLifecycle()
+
+                user?.let { checkedUser ->
+                    HomeScreen(
+                        navController = navController,
+                        user = checkedUser
+                    )
+                }
+            }
+
+            composable<ScreensRoutes.SearchRoute> {
+                showBottomBar = true
+
+                val searchViewModel: SearchViewModel = hiltViewModel(viewModelStoreOwner)
+
+                SearchScreen(
+                    navController = navController,
+                    searchViewModel = searchViewModel
                 )
+            }
 
-                HomeScreen(
+            composable<ScreensRoutes.LibraryRoute> {
+                showBottomBar = true
+            }
 
+            composable<MusicObject> { navBackStackEntry ->
+                showBottomBar = false
+
+                val musicObject: MusicObject = navBackStackEntry.toRoute()
+
+                MusicDetailedScreen(
+                    navController = navController,
+                    musicObject = musicObject,
+                    musicDetailedViewModel = hiltViewModel(viewModelStoreOwner)
                 )
             }
         }
