@@ -66,7 +66,6 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
     implementation(libs.googleid)
-    implementation(files("E:\\spotify-app-remote-release-0.8.0.aar"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -111,4 +110,15 @@ dependencies {
 
     //coil
     implementation(libs.coil)
+
+    //paging
+    implementation(libs.paging.runtime)
+    implementation(libs.paging.compose)
+
+    //exoplayer
+    implementation(libs.exoplayer.core)
+    implementation(libs.exoplayer.ui)
+    implementation(libs.media3.ui)
+    implementation(libs.media3.exoplayer)
+    implementation(libs.media3.session)
 }
