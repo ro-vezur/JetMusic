@@ -29,7 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.example.jetmusic.DTOs.UserDTOs.User
+import com.example.jetmusic.data.DTOs.UserDTOs.User
 import com.example.jetmusic.Resources.ResultResource
 import com.example.jetmusic.View.Components.Cards.MusicCards.MusicCard
 import com.example.jetmusic.View.Components.TabsRow.CustomScrollableTabRow

@@ -2,8 +2,8 @@ package com.example.jetmusic.ViewModels.MainScreensViewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.jetmusic.DTOs.API.MusicDTOs.MusicResponse
-import com.example.jetmusic.Remote.Repositories.ApiRepostories.MusicRepository
+import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicResponse
+import com.example.jetmusic.data.Remote.Repositories.ApiRepostories.MusicRepository
 import com.example.jetmusic.Resources.ResultResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
