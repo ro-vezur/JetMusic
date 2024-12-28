@@ -4,7 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.example.jetmusic.DTOs.UserDTOs.User
+import com.example.jetmusic.data.DTOs.UserDTOs.User
 import com.example.jetmusic.View.Screens.StartScreen.Screens.LogInScreen
 import com.example.jetmusic.View.Screens.StartScreen.Screens.SignUpScreen
 import com.example.jetmusic.View.Screens.StartScreen.Screens.WelcomeScreen
