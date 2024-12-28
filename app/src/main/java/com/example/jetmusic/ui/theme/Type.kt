@@ -43,35 +43,50 @@ fun typography():Typography {
             fontFamily = FontFamily.Default,
             fontWeight = FontWeight.W500,
             fontSize = 15.ssp,
-            lineHeight = 24.ssp,
+            lineHeight = 14.ssp,
             letterSpacing = 1.ssp
         ),
         bodyMedium = TextStyle(
             fontFamily = FontFamily.Default,
             fontWeight = FontWeight.Normal,
             fontSize = 13.ssp,
-            lineHeight = 24.ssp,
+            lineHeight = 14.ssp,
             letterSpacing = 1.ssp
         ),
         bodySmall = TextStyle(
             fontFamily = FontFamily.Default,
             fontWeight = FontWeight.Normal,
             fontSize = 10.ssp,
-            lineHeight = 24.ssp,
+            lineHeight = 17.ssp,
             letterSpacing = 1.ssp
+        ),
+        headlineLarge = TextStyle(
+            fontWeight = FontWeight.W500,
+            fontSize = 31.ssp,
+            letterSpacing = 3.ssp
         ),
         headlineMedium = TextStyle(
             fontWeight = FontWeight.W500,
-            fontSize = 32.ssp,
-            letterSpacing = 3.ssp
+            fontSize = 27.ssp,
+            letterSpacing = 2.ssp
+        ),
+        headlineSmall = TextStyle(
+            fontWeight = FontWeight.Normal,
+            fontSize = 24.ssp,
+            letterSpacing = 1.ssp
+        ),
+        titleLarge = TextStyle(
+            fontWeight = FontWeight.W500,
+            fontSize = 21.ssp,
+            letterSpacing = 1.ssp
         ),
         titleMedium = TextStyle(
-            fontWeight = FontWeight.W500,
+            fontWeight = FontWeight.Normal,
             fontSize = 18.ssp,
             letterSpacing = 1.ssp
         ),
         titleSmall = TextStyle(
-            fontWeight = FontWeight.W500,
+            fontWeight = FontWeight.Normal,
             fontSize = 16.ssp,
             letterSpacing = 1.ssp
         )
