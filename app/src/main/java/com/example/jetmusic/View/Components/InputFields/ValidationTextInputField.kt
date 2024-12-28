@@ -96,10 +96,6 @@ fun ValidationTextInputField(
     val border = if (isError) errorBorder
     else { if (isFocused && !readOnly) focusedBorder else unfocusedBorder }
 
-    LaunchedEffect(keyboardController) {
-
-    }
-
     Box(
         modifier = modifier
             .focusable(isFocused, interactionSource)
