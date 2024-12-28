@@ -1,4 +1,4 @@
-package com.example.jetmusic.Firebase.Auth
+package com.example.jetmusic.domain.auth
 
 import com.example.jetmusic.Resources.ResultResource
 import com.google.firebase.auth.AuthResult

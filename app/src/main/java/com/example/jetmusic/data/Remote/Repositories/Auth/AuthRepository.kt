@@ -1,6 +1,6 @@
-package com.example.jetmusic.Repositories.Auth
+package com.example.jetmusic.data.Remote.Repositories.Auth
 
-import com.example.jetmusic.Firebase.Auth.FirebaseAuthInterface
+import com.example.jetmusic.domain.auth.FirebaseAuthInterface
 import com.example.jetmusic.Resources.ResultResource
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
