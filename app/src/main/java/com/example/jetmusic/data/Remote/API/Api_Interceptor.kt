@@ -1,4 +1,4 @@
-package com.example.jetmusic.Remote.API
+package com.example.jetmusic.data.Remote.API
 
 import com.example.jetmusic.RESPONSE_FORMAT
 import okhttp3.Interceptor
