@@ -1,9 +1,9 @@
-package com.example.jetmusic.ViewModels.StartScreenViewModels
+package com.example.jetmusic.ViewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.jetmusic.DTOs.UserDTOs.User
-import com.example.jetmusic.Firebase.Collections.UsersCollectionInterface
+import com.example.jetmusic.data.DTOs.UserDTOs.User
+import com.example.jetmusic.domain.collections.UsersCollectionInterface
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel

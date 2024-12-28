@@ -1,4 +1,4 @@
-package com.example.jetmusic.DTOs.UserDTOs
+package com.example.jetmusic.data.DTOs.UserDTOs
 
 import com.google.firebase.auth.FirebaseUser
 

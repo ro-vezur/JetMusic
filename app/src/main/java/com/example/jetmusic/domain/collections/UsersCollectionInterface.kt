@@ -1,6 +1,6 @@
-package com.example.jetmusic.Firebase.Collections
+package com.example.jetmusic.domain.collections
 
-import com.example.jetmusic.DTOs.UserDTOs.User
+import com.example.jetmusic.data.DTOs.UserDTOs.User
 import com.example.jetmusic.Resources.ResultResource
 import kotlinx.coroutines.flow.Flow
 
