@@ -61,11 +61,15 @@ fun TextButton(
 
         Text(
             modifier = Modifier
-                .padding(start = if(leadingIcon != null) 11.sdp else 0.sdp)
+                .padding(
+                    start = if(leadingIcon != null) 11.sdp else 5.sdp,
+                    end = if(leadingIcon != null) 0.sdp else 5.sdp
+                )
                 .align(Alignment.Center),
             text = text,
             style = style,
-            color = textColor
+            color = textColor,
+            maxLines = 1
         )
     }
 }
