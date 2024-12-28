@@ -1,4 +1,4 @@
-package com.example.jetmusic.Repositories.Auth.OtherPlatforms
+package com.example.jetmusic.data.Remote.Repositories.Auth.OtherPlatforms
 
 import android.content.Context
 import androidx.credentials.CredentialManager

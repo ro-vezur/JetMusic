@@ -24,9 +24,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.jetmusic.DTOs.UserDTOs.User
+import com.example.jetmusic.data.DTOs.UserDTOs.User
 import com.example.jetmusic.R
-import com.example.jetmusic.Repositories.Auth.OtherPlatforms.GoogleManager
+import com.example.jetmusic.data.Remote.Repositories.Auth.OtherPlatforms.GoogleManager
 import com.example.jetmusic.View.Components.Buttons.TextButton
 import com.example.jetmusic.View.ScreensRoutes
 import com.example.jetmusic.ViewModels.StartScreenViewModels.WelcomeViewModel

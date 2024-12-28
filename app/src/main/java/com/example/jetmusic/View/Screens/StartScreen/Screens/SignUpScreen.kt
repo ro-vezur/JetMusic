@@ -39,7 +39,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.example.jetmusic.DTOs.UserDTOs.User
+import com.example.jetmusic.data.DTOs.UserDTOs.User
 import com.example.jetmusic.Helpers.Validation.Result.ValidationResults
 import com.example.jetmusic.View.Components.Buttons.TextButton
 import com.example.jetmusic.View.Components.Buttons.TurnBackButton

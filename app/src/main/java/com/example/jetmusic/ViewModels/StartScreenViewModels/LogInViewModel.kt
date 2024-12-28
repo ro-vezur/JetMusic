@@ -2,10 +2,10 @@ package com.example.jetmusic.ViewModels.StartScreenViewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.jetmusic.DTOs.UserDTOs.User
-import com.example.jetmusic.Firebase.Collections.UsersCollectionInterface
-import com.example.jetmusic.Firebase.Auth.FirebaseAuthInterface
-import com.example.jetmusic.Helpers.Validation.Email.Email
+import com.example.jetmusic.data.DTOs.UserDTOs.User
+import com.example.jetmusic.domain.collections.UsersCollectionInterface
+import com.example.jetmusic.domain.auth.FirebaseAuthInterface
+import com.example.jetmusic.Helpers.Validation.Email.EmailValidation
 import com.example.jetmusic.Helpers.Validation.Password.PasswordValidation
 import com.example.jetmusic.Helpers.Validation.Result.ValidationResults
 import com.example.jetmusic.Resources.ResultResource
@@ -33,7 +33,7 @@ class LogInViewModel @Inject constructor(
         email: String,
         password: String,
     ): Boolean {
-        val validateEmail = Email.validate(
+        val validateEmail = EmailValidation.validate(
             email = email,
             additionalValidators = !checkIsEmailRegistered(email) || !checkIsCustomProviderUsed(email)
         )
