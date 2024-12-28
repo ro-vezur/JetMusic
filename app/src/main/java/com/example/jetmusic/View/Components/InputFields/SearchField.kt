@@ -10,6 +10,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -19,9 +20,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -52,19 +51,17 @@ fun SearchField(
     modifier: Modifier = Modifier,
     text: String,
     onTextChange: (value: String) -> Unit,
+    textColor: Color = colorScheme.inversePrimary,
     textStyle: TextStyle = typography().bodyMedium,
     width: Dp = BASE_BUTTON_WIDTH.sdp,
     height: Dp = (BASE_BUTTON_HEIGHT - 4).sdp,
     shape: RoundedCornerShape = RoundedCornerShape(25.sdp),
-    primaryColor: Color = colorScheme.background,
-    inversePrimaryColor: Color = colorScheme.inversePrimary,
+    background: Color = colorScheme.background,
     unfocusedBorder: BorderStroke = BorderStroke(1.sdp, Color.White),
     focusedBorder: BorderStroke = BorderStroke(1.sdp, tidalGradient),
     placeHolder: String = "",
     onSearchClick: () -> Unit,
-    onCancelClick: () -> Unit,
     searchIcon: @Composable () -> Unit,
-    leadingIcon: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -73,7 +70,7 @@ fun SearchField(
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    val contentColor = if (isFocused) inversePrimaryColor else inversePrimaryColor.copy(0.85f)
+    val contentColor = if (isFocused) textColor else textColor.copy(0.85f)
 
     val border = if (isFocused) focusedBorder else unfocusedBorder
 
@@ -83,7 +80,7 @@ fun SearchField(
             .width(width)
             .height(height)
             .clip(shape)
-            .background(primaryColor)
+            .background(background)
             .border(border, shape)
             .focusRequester(focusRequester)
             .clickable {
@@ -106,7 +103,6 @@ fun SearchField(
             value = text,
             onValueChange = onTextChange,
             singleLine = true,
-            readOnly = true,
             interactionSource = interactionSource,
             keyboardActions = KeyboardActions(
                 onDone = {
@@ -123,19 +119,15 @@ fun SearchField(
             decorationBox = { innerTextField ->
                 Row(
                     modifier = Modifier
-                        .height(20.sdp),
+                        .fillMaxHeight(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
 
-                    if(isFocused || leadingIcon == null) {
-                        searchIcon()
-                    } else {
-                        leadingIcon()
-                    }
+                    searchIcon()
 
                     Box(
                         Modifier
-                            .padding(horizontal = 10.sdp)
+                            .padding(horizontal = 6.sdp)
                             .weight(1f)
                     ) {
                         if (text.isBlank()) {
@@ -151,15 +143,8 @@ fun SearchField(
                         innerTextField()
                     }
 
-                    if(text.isNotBlank()) {
-                        Icon(
-                            imageVector = Icons.Filled.Clear,
-                            contentDescription = "clear",
-                            tint = contentColor,
-                            modifier = Modifier
-                                .size(24.sdp)
-                                .clickable { onCancelClick() }
-                        )
+                    if(text.isNotBlank() && trailingIcon != null) {
+                        trailingIcon()
                     }
                 }
             }

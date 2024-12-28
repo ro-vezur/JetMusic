@@ -1,8 +1,14 @@
 package com.example.jetmusic.View.Screens.SearchScreen
 
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,6 +26,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material3.CircularProgressIndicator
@@ -34,8 +42,10 @@ import com.example.jetmusic.ViewModels.MainScreensViewModels.SearchViewModel
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
 import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
@@ -43,212 +53,180 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.example.jetmusic.BASE_BUTTON_WIDTH
 import com.example.jetmusic.BOTTOM_NAVIGATION_BAR_HEIGHT
-import com.example.jetmusic.DTOs.Genres.MusicGenres
+import com.example.jetmusic.data.DTOs.Genres.MusicGenres
 import com.example.jetmusic.Resources.ResultResource
+import com.example.jetmusic.View.Components.Buttons.TextButton
 import com.example.jetmusic.View.Components.Cards.ArtistCard
 import com.example.jetmusic.View.Components.Cards.MusicCards.MusicGenreCard
 import com.example.jetmusic.View.Components.InputFields.SearchField
+import kotlinx.coroutines.launch
 
 @Composable
 fun SearchScreen(
+    navController: NavController,
     searchViewModel: SearchViewModel,
 ) {
-
-    val trendingArtistsResult by searchViewModel.trendingArtists.collectAsStateWithLifecycle()
-
     val focusManager = LocalFocusManager.current
-    val configuration = LocalConfiguration.current
+    val scope = rememberCoroutineScope()
 
-    val screenWidth = configuration.screenWidthDp
+    val searchText by searchViewModel.searchText.collectAsStateWithLifecycle()
+    val isRequestSent by searchViewModel.isRequestSent.collectAsStateWithLifecycle()
 
-    var showSearchHistoryScreen by remember { mutableStateOf(false) }
 
-    val searchBarPrimaryColor by animateColorAsState(targetValue = if (showSearchHistoryScreen)
-        colorScheme.background else colorScheme.inversePrimary
-    )
+    var searchBarWidth by remember { mutableStateOf(if(isRequestSent) 200  else 235 ) }
+    var searchBarTrailingIconWidth by remember { mutableStateOf(if(isRequestSent) 72 else 32) }
 
-    val searchBarInversePrimaryColor by animateColorAsState(targetValue = if (showSearchHistoryScreen)
-        colorScheme.inversePrimary else colorScheme.background
-    )
+    val enterTransition = fadeIn(animationSpec = tween(65))
+    val exitTransition = fadeOut(animationSpec = tween(65))
 
-    var searchText by remember { mutableStateOf("") }
+    LaunchedEffect(isRequestSent) {
+        if(isRequestSent) {
+            searchBarTrailingIconWidth = 72
+            searchBarWidth = 200
+        } else {
+            searchBarWidth = 235
+            searchBarTrailingIconWidth = 34
+        }
+    }
 
     Scaffold(
         containerColor = colorScheme.background,
         topBar = {
-            Box(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(65.sdp),
-                contentAlignment = Alignment.Center
+                verticalAlignment = Alignment.CenterVertically
             ){
                 SearchField(
                     modifier = Modifier
-                        .clickable {
-                            showSearchHistoryScreen = true
-                        },
+                        .padding(start = 10.sdp),
                     text = searchText,
-                    onTextChange = { value -> searchText = value },
-                    primaryColor = searchBarPrimaryColor,
-                    inversePrimaryColor = searchBarInversePrimaryColor,
+                    onTextChange = { value ->
+                        searchViewModel.setSearchText(value)
+                                   },
+                    width = animateIntAsState(targetValue = searchBarWidth).value.sdp,
+                    background = colorScheme.inversePrimary,
+                    textColor = colorScheme.background,
                     focusedBorder = BorderStroke(0.sdp, Color.Transparent),
                     unfocusedBorder = BorderStroke(0.sdp,Color.Transparent),
                     shape = RoundedCornerShape(8.sdp),
                     onSearchClick = {
-
-                    },
-                    onCancelClick = {
-
+                        if(searchText.isNotBlank()) {
+                            focusManager.clearFocus()
+                            searchViewModel.setRequestStatus(true)
+                            searchViewModel.setSearchedData()
+                        }
                     },
                     searchIcon = {
                         Icon(
                             imageVector = Icons.Filled.Search,
                             contentDescription = "search",
-                            tint = searchBarInversePrimaryColor,
+                            tint = colorScheme.background,
                             modifier = Modifier
                                 .padding(start = 12.sdp)
-                                .size(24.sdp)
+                                .size(21.sdp)
                                 .clip(RoundedCornerShape(8.sdp))
                                 .clickable {
-                                    focusManager.clearFocus()
+                                    if (searchText.isNotBlank()) {
+                                        focusManager.clearFocus()
+                                        searchViewModel.setRequestStatus(true)
+                                        searchViewModel.setSearchedData()
+                                    }
                                 }
                         )
                     },
-                    leadingIcon = if(showSearchHistoryScreen) {
-                        {
-                            Icon(
-                                imageVector = Icons.Filled.ArrowBack,
-                                contentDescription = "back",
-                                tint = searchBarInversePrimaryColor,
-                                modifier = Modifier
-                                    .padding(start = 12.sdp)
-                                    .size(24.sdp)
-                                    .clip(RoundedCornerShape(8.sdp))
-                                    .clickable {
-                                        focusManager.clearFocus()
-                                    }
-                            )
-                        }
-                    }
-                     else null,
                     trailingIcon = {
-
+                        Icon(
+                            imageVector = Icons.Filled.Clear,
+                            contentDescription = "clear",
+                            tint = colorScheme.background,
+                            modifier = Modifier
+                                .padding(end = 7.sdp)
+                                .size(23.sdp)
+                                .clip(RoundedCornerShape(8.sdp))
+                                .clickable {
+                                    searchViewModel.setSearchText("")
+                                }
+                        )
                     }
                 )
-            }
-        }
-    ) { innerPadding ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(innerPadding)
-        ) {
 
-            item {
-                Column{
-                    Row(
-                        modifier = Modifier
-                            .padding(start = 14.sdp, top = 12.sdp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
+                Box(
+                    modifier = Modifier
+                        .padding(start = 9.sdp)
+                        .width(animateIntAsState(targetValue = searchBarTrailingIconWidth).value.sdp)
+                        .height(34.sdp)
+                        .clip(RoundedCornerShape(10.sdp))
+                        .background(colorScheme.inversePrimary),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if(!isRequestSent){
                         Icon(
-                            imageVector = Icons.Filled.TrendingUp,
-                            contentDescription = "trending up",
+                            imageVector = Icons.Filled.History,
+                            contentDescription = "history",
+                            tint = colorScheme.background,
                             modifier = Modifier
                                 .size(30.sdp)
                         )
-
-                        Text(
-                            modifier = Modifier
-                                .padding(start = 11.sdp),
-                            text = "Trending Artists",
-                            style = typography().titleMedium,
-                        )
-                    }
-
-                    when (trendingArtistsResult) {
-                        is ResultResource.Loading -> {
-                            Box(
-                                modifier = Modifier
-                                    .padding(top = 15.sdp)
-                                    .fillMaxWidth()
-                                    .height(85.sdp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                CircularProgressIndicator()
+                    } else {
+                        TextButton(
+                            modifier = Modifier,
+                            text = "Cancel",
+                            style = typography().bodyMedium.copy(),
+                            width = 72.sdp,
+                            height = 34.sdp,
+                            background = colorScheme.inversePrimary,
+                            borderStroke = BorderStroke(0.sdp, Color.Transparent),
+                            onClick = {
+                                searchViewModel.setRequestStatus(false)
+                                searchViewModel.clearSearchedData()
                             }
-                        }
-
-                        is ResultResource.Success -> {
-                            LazyRow(
-                                modifier = Modifier
-                                    .padding(top = 15.sdp)
-                                    .height(85.sdp),
-                                horizontalArrangement = Arrangement.spacedBy(9.sdp)
-                            ) {
-                                item { }
-
-                                trendingArtistsResult.data?.let { artists ->
-                                    items(artists.results) { artist ->
-                                        if(artist.name.isNotBlank() && artist.image.isNotBlank()) {
-                                            ArtistCard(
-                                                modifier = Modifier
-                                                    .height(85.sdp)
-                                                    .width(50.sdp),
-                                                artistObject = artist
-                                            )
-                                        }
-                                    }
-                                }
-
-                                item { }
-                            }
-                        }
-
-                        is ResultResource.Error -> {
-
-                        }
-                    }
-                }
-            }
-            
-            item {
-                Text(
-                    modifier = Modifier
-                        .padding(start = 14.sdp, bottom = 13.sdp,top = 10.sdp),
-                    text = "Browse",
-                    style = typography().titleMedium,
-                )
-            }
-
-            items(
-                MusicGenres.entries.toList().chunked(2),
-                key = { it}
-            ) { musicGenresChunk ->
-                Row(
-                    modifier = Modifier
-                        .padding(horizontal = 7.sdp, vertical = 5.sdp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    musicGenresChunk.forEach { musicGenre ->
-                        MusicGenreCard(
-                            modifier = Modifier
-                                .padding(horizontal = 5.sdp)
-                                .width(screenWidth.dp / 2.32f)
-                                .height(88.sdp)
-                                .clip(RoundedCornerShape(14.sdp)),
-                            musicGenre = musicGenre
                         )
                     }
                 }
             }
+        }
+    ) { innerPadding ->
+        AnimatedVisibility(
+            visible = !isRequestSent,
+            enter = enterTransition,
+            exit = exitTransition,
+        ) {
+            val trendingArtistsResult by searchViewModel.trendingArtists.collectAsStateWithLifecycle()
 
-            item{
-                Spacer(
-                    modifier = Modifier.height((BOTTOM_NAVIGATION_BAR_HEIGHT + 15).sdp)
-                )
-            }
+            DiscoverScreen(
+                modifier = Modifier
+                    .padding(innerPadding),
+                trendingArtistsResult = trendingArtistsResult,
+            )
+        }
+
+        AnimatedVisibility(
+            visible = isRequestSent,
+            enter = enterTransition,
+            exit = exitTransition,
+        ) {
+            val searchedData = searchViewModel.searchedData.collectAsLazyPagingItems()
+
+            SearchedMediaScreen(
+                modifier = Modifier
+                    .padding(innerPadding),
+                paginatedSearchedData = searchedData,
+                navigateToSelectedMusic = { id ->
+                    scope.launch {
+                        val selectedMusicResponse = searchViewModel.getMusicById(id)
+                        if(selectedMusicResponse.results.isNotEmpty()) {
+                            Log.d("result",selectedMusicResponse.results.first().toString())
+                            navController.navigate(selectedMusicResponse.results.first())
+                        }
+                    }
+                }
+            )
         }
     }
 }
