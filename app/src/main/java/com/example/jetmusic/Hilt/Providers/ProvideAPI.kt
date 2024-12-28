@@ -2,10 +2,10 @@ package com.example.jetmusic.Hilt.Providers
 
 import com.example.jetmusic.API_KEY
 import com.example.jetmusic.BASE_API_URL
-import com.example.jetmusic.Remote.API.ApiService
-import com.example.jetmusic.Remote.API.Api_Interceptor
-import com.example.jetmusic.Remote.Repositories.ApiRepostories.ArtistsRepository
-import com.example.jetmusic.Remote.Repositories.ApiRepostories.MusicRepository
+import com.example.jetmusic.data.Remote.API.ApiService
+import com.example.jetmusic.data.Remote.API.Api_Interceptor
+import com.example.jetmusic.data.Remote.Repositories.ApiRepostories.ArtistsRepository
+import com.example.jetmusic.data.Remote.Repositories.ApiRepostories.MusicRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
