@@ -1,4 +1,4 @@
-package com.example.jetmusic.data.DTOs.Genres
+package com.example.jetmusic.data.enums.Genres
 
 const val rockImage = "https://static.vecteezy.com/system/resources/thumbnails/024/569/707/small_2x/rock-music-concert-background-illustration-ai-generative-free-photo.jpg"
 const val popImage = "https://soundslikecorey.com/wp-content/uploads/2024/10/what-is-pop-music-banner-image.jpg"

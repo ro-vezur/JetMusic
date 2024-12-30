@@ -17,7 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.memory.MemoryCache
-import com.example.jetmusic.data.DTOs.Genres.MusicGenres
+import com.example.jetmusic.data.enums.Genres.MusicGenres
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
 

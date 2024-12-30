@@ -1,4 +1,4 @@
-package com.example.jetmusic.data.DTOs.Genres
+package com.example.jetmusic.data.enums.Genres
 
 enum class MusicGenres(val tag: String, val displayName: String, val image: String) {
     ROCK("rock", "Rock", rockImage),
