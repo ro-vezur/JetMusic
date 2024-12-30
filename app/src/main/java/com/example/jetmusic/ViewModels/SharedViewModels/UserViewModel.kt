@@ -1,4 +1,4 @@
-package com.example.jetmusic.ViewModels
+package com.example.jetmusic.ViewModels.SharedViewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
