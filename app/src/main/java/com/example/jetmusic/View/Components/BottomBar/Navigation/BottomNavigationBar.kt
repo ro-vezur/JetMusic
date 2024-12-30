@@ -1,4 +1,4 @@
-package com.example.jetmusic.View.Components.BottomNaviationBar
+package com.example.jetmusic.View.Components.BottomBar.Navigation
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,7 +30,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.jetmusic.BOTTOM_NAVIGATION_BAR_HEIGHT
 import com.example.jetmusic.BOTTOM_NAVIGATION_BAR_ITEM_SIZE
 import com.example.jetmusic.View.Components.Icons.SelectedAnimatedIcon
-import com.example.jetmusic.View.ScreensRoutes
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
 
