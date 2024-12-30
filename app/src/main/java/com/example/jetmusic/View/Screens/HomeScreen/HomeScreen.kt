@@ -1,6 +1,8 @@
 package com.example.jetmusic.View.Screens.HomeScreen
 
+import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +21,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +37,7 @@ import com.example.jetmusic.Resources.ResultResource
 import com.example.jetmusic.View.Components.Cards.MusicCards.MusicCard
 import com.example.jetmusic.View.Components.TabsRow.CustomScrollableTabRow
 import com.example.jetmusic.View.Screens.HomeScreen.TabsCategories.TabsHomeCategories
+import com.example.jetmusic.View.ScreensRoutes
 import com.example.jetmusic.ViewModels.MainScreensViewModels.HomeViewModel
 import com.example.jetmusic.ui.theme.darkGrey
 import com.example.jetmusic.ui.theme.typography
@@ -47,8 +51,9 @@ fun HomeScreen(
 ) {
 
     val pagerState = rememberPagerState { TabsHomeCategories.entries.size }
-
     val musicOfWeek by homeViewModel.musicOfWeek.collectAsStateWithLifecycle()
+
+    val homeUiState = homeViewModel.homeUiState
 
     Column(
         modifier = Modifier
@@ -126,6 +131,11 @@ fun HomeScreen(
 
                     is ResultResource.Success -> {
                         musicOfWeek.data?.let { musicResponse ->
+
+                            LaunchedEffect(null) {
+                                homeViewModel.onEvent(HomeEvent.AddMediaItems(musicResponse.results))
+                            }
+
                             LazyColumn(
                                 modifier = Modifier
                                     .fillMaxSize(),
@@ -139,7 +149,12 @@ fun HomeScreen(
                                         modifier = Modifier
                                             .padding(start = 10.sdp)
                                             .height(46.sdp)
-                                            .fillMaxWidth(),
+                                            .fillMaxWidth()
+                                            .clickable {
+                                                homeViewModel.onEvent(HomeEvent.OnSongSelected(music))
+                                                homeViewModel.onEvent(HomeEvent.PlaySong)
+                                                navController.navigate(ScreensRoutes.DetailedMusicRoute)
+                                            },
                                         musicObject = music
                                     )
                                 }
