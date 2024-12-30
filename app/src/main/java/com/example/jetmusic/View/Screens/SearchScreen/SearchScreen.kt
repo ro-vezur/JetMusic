@@ -57,18 +57,21 @@ import androidx.navigation.NavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.jetmusic.BASE_BUTTON_WIDTH
 import com.example.jetmusic.BOTTOM_NAVIGATION_BAR_HEIGHT
-import com.example.jetmusic.data.DTOs.Genres.MusicGenres
+import com.example.jetmusic.data.enums.Genres.MusicGenres
 import com.example.jetmusic.Resources.ResultResource
 import com.example.jetmusic.View.Components.Buttons.TextButton
 import com.example.jetmusic.View.Components.Cards.ArtistCard
 import com.example.jetmusic.View.Components.Cards.MusicCards.MusicGenreCard
 import com.example.jetmusic.View.Components.InputFields.SearchField
+import com.example.jetmusic.View.Screens.DetailedScreens.DetailedMusicScreen.MusicEvent
+import com.example.jetmusic.View.ScreensRoutes
 import kotlinx.coroutines.launch
 
 @Composable
 fun SearchScreen(
     navController: NavController,
     searchViewModel: SearchViewModel,
+    onEvent: (MusicEvent) -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
     val scope = rememberCoroutineScope()
@@ -221,8 +224,9 @@ fun SearchScreen(
                     scope.launch {
                         val selectedMusicResponse = searchViewModel.getMusicById(id)
                         if(selectedMusicResponse.results.isNotEmpty()) {
-                            Log.d("result",selectedMusicResponse.results.first().toString())
-                            navController.navigate(selectedMusicResponse.results.first())
+                            val selectedMusic = selectedMusicResponse.results.first()
+                            navController.navigate(ScreensRoutes.DetailedMusicRoute)
+                      //      onEvent(MusicEvent.OnSongSelected(selectedMusic))
                         }
                     }
                 }
