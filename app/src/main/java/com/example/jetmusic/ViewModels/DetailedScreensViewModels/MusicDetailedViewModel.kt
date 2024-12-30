@@ -1,8 +1,17 @@
 package com.example.jetmusic.ViewModels.DetailedScreensViewModels
 
+import android.graphics.Bitmap
 import android.media.MediaPlayer
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.palette.graphics.Palette
+import com.example.jetmusic.View.Screens.DetailedScreens.DetailedMusicScreen.MusicEvent
+import com.example.jetmusic.domain.usecases.musicController.music.PauseMusicUseCase
+import com.example.jetmusic.domain.usecases.musicController.music.ResumeMusicUseCase
+import com.example.jetmusic.domain.usecases.musicController.music.SeekMusicToPositionUseCase
+import com.example.jetmusic.domain.usecases.musicController.music.SkipToNextMusicUseCase
+import com.example.jetmusic.domain.usecases.musicController.music.SkipToPreviousMusicUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,37 +21,40 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MusicDetailedViewModel @Inject constructor(
-
-): ViewModel() {
-
-    val mediaPlayer = MediaPlayer()
-
-    private val _oldAudioUrl: MutableStateFlow<String> = MutableStateFlow("")
-    val oldAudioUrl: StateFlow<String> = _oldAudioUrl.asStateFlow()
-
-    private val _currentAudioId: MutableStateFlow<String> = MutableStateFlow("")
-    val currentAudioId: StateFlow<String> = _currentAudioId.asStateFlow()
-
-    private val _isPlaying: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val isPlaying: StateFlow<Boolean> = _isPlaying.asStateFlow()
-
-    private val _currentPosition: MutableStateFlow<Int> = MutableStateFlow(0)
-    val currentPosition: StateFlow<Int> = _currentPosition.asStateFlow()
-
-    fun setPlayStatus(status: Boolean) = viewModelScope.launch {
-        _isPlaying.emit(status)
+    private val pauseSongUseCase: PauseMusicUseCase,
+    private val resumeSongUseCase: ResumeMusicUseCase,
+    private val skipToNextSongUseCase: SkipToNextMusicUseCase,
+    private val skipToPreviousSongUseCase: SkipToPreviousMusicUseCase,
+    private val seekSongToPositionUseCase: SeekMusicToPositionUseCase,
+) : ViewModel() {
+    fun onEvent(event: MusicEvent) {
+        when (event) {
+            MusicEvent.PauseSong -> pauseMusic()
+            MusicEvent.ResumeSong -> resumeMusic()
+            is MusicEvent.SeekSongToPosition -> seekToPosition(event.position)
+            MusicEvent.SkipToNextSong -> skipToNextSong()
+            MusicEvent.SkipToPreviousSong -> skipToPreviousSong()
+        }
     }
 
-    fun setCurrentPosition(position: Int) = viewModelScope.launch {
-        _currentPosition.emit(position)
+    private fun pauseMusic() {
+        pauseSongUseCase()
     }
 
-    fun setOldAudioUrl(url: String) = viewModelScope.launch {
-        _oldAudioUrl.emit(url)
+    private fun resumeMusic() {
+        resumeSongUseCase()
     }
 
-    fun setCurrentAudioId(url: String) = viewModelScope.launch {
-        _currentAudioId.emit(url)
+    private fun skipToNextSong() = skipToNextSongUseCase {
+
+    }
+
+    private fun skipToPreviousSong() = skipToPreviousSongUseCase {
+
+    }
+
+    private fun seekToPosition(position: Long) {
+        seekSongToPositionUseCase(position)
     }
 
 }
