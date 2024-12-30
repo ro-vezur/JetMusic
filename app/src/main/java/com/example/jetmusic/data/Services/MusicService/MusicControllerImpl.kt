@@ -1,14 +1,17 @@
-package com.example.jetmusic.data.Services
+package com.example.jetmusic.data.Services.MusicService
 
 import android.content.ComponentName
 import android.content.Context
 import android.net.Uri
+import android.util.Log
+import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
+import com.example.jetmusic.data.mapper.toMediaItem
 import com.example.jetmusic.data.mapper.toMusic
 import com.example.jetmusic.domain.service.MusicController
 import com.example.jetmusic.states.PlayerState
@@ -32,7 +35,6 @@ class MusicControllerImpl(context: Context) : MusicController {
     ) -> Unit
     )? = null
 
-
     init {
         val sessionToken =
             SessionToken(context, ComponentName(context, MusicService::class.java))
@@ -42,22 +44,24 @@ class MusicControllerImpl(context: Context) : MusicController {
 
 
     private fun controllerListener() {
-        mediaController?.addListener(object : Player.Listener {
-            override fun onEvents(player: Player, events: Player.Events) {
-                super.onEvents(player, events)
+        mediaController?.addListener(
+            object : Player.Listener {
+                override fun onEvents(player: Player, events: Player.Events) {
+                    super.onEvents(player, events)
 
-                with(player) {
-                    mediaControllerCallback?.invoke(
-                        playbackState.toPlayerState(isPlaying),
-                        currentMediaItem?.toMusic(),
-                        currentPosition.coerceAtLeast(0L),
-                        duration.coerceAtLeast(0L),
-                        shuffleModeEnabled,
-                        repeatMode == Player.REPEAT_MODE_ONE
-                    )
+                    with(player) {
+                        mediaControllerCallback?.invoke(
+                            playbackState.toPlayerState(isPlaying),
+                            currentMediaItem?.toMusic(),
+                            currentPosition.coerceAtLeast(0L),
+                            duration.coerceAtLeast(0L),
+                            shuffleModeEnabled,
+                            repeatMode == Player.REPEAT_MODE_ONE
+                        )
+                    }
                 }
             }
-        })
+        )
     }
 
     private fun Int.toPlayerState(isPlaying: Boolean) =
@@ -67,21 +71,8 @@ class MusicControllerImpl(context: Context) : MusicController {
             else -> if (isPlaying) PlayerState.PLAYING else PlayerState.PAUSED
         }
 
-    override fun addMediaItems(songs: List<MusicObject>) {
-        val mediaItems = songs.map {
-            MediaItem.Builder()
-                .setMediaId(it.audio)
-                .setUri(it.audio)
-                .setMediaMetadata(
-                    MediaMetadata.Builder()
-                        .setTitle(it.name)
-                        .setSubtitle(it.artist_name)
-                        .setArtist(it.artist_name)
-                        .setArtworkUri(Uri.parse(it.image))
-                        .build()
-                )
-                .build()
-        }
+    override fun addMediaItems(musicList: List<MusicObject>) {
+        val mediaItems = musicList.map { it.toMediaItem() }
 
         mediaController?.setMediaItems(mediaItems)
     }
@@ -89,7 +80,7 @@ class MusicControllerImpl(context: Context) : MusicController {
     override fun play(mediaItemIndex: Int) {
         mediaController?.apply {
             seekToDefaultPosition(mediaItemIndex)
-            playWhenReady = true
+
             prepare()
         }
     }
