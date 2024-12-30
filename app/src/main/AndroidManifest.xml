@@ -19,7 +19,7 @@
         android:theme="@style/Theme.JetMusic"
         tools:targetApi="31">
         <service
-            android:name=".data.Services.MusicService"
+            android:name=".data.Services.MusicService.MusicService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="mediaPlayback">
