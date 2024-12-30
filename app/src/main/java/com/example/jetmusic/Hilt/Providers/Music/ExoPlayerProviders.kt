@@ -1,20 +1,21 @@
-package com.example.jetmusic.Hilt.Providers
+package com.example.jetmusic.Hilt.Providers.Music
 
 import android.content.Context
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.exoplayer.ExoPlayer
+import com.example.jetmusic.data.Services.MusicService.MusicControllerImpl
+import com.example.jetmusic.domain.service.MusicController
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ServiceComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ServiceScoped
-import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(ServiceComponent::class)
-object ServiceProviders {
+object ExoPlayerProviders {
 
     @ServiceScoped
     @Provides
