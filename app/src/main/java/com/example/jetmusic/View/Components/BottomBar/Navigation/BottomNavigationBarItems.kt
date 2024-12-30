@@ -1,9 +1,8 @@
-package com.example.jetmusic.View.Components.BottomNaviationBar
+package com.example.jetmusic.View.Components.BottomBar.Navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LibraryMusic
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.LibraryMusic

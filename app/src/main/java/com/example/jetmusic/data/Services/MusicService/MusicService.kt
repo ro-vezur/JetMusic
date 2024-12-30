@@ -1,4 +1,4 @@
-package com.example.jetmusic.data.Services
+package com.example.jetmusic.data.Services.MusicService
 
 
 import androidx.media3.common.MediaItem
