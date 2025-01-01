@@ -1,6 +1,5 @@
 package com.example.jetmusic.View.Screens.HomeScreen
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,7 +20,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +37,9 @@ import com.example.jetmusic.View.Components.TabsRow.CustomScrollableTabRow
 import com.example.jetmusic.View.Screens.HomeScreen.TabsCategories.TabsHomeCategories
 import com.example.jetmusic.View.ScreensRoutes
 import com.example.jetmusic.ViewModels.MainScreensViewModels.HomeViewModel
+import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
+import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
+import com.example.jetmusic.other.events.MusicSelectionEvent
 import com.example.jetmusic.ui.theme.darkGrey
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
@@ -47,13 +48,14 @@ import ir.kaaveh.sdpcompose.sdp
 fun HomeScreen(
     navController: NavController,
     user: User,
+    musicControllerUiState: MusicControllerUiState,
+    selectedPlaylist: List<MusicObject>,
+    setPlaylist: (List<MusicObject>) -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
 
     val pagerState = rememberPagerState { TabsHomeCategories.entries.size }
     val musicOfWeek by homeViewModel.musicOfWeek.collectAsStateWithLifecycle()
-
-    val homeUiState = homeViewModel.homeUiState
 
     Column(
         modifier = Modifier
@@ -132,10 +134,6 @@ fun HomeScreen(
                     is ResultResource.Success -> {
                         musicOfWeek.data?.let { musicResponse ->
 
-                            LaunchedEffect(null) {
-                                homeViewModel.onEvent(HomeEvent.AddMediaItems(musicResponse.results))
-                            }
-
                             LazyColumn(
                                 modifier = Modifier
                                     .fillMaxSize(),
@@ -144,15 +142,27 @@ fun HomeScreen(
                             ) {
                                 item {  }
 
-                                items(musicResponse.results) { music ->
+                                items(
+                                    musicResponse.results,
+                                    key = { it.id }
+                                ) { music ->
                                     MusicCard(
                                         modifier = Modifier
                                             .padding(start = 10.sdp)
                                             .height(46.sdp)
                                             .fillMaxWidth()
                                             .clickable {
-                                                homeViewModel.onEvent(HomeEvent.OnSongSelected(music))
-                                                homeViewModel.onEvent(HomeEvent.PlaySong)
+                                                val newPlaylist = listOf(music)
+
+                                                if (newPlaylist != selectedPlaylist) {
+                                                    setPlaylist(newPlaylist)
+                                                    homeViewModel.onEvent(MusicSelectionEvent.AddMediaItems(newPlaylist))
+                                                }
+
+                                                if(musicControllerUiState.currentMusic?.audio != music.audio) {
+                                                    homeViewModel.onEvent(MusicSelectionEvent.PlaySong(newPlaylist,music))
+                                                }
+
                                                 navController.navigate(ScreensRoutes.DetailedMusicRoute)
                                             },
                                         musicObject = music
