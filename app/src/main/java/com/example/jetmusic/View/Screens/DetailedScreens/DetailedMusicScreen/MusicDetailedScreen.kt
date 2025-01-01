@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -16,6 +17,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.SkipNext
+import androidx.compose.material.icons.filled.SkipPrevious
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,14 +35,18 @@ import ir.kaaveh.sdpcompose.sdp
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
+import com.example.jetmusic.Helpers.TimeHelper
+import com.example.jetmusic.View.Components.Slider.MusicPlayerSlider
 import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
+import com.example.jetmusic.other.events.MusicPlayerEvent
 import com.example.jetmusic.states.PlayerState
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MusicDetailedScreen(
     musicControllerUiState: MusicControllerUiState,
     navigateBack: () -> Unit,
-    onEvent: (MusicEvent) -> Unit,
+    onEvent: (MusicPlayerEvent) -> Unit,
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -48,12 +56,13 @@ fun MusicDetailedScreen(
     musicControllerUiState.currentMusic?.let { musicObject ->
         Column(
             modifier = Modifier
+                .padding(horizontal = 20.sdp)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
                 modifier = Modifier
-                    .padding(start = 14.sdp, top = 20.sdp)
+                    .padding(top = 20.sdp)
                     .fillMaxWidth()
             ) {
                 Icon(
@@ -78,14 +87,14 @@ fun MusicDetailedScreen(
 
             Row(
                 modifier = Modifier
-                    .padding(start = 26.sdp, end = 26.sdp, top = 16.sdp)
+                    .padding(top = 16.sdp)
                     .fillMaxWidth()
             ) {
                 Column(
                 ) {
                     Text(
                         text = musicObject.name,
-                        style = typography().headlineSmall,
+                        style = typography().titleLarge,
                         fontWeight = FontWeight.SemiBold
                     )
 
@@ -100,12 +109,48 @@ fun MusicDetailedScreen(
                 }
             }
 
+            MusicPlayerSlider(
+                modifier = Modifier
+                    .padding(top = 14.sdp)
+                    .height(20.sdp)
+                    .fillMaxWidth(),
+                musicControllerUiState = musicControllerUiState,
+                onEvent = onEvent
+            )
+
             Row(
                 modifier = Modifier
-                    .padding(top = 28.sdp)
+                    .padding(horizontal = 5.sdp, vertical = 2.sdp)
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
+                Text(
+                    text = TimeHelper.formatTimeFromMillis(musicControllerUiState.currentPosition),
+                    style = typography().bodyMedium,
+                    color = Color.Gray
+                )
+
+                Text(
+                    text = TimeHelper.formatTimeFromMillis(musicControllerUiState.totalDuration),
+                    style = typography().bodyMedium,
+                    color = Color.Gray
+                )
+            }
+
+            Row(
+                modifier = Modifier
+                    .padding(top = 10.sdp),
+                horizontalArrangement = Arrangement.spacedBy(12.sdp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.SkipPrevious,
+                    contentDescription = "play/pause",
+                    tint = colorScheme.inversePrimary,
+                    modifier = Modifier
+                        .size(33.sdp)
+                )
+
                 Box(
                     modifier = Modifier
                         .size(46.sdp)
@@ -113,9 +158,9 @@ fun MusicDetailedScreen(
                         .background(colorScheme.inversePrimary)
                         .clickable {
                             if (isPlaying) {
-                                onEvent(MusicEvent.PauseSong)
+                                onEvent(MusicPlayerEvent.PauseSong)
                             } else {
-                                onEvent(MusicEvent.ResumeSong)
+                                onEvent(MusicPlayerEvent.ResumeSong)
                             }
                         },
                     contentAlignment = Alignment.Center,
@@ -128,6 +173,14 @@ fun MusicDetailedScreen(
                             .size(33.sdp)
                     )
                 }
+
+                Icon(
+                    imageVector = Icons.Filled.SkipNext,
+                    contentDescription = "play/pause",
+                    tint = colorScheme.inversePrimary,
+                    modifier = Modifier
+                        .size(33.sdp)
+                )
             }
         }
     }
