@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                    MainScreen(
-                       sharedViewModel = sharedViewModel
+                       sharedMusicControllerViewModel = sharedViewModel
                    )
                 }
             }
