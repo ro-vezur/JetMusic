@@ -25,19 +25,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
+import com.example.jetmusic.BOTTOM_MUSIC_PLAYER_HEIGHT
 import com.example.jetmusic.BOTTOM_NAVIGATION_BAR_HEIGHT
 import com.example.jetmusic.data.DTOs.API.ArtistDTOs.ArtistResponse
 import com.example.jetmusic.data.enums.Genres.MusicGenres
 import com.example.jetmusic.Resources.ResultResource
 import com.example.jetmusic.View.Components.Cards.ArtistCard
 import com.example.jetmusic.View.Components.Cards.MusicCards.MusicGenreCard
+import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
 
 @Composable
 fun DiscoverScreen(
     modifier: Modifier,
-    trendingArtistsResult: ResultResource<ArtistResponse>
+    trendingArtistsResult: ResultResource<ArtistResponse>,
+    musicControllerUiState: MusicControllerUiState,
 ) {
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp
@@ -146,9 +149,14 @@ fun DiscoverScreen(
         }
 
         item {
-            Spacer(
-                modifier = Modifier.height((BOTTOM_NAVIGATION_BAR_HEIGHT + 15).sdp)
-            )
+            if(musicControllerUiState.currentMusic == null) {
+                Spacer(modifier = Modifier.height((BOTTOM_NAVIGATION_BAR_HEIGHT + 15).sdp))
+            } else {
+                Spacer(
+                    modifier = Modifier
+                        .height((BOTTOM_NAVIGATION_BAR_HEIGHT + BOTTOM_MUSIC_PLAYER_HEIGHT + 15).sdp)
+                )
+            }
         }
     }
 }
