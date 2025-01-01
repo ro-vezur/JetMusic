@@ -110,7 +110,6 @@ fun MainScreen(
 
                 user?.let { checkedUser ->
                     HomeScreen(
-                        modifier = Modifier,
                         navController = navController,
                         user = checkedUser,
                         musicControllerUiState = musicControllerUiState,
