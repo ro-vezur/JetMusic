@@ -8,7 +8,7 @@ import com.example.jetmusic.data.DTOs.UserDTOs.User
 import com.example.jetmusic.View.Screens.StartScreen.Screens.LogInScreen
 import com.example.jetmusic.View.Screens.StartScreen.Screens.SignUpScreen
 import com.example.jetmusic.View.Screens.StartScreen.Screens.WelcomeScreen
-import com.example.jetmusic.View.ScreensRoutes
+import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
 
 fun NavGraphBuilder.startScreensGraph(
     navController: NavController,

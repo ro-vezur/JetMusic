@@ -44,7 +44,7 @@ import com.example.jetmusic.Helpers.Validation.Result.ValidationResults
 import com.example.jetmusic.View.Components.Buttons.TextButton
 import com.example.jetmusic.View.Components.Buttons.TurnBackButton
 import com.example.jetmusic.View.Components.InputFields.ValidationTextInputField
-import com.example.jetmusic.View.ScreensRoutes
+import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
 import com.example.jetmusic.ViewModels.StartScreenViewModels.SignUpViewModel
 import com.example.jetmusic.ui.theme.tidalGradient
 import com.example.jetmusic.ui.theme.typography
