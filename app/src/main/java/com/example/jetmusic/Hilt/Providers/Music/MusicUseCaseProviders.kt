@@ -1,14 +1,16 @@
 package com.example.jetmusic.Hilt.Providers.Music
 
+import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
 import com.example.jetmusic.domain.service.MusicController
 import com.example.jetmusic.domain.usecases.musicController.DestroyMediaControllerUseCase
 import com.example.jetmusic.domain.usecases.musicController.SetMediaControllerCallbackUseCase
-import com.example.jetmusic.domain.usecases.musicController.music.AddMediaItemsUseCase
+import com.example.jetmusic.domain.usecases.musicController.music.SetMediaItemsUseCase
 import com.example.jetmusic.domain.usecases.musicController.music.GetCurrentMusicPositionUseCase
 import com.example.jetmusic.domain.usecases.musicController.music.PauseMusicUseCase
 import com.example.jetmusic.domain.usecases.musicController.music.PlayMusicUseCase
 import com.example.jetmusic.domain.usecases.musicController.music.ResumeMusicUseCase
 import com.example.jetmusic.domain.usecases.musicController.music.SeekMusicToPositionUseCase
+import com.example.jetmusic.domain.usecases.musicController.music.SetMediaItemUseCase
 import com.example.jetmusic.domain.usecases.musicController.music.SkipToNextMusicUseCase
 import com.example.jetmusic.domain.usecases.musicController.music.SkipToPreviousMusicUseCase
 import dagger.Module
@@ -23,8 +25,13 @@ object MusicUseCaseProviders {
 
     @Provides
     @Singleton
+    fun provideAddMediaItemUseCase(musicController: MusicController) =
+       SetMediaItemUseCase(musicController)
+
+    @Provides
+    @Singleton
     fun provideAddMediaItemsUseCase(musicController: MusicController) =
-        AddMediaItemsUseCase(musicController)
+        SetMediaItemsUseCase(musicController)
 
     @Provides
     @Singleton

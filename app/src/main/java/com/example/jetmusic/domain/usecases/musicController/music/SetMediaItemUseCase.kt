@@ -4,8 +4,8 @@ import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
 import com.example.jetmusic.domain.service.MusicController
 import javax.inject.Inject
 
-class SkipToNextMusicUseCase @Inject constructor(private val musicController: MusicController) {
-    operator fun invoke() {
-        musicController.skipToNextSong()
+class SetMediaItemUseCase @Inject constructor(private val musicController: MusicController) {
+    operator fun invoke(musicObject: MusicObject) {
+        musicController.setMediaItem(musicObject)
     }
 }
