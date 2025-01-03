@@ -21,6 +21,7 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -35,24 +36,27 @@ import com.example.jetmusic.Resources.ResultResource
 import com.example.jetmusic.View.Components.Cards.MusicCards.MusicCard
 import com.example.jetmusic.View.Components.TabsRow.CustomScrollableTabRow
 import com.example.jetmusic.View.Screens.HomeScreen.TabsCategories.TabsHomeCategories
-import com.example.jetmusic.View.ScreensRoutes
+import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
 import com.example.jetmusic.ViewModels.MainScreensViewModels.HomeViewModel
-import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
+import com.example.jetmusic.data.DTOs.API.PlaylistDTOs.Detailed.DetailedPlaylistObject
 import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
 import com.example.jetmusic.other.events.MusicSelectionEvent
 import com.example.jetmusic.ui.theme.darkGrey
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
     navController: NavController,
     user: User,
     musicControllerUiState: MusicControllerUiState,
-    selectedPlaylist: List<MusicObject>,
-    setPlaylist: (List<MusicObject>) -> Unit,
+    playlist: DetailedPlaylistObject?,
+    setPlaylist: (DetailedPlaylistObject?) -> Unit,
+    onEvent: (MusicSelectionEvent) -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
+    val scope = rememberCoroutineScope()
 
     val pagerState = rememberPagerState { TabsHomeCategories.entries.size }
     val musicOfWeek by homeViewModel.musicOfWeek.collectAsStateWithLifecycle()
@@ -152,18 +156,15 @@ fun HomeScreen(
                                             .height(46.sdp)
                                             .fillMaxWidth()
                                             .clickable {
-                                                val newPlaylist = listOf(music)
+                                                if (musicControllerUiState.currentMusic?.audio != music.audio) {
+                                                    val musicList = listOf(music)
 
-                                                if (newPlaylist != selectedPlaylist) {
-                                                    setPlaylist(newPlaylist)
-                                                    homeViewModel.onEvent(MusicSelectionEvent.AddMediaItems(newPlaylist))
+                                                    setPlaylist(DetailedPlaylistObject(musicList))
+                                                    onEvent(MusicSelectionEvent.SetMediaItem(music))
+                                                    onEvent(MusicSelectionEvent.PlaySong(musicList, music))
                                                 }
 
-                                                if(musicControllerUiState.currentMusic?.audio != music.audio) {
-                                                    homeViewModel.onEvent(MusicSelectionEvent.PlaySong(newPlaylist,music))
-                                                }
-
-                                                navController.navigate(ScreensRoutes.DetailedMusicRoute)
+                                                navController.navigate(ScreensRoutes.DetailedScreens.DetailedMusicRoute)
                                             },
                                         musicObject = music
                                     )
