@@ -2,9 +2,9 @@ package com.example.jetmusic.data.Remote.API
 
 import com.example.jetmusic.data.DTOs.API.ArtistDTOs.ArtistResponse
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicResponse
-import com.example.jetmusic.data.DTOs.API.PlaylistDTOs.PlaylistResponse
+import com.example.jetmusic.data.DTOs.API.PlaylistDTOs.Detailed.DetailedPlaylistResponse
+import com.example.jetmusic.data.DTOs.API.PlaylistDTOs.Simplified.SimplifiedPlaylistResponse
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
@@ -13,6 +13,11 @@ interface ApiService {
     suspend fun musicById(
         @Query("id") id: String,
     ): MusicResponse
+
+    @GET("playlists/tracks?")
+    suspend fun playlistById(
+        @Query("id") id: String,
+    ): DetailedPlaylistResponse
 
     @GET("tracks/?order=popularity_week")
     suspend fun bestMusicsOfWeek(
@@ -25,22 +30,22 @@ interface ApiService {
 
     @GET("artists/?")
     suspend fun searchArtists(
-        @Query("search") search: String,
+        @Query("name") search: String,
         @Query("offset") offset: Int,
         @Query("limit") limit: Int = 5
     ): ArtistResponse
 
     @GET("tracks/?")
     suspend fun searchTracks(
-        @Query("search") search: String,
+        @Query("name") search: String,
         @Query("offset") offset: Int,
         @Query("limit") limit: Int = 5,
     ): MusicResponse
 
     @GET("playlists/?")
     suspend fun searchPlaylists(
-        @Query("search") search: String,
+        @Query("name") search: String,
         @Query("offset") offset: Int,
         @Query("limit") limit: Int = 5,
-    ): PlaylistResponse
+    ): SimplifiedPlaylistResponse
 }
