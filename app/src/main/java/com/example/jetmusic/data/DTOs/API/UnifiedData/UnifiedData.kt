@@ -2,12 +2,12 @@ package com.example.jetmusic.data.DTOs.API.UnifiedData
 
 import com.example.jetmusic.data.DTOs.API.ArtistDTOs.ArtistObject
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
-import com.example.jetmusic.data.DTOs.API.PlaylistDTOs.PlaylistObject
+import com.example.jetmusic.data.DTOs.API.PlaylistDTOs.Simplified.SimplifiedPlaylistObject
 
 data class UnifiedData(
     val id: String,
     val name: String,
-    val image: String,
+    val image: String?,
     val type: UnifiedDataTypes,
 ) {
     companion object {
@@ -29,7 +29,7 @@ data class UnifiedData(
             )
         }
 
-        fun fromPlaylist( playlistObject: PlaylistObject): UnifiedData {
+        fun fromPlaylist( playlistObject: SimplifiedPlaylistObject): UnifiedData {
             return UnifiedData(
                 id = playlistObject.id,
                 name = playlistObject.name,
