@@ -15,7 +15,9 @@ interface MusicController {
     ) -> Unit
     )?
 
-    fun addMediaItems(musicList: List<MusicObject>)
+    fun setMediaItem(musicObject: MusicObject)
+
+    fun setMediaItems(musicList: List<MusicObject>)
 
     fun play(mediaItemIndex: Int)
 

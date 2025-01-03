@@ -48,7 +48,6 @@ class MusicControllerImpl(context: Context) : MusicController {
             object : Player.Listener {
                 override fun onEvents(player: Player, events: Player.Events) {
                     super.onEvents(player, events)
-
                     with(player) {
                         mediaControllerCallback?.invoke(
                             playbackState.toPlayerState(isPlaying),
@@ -71,8 +70,13 @@ class MusicControllerImpl(context: Context) : MusicController {
             else -> if (isPlaying) PlayerState.PLAYING else PlayerState.PAUSED
         }
 
-    override fun addMediaItems(musicList: List<MusicObject>) {
-        val mediaItems = musicList.map { it.toMediaItem() }
+    override fun setMediaItem(musicObject: MusicObject) {
+        mediaController?.setMediaItem(musicObject.toMediaItem())
+    }
+
+    override fun setMediaItems(musicList: List<MusicObject>) {
+        val filteredMedia = musicList.filter { it.image != null}
+        val mediaItems = filteredMedia.map { it.toMediaItem() }
 
         mediaController?.setMediaItems(mediaItems)
     }
