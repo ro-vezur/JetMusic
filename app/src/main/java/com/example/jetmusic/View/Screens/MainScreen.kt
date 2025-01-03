@@ -1,11 +1,9 @@
 package com.example.jetmusic.View.Screens
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController
@@ -22,26 +20,34 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.example.jetmusic.BOTTOM_MUSIC_PLAYER_HEIGHT
 import com.example.jetmusic.Extensions.NavigateExtensions.navigateBack
+import com.example.jetmusic.Helpers.SerializationClass
 import com.example.jetmusic.View.Components.BottomBar.MusicBar.MusicBottomBar
+import com.example.jetmusic.View.ScreenRoutes.ScreenRoutesAdditionalParameters.DetailedPlaylistRouteParameters
 import com.example.jetmusic.View.Screens.DetailedScreens.DetailedMusicScreen.MusicDetailedScreen
+import com.example.jetmusic.View.Screens.DetailedScreens.DetailedPlaylistScreen.DetailedPlaylistScreen
 import com.example.jetmusic.View.Screens.HomeScreen.HomeScreen
 import com.example.jetmusic.View.Screens.SearchScreen.SearchScreen
 import com.example.jetmusic.View.Screens.StartScreen.startScreensGraph
-import com.example.jetmusic.View.ScreensRoutes
-import com.example.jetmusic.ViewModels.DetailedScreensViewModels.MusicDetailedViewModel
+import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
+import com.example.jetmusic.ViewModels.MusicPlayerViewModel
 import com.example.jetmusic.ViewModels.MainScreensViewModels.SearchViewModel
 import com.example.jetmusic.ViewModels.SharedViewModels.SharedMusicControllerViewModel
+import com.example.jetmusic.ViewModels.SharedViewModels.SharedMusicSelectionViewModel
 import com.example.jetmusic.ViewModels.SharedViewModels.UserViewModel
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
 import ir.kaaveh.sdpcompose.sdp
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 @Composable
 fun MainScreen(
     sharedMusicControllerViewModel: SharedMusicControllerViewModel,
+    sharedMusicSelectionViewModel: SharedMusicSelectionViewModel = hiltViewModel(),
 ) {
     val colors = colorScheme
 
@@ -64,6 +70,8 @@ fun MainScreen(
         containerColor = colors.background,
         bottomBar = {
             if(showBottomBar) {
+                val selectedPlaylist by sharedMusicSelectionViewModel.selectedPlaylist.collectAsStateWithLifecycle()
+
                 Column {
                     MusicBottomBar(
                         modifier = Modifier
@@ -71,7 +79,21 @@ fun MainScreen(
                             .height(BOTTOM_MUSIC_PLAYER_HEIGHT.sdp)
                             .hazeChild(hazeState)
                             .clickable {
-                                navController.navigate(ScreensRoutes.DetailedMusicRoute)
+                                selectedPlaylist?.apply {
+                                    if(id.isBlank()) {
+                                        navController.navigate(ScreensRoutes.DetailedScreens.DetailedMusicRoute)
+                                    } else {
+                                        val playlistRouteParameters = DetailedPlaylistRouteParameters(
+                                            name = name,
+                                            image = musicControllerUiState.currentMusic?.image.toString(),
+                                            musicList = tracks
+                                        )
+
+                                        navController.navigate(
+                                            ScreensRoutes.DetailedScreens.DetailedPlaylistRoute(Json.encodeToString(playlistRouteParameters))
+                                        )
+                                    }
+                                }
                             },
                         musicControllerUiState = musicControllerUiState,
                     )
@@ -106,15 +128,16 @@ fun MainScreen(
                 showBottomBar = true
 
                 val user by userViewModel.user.collectAsStateWithLifecycle()
-                val selectedPlaylist by sharedMusicControllerViewModel.selectedPlaylist.collectAsStateWithLifecycle()
+                val selectedPlaylist by sharedMusicSelectionViewModel.selectedPlaylist.collectAsStateWithLifecycle()
 
                 user?.let { checkedUser ->
                     HomeScreen(
                         navController = navController,
                         user = checkedUser,
                         musicControllerUiState = musicControllerUiState,
-                        selectedPlaylist = selectedPlaylist,
-                        setPlaylist = { newPlaylist -> sharedMusicControllerViewModel.setPlaylist(newPlaylist)}
+                        playlist = selectedPlaylist,
+                        setPlaylist = sharedMusicSelectionViewModel::setPlaylist,
+                        onEvent = sharedMusicSelectionViewModel::onEvent
                     )
                 }
             }
@@ -123,13 +146,14 @@ fun MainScreen(
                 showBottomBar = true
 
                 val searchViewModel: SearchViewModel = hiltViewModel(viewModelStoreOwner)
-                val selectedPlaylist by sharedMusicControllerViewModel.selectedPlaylist.collectAsStateWithLifecycle()
+                val playerMusicList by sharedMusicSelectionViewModel.selectedPlaylist.collectAsStateWithLifecycle()
 
                 SearchScreen(
                     navController = navController,
                     musicControllerUiState = musicControllerUiState,
-                    selectedPlaylist = selectedPlaylist,
-                    setPlaylist = { newPlaylist -> sharedMusicControllerViewModel.setPlaylist(newPlaylist)},
+                    playlist = playerMusicList,
+                    setPlaylist = sharedMusicSelectionViewModel::setPlaylist,
+                    onEvent = sharedMusicSelectionViewModel::onEvent,
                     searchViewModel = searchViewModel,
                 )
             }
@@ -138,15 +162,27 @@ fun MainScreen(
                 showBottomBar = true
             }
 
-            composable<ScreensRoutes.DetailedMusicRoute> { navBackStackEntry ->
+            composable<ScreensRoutes.DetailedScreens.DetailedMusicRoute> { navBackStackEntry ->
                 showBottomBar = false
 
-                val musicDetailedViewModel: MusicDetailedViewModel = hiltViewModel()
+                val musicDetailedViewModel: MusicPlayerViewModel = hiltViewModel()
 
                 MusicDetailedScreen(
                     musicControllerUiState = musicControllerUiState,
                     navigateBack = { navController.navigateBack() },
                     onEvent = musicDetailedViewModel::onEvent,
+                )
+            }
+
+            composable<ScreensRoutes.DetailedScreens.DetailedPlaylistRoute>() { navBackStackEntry ->
+                showBottomBar = false
+
+                val playlistObject = navBackStackEntry.toRoute<ScreensRoutes.DetailedScreens.DetailedPlaylistRoute>()
+
+                DetailedPlaylistScreen(
+                    navController = navController,
+                    playlistObject = SerializationClass.decode(playlistObject.parametersJson),
+                    musicControllerUiState = musicControllerUiState,
                 )
             }
         }
