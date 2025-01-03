@@ -1,6 +1,7 @@
 package com.example.jetmusic.View.Components.BottomBar.MusicBar
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
@@ -26,7 +29,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.jetmusic.View.Components.Slider.MusicPlayerSlider
 import com.example.jetmusic.other.events.MusicPlayerEvent
-import com.example.jetmusic.ViewModels.DetailedScreensViewModels.MusicDetailedViewModel
+import com.example.jetmusic.ViewModels.MusicPlayerViewModel
 import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
 import com.example.jetmusic.states.PlayerState
 import com.example.jetmusic.ui.theme.typography
@@ -37,9 +40,10 @@ import ir.kaaveh.sdpcompose.sdp
 fun MusicBottomBar(
     modifier: Modifier = Modifier,
     musicControllerUiState: MusicControllerUiState,
-    musicDetailedViewModel: MusicDetailedViewModel = hiltViewModel(),
+    musicDetailedViewModel: MusicPlayerViewModel = hiltViewModel(),
 ) {
     val imageSize = 38.sdp
+    val scrollState = rememberScrollState()
 
     musicControllerUiState.currentMusic?.let { musicObject ->
 
@@ -65,22 +69,29 @@ fun MusicBottomBar(
                         .clip(RoundedCornerShape(8.sdp))
                 )
 
-                Column(
+                Row(
                     modifier = Modifier
-                        .padding(top = 1.sdp, start = 11.sdp)
-                        .height(imageSize),
-                    verticalArrangement = Arrangement.spacedBy(2.sdp)
-                ) {
-                    Text(
-                        text = musicObject.name,
-                        fontSize = typography().bodyMedium.fontSize * 1.05f,
-                    )
+                        .width(185.sdp)
+                        .height(imageSize)
+                        .horizontalScroll(scrollState),
+                ){
+                    Column(
+                        modifier = Modifier
+                            .padding(top = 1.sdp, start = 11.sdp)
+                            .height(imageSize),
+                        verticalArrangement = Arrangement.spacedBy(2.sdp)
+                    ) {
+                        Text(
+                            text = musicObject.name,
+                            fontSize = typography().bodyMedium.fontSize * 1.05f,
+                        )
 
-                    Text(
-                        text = musicObject.artist_name,
-                        fontSize = typography().bodyMedium.fontSize,
-                        color = Color.Gray
-                    )
+                        Text(
+                            text = musicObject.artist_name,
+                            fontSize = typography().bodyMedium.fontSize,
+                            color = Color.Gray
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.weight(1f))
