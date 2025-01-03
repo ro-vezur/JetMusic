@@ -145,10 +145,14 @@ fun MusicDetailedScreen(
             ) {
                 Icon(
                     imageVector = Icons.Filled.SkipPrevious,
-                    contentDescription = "play/pause",
+                    contentDescription = "skip previous",
                     tint = colorScheme.inversePrimary,
                     modifier = Modifier
                         .size(33.sdp)
+                        .clip(RoundedCornerShape(8.sdp))
+                        .clickable {
+                            onEvent(MusicPlayerEvent.SkipToPreviousSong)
+                        }
                 )
 
                 Box(
@@ -176,10 +180,14 @@ fun MusicDetailedScreen(
 
                 Icon(
                     imageVector = Icons.Filled.SkipNext,
-                    contentDescription = "play/pause",
+                    contentDescription = "skip next",
                     tint = colorScheme.inversePrimary,
                     modifier = Modifier
                         .size(33.sdp)
+                        .clip(RoundedCornerShape(8.sdp))
+                        .clickable {
+                            onEvent(MusicPlayerEvent.SkipToNextSong)
+                        }
                 )
             }
         }

@@ -1,8 +1,9 @@
-package com.example.jetmusic.ViewModels.DetailedScreensViewModels
+package com.example.jetmusic.ViewModels
 
 import androidx.lifecycle.ViewModel
 import com.example.jetmusic.other.events.MusicPlayerEvent
 import com.example.jetmusic.domain.usecases.musicController.music.PauseMusicUseCase
+import com.example.jetmusic.domain.usecases.musicController.music.PlayMusicUseCase
 import com.example.jetmusic.domain.usecases.musicController.music.ResumeMusicUseCase
 import com.example.jetmusic.domain.usecases.musicController.music.SeekMusicToPositionUseCase
 import com.example.jetmusic.domain.usecases.musicController.music.SkipToNextMusicUseCase
@@ -11,7 +12,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class MusicDetailedViewModel @Inject constructor(
+class MusicPlayerViewModel @Inject constructor(
+    private val playMusicUseCase: PlayMusicUseCase,
     private val pauseSongUseCase: PauseMusicUseCase,
     private val resumeSongUseCase: ResumeMusicUseCase,
     private val skipToNextSongUseCase: SkipToNextMusicUseCase,
@@ -20,24 +22,13 @@ class MusicDetailedViewModel @Inject constructor(
 ) : ViewModel() {
     fun onEvent(event: MusicPlayerEvent) {
         when (event) {
-            MusicPlayerEvent.PauseSong -> pauseMusic()
-            MusicPlayerEvent.ResumeSong -> resumeMusic()
+            is MusicPlayerEvent.PlaySong -> playMusicUseCase(event.mediaItemIndex)
+            MusicPlayerEvent.PauseSong -> pauseSongUseCase()
+            MusicPlayerEvent.ResumeSong -> resumeSongUseCase()
             is MusicPlayerEvent.SeekSongToPosition -> seekToPosition(event.position)
-            MusicPlayerEvent.SkipToNextSong -> skipToNextSong()
+            MusicPlayerEvent.SkipToNextSong -> skipToNextSongUseCase()
             MusicPlayerEvent.SkipToPreviousSong -> skipToPreviousSong()
         }
-    }
-
-    private fun pauseMusic() {
-        pauseSongUseCase()
-    }
-
-    private fun resumeMusic() {
-        resumeSongUseCase()
-    }
-
-    private fun skipToNextSong() = skipToNextSongUseCase {
-
     }
 
     private fun skipToPreviousSong() = skipToPreviousSongUseCase {
@@ -47,5 +38,4 @@ class MusicDetailedViewModel @Inject constructor(
     private fun seekToPosition(position: Long) {
         seekSongToPositionUseCase(position)
     }
-
 }

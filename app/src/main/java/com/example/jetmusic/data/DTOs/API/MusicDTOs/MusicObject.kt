@@ -1,5 +1,7 @@
 package com.example.jetmusic.data.DTOs.API.MusicDTOs
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -10,8 +12,8 @@ data class MusicObject(
     val duration: Int,
     val artist_id: String,
     val artist_name: String,
-    val audio: String,
+    val audio: String?,
     @SerialName("audiodownload") val downloadUrl: String?,
-    val image: String,
+    val image: String?,
     @SerialName("audiodownload_allowed") val downloadAllowed: Boolean,
 )
