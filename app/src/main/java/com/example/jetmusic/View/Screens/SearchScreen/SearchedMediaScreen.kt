@@ -27,6 +27,7 @@ fun SearchedMediaScreen(
     modifier: Modifier = Modifier,
     paginatedSearchedData: LazyPagingItems<UnifiedData>,
     navigateToSelectedMusic: (id: String) -> Unit,
+    navigateToSelectedPlaylist: (id: String) -> Unit,
 ) {
     LazyColumn(
         modifier,
@@ -46,11 +47,9 @@ fun SearchedMediaScreen(
                         .clip(RoundedCornerShape(8.sdp))
                         .clickable {
                             when(unifiedData.type) {
-                                UnifiedDataTypes.MUSIC -> {
-                                    navigateToSelectedMusic(unifiedData.id)
-                                }
-                                UnifiedDataTypes.ARTIST -> {}
-                                UnifiedDataTypes.PLAYLIST -> {}
+                                UnifiedDataTypes.MUSIC -> { navigateToSelectedMusic(unifiedData.id) }
+                                UnifiedDataTypes.ARTIST -> { }
+                                UnifiedDataTypes.PLAYLIST -> { navigateToSelectedPlaylist(unifiedData.id) }
                             }
                         },
                     unifiedData = unifiedData

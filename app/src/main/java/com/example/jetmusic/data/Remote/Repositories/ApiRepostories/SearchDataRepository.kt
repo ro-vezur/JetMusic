@@ -22,4 +22,6 @@ class SearchDataRepository @Inject constructor(
     }.flow
 
     suspend fun getMusicById(id: String) = apiService.musicById(id)
+
+    suspend fun getPlaylistById(id: String) = apiService.playlistById(id)
 }

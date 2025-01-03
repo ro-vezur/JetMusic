@@ -9,11 +9,6 @@ import com.example.jetmusic.data.DTOs.API.UnifiedData.UnifiedData
 import com.example.jetmusic.data.Remote.Repositories.ApiRepostories.ArtistsRepository
 import com.example.jetmusic.data.Remote.Repositories.ApiRepostories.SearchDataRepository
 import com.example.jetmusic.Resources.ResultResource
-import com.example.jetmusic.other.events.MusicSelectionEvent
-import com.example.jetmusic.domain.usecases.musicController.music.AddMediaItemsUseCase
-import com.example.jetmusic.domain.usecases.musicController.music.PauseMusicUseCase
-import com.example.jetmusic.domain.usecases.musicController.music.PlayMusicUseCase
-import com.example.jetmusic.domain.usecases.musicController.music.ResumeMusicUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,10 +21,6 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     private val artistsRepository: ArtistsRepository,
     private val searchDataRepository: SearchDataRepository,
-    private val addMediaItemsUseCase: AddMediaItemsUseCase,
-    private val playMusicUseCase: PlayMusicUseCase,
-    private val pauseMusicUseCase: PauseMusicUseCase,
-    private val resumeMusicUseCase: ResumeMusicUseCase,
 ): ViewModel() {
 
     private val _trendingArtists: MutableStateFlow<ResultResource<ArtistResponse>> = MutableStateFlow(ResultResource.Loading())
@@ -46,18 +37,6 @@ class SearchViewModel @Inject constructor(
 
     init {
         setTrendingArtists()
-    }
-
-    fun onEvent(event: MusicSelectionEvent) {
-        when (event) {
-            is MusicSelectionEvent.AddMediaItems -> addMediaItemsUseCase(musicList = event.musicList)
-
-            is MusicSelectionEvent.PlaySong ->  playMusicUseCase(event.musicList.indexOf(event.selectedMusic))
-
-            MusicSelectionEvent.PauseSong -> pauseMusicUseCase()
-
-            MusicSelectionEvent.ResumeSong -> resumeMusicUseCase()
-        }
     }
 
     fun setTrendingArtists() = viewModelScope.launch {
@@ -92,5 +71,7 @@ class SearchViewModel @Inject constructor(
     }
 
     suspend fun getMusicById(id: String) = searchDataRepository.getMusicById(id)
+
+    suspend fun getPlaylistById(id: String) = searchDataRepository.getPlaylistById(id)
 
 }

@@ -1,5 +1,6 @@
 package com.example.jetmusic.View.Screens.SearchScreen
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
@@ -43,19 +44,22 @@ import androidx.navigation.NavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.jetmusic.View.Components.Buttons.TextButton
 import com.example.jetmusic.View.Components.InputFields.SearchField
-import com.example.jetmusic.other.events.MusicPlayerEvent
-import com.example.jetmusic.View.ScreensRoutes
-import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
+import com.example.jetmusic.View.ScreenRoutes.ScreenRoutesAdditionalParameters.DetailedPlaylistRouteParameters
+import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
+import com.example.jetmusic.data.DTOs.API.PlaylistDTOs.Detailed.DetailedPlaylistObject
 import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
 import com.example.jetmusic.other.events.MusicSelectionEvent
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 @Composable
 fun SearchScreen(
     navController: NavController,
     musicControllerUiState: MusicControllerUiState,
-    selectedPlaylist: List<MusicObject>,
-    setPlaylist: (List<MusicObject>) -> Unit,
+    playlist: DetailedPlaylistObject?,
+    setPlaylist: (DetailedPlaylistObject?) -> Unit,
+    onEvent: (MusicSelectionEvent) -> Unit,
     searchViewModel: SearchViewModel,
 ) {
     val focusManager = LocalFocusManager.current
@@ -212,20 +216,49 @@ fun SearchScreen(
                         if(selectedMusicResponse.results.isNotEmpty()) {
                             val selectedMusic = selectedMusicResponse.results.first()
 
-                            navController.navigate(ScreensRoutes.DetailedMusicRoute)
-
-                            val newPlaylist = listOf(selectedMusic)
-
-                            if (newPlaylist != selectedPlaylist) {
-                                setPlaylist(newPlaylist)
-                                searchViewModel.onEvent(MusicSelectionEvent.AddMediaItems(newPlaylist))
-                            }
-
                             if(musicControllerUiState.currentMusic?.audio != selectedMusic.audio) {
-                                searchViewModel.onEvent(MusicSelectionEvent.PlaySong(newPlaylist,selectedMusic))
+                                setPlaylist(DetailedPlaylistObject(selectedMusicResponse.results))
+                                onEvent(MusicSelectionEvent.SetMediaItem(selectedMusic))
+                                onEvent(MusicSelectionEvent.PlaySong(selectedMusicResponse.results,selectedMusic))
                             }
 
-                            navController.navigate(ScreensRoutes.DetailedMusicRoute)
+                            navController.navigate(ScreensRoutes.DetailedScreens.DetailedMusicRoute)
+                        }
+                    }
+                },
+                navigateToSelectedPlaylist = { id ->
+                    scope.launch {
+                        val selectedPlaylistResponse = searchViewModel.getPlaylistById(id)
+
+                        if(selectedPlaylistResponse.results.isNotEmpty()) {
+                            val selectedPlaylist = selectedPlaylistResponse.results.first()
+
+                            val playlistTracks = selectedPlaylist.tracks.filter { it.audio != null }
+
+                            if(playlistTracks.isNotEmpty()) {
+                                if (playlistTracks != playlist?.tracks) {
+                                    setPlaylist(selectedPlaylist)
+                                    onEvent(MusicSelectionEvent.SetMediaItems(playlistTracks))
+
+                                    musicControllerUiState.apply {
+                                        if(playlistTracks.contains(currentMusic) && currentMusic != null) {
+                                            onEvent(MusicSelectionEvent.PlaySong(playlistTracks,currentMusic))
+                                        }
+                                    }
+                                }
+
+                                val playlistRouteParameters = DetailedPlaylistRouteParameters(
+                                    name = selectedPlaylist.name,
+                                    image = musicControllerUiState.currentMusic?.image.toString(),
+                                    musicList = playlistTracks
+                                )
+
+                                navController.navigate(
+                                    ScreensRoutes.DetailedScreens.DetailedPlaylistRoute(
+                                        parametersJson = Json.encodeToString(playlistRouteParameters)
+                                    )
+                                )
+                            }
                         }
                     }
                 }
