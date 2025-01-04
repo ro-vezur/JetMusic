@@ -9,11 +9,13 @@ import kotlinx.serialization.Serializable
 data class MusicObject(
     val id: String,
     val name: String,
+    val artist_id: String?,
+    val artist_name: String?,
+    val album_id: String,
+    val album_name: String?,
     val duration: Int,
-    val artist_id: String,
-    val artist_name: String,
     val audio: String?,
-    @SerialName("audiodownload") val downloadUrl: String?,
+  //  @SerialName("audiodownload") val downloadUrl: String?,
     val image: String?,
-    @SerialName("audiodownload_allowed") val downloadAllowed: Boolean,
+  //  @SerialName("audiodownload_allowed") val downloadAllowed: Boolean,
 )

@@ -4,9 +4,12 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -17,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.AsyncImage
+import com.example.jetmusic.Helpers.MusicObjectHelper
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
@@ -24,53 +28,72 @@ import ir.kaaveh.sdpcompose.sdp
 @Composable
 fun MusicCard(
     modifier: Modifier = Modifier,
-    musicObject: MusicObject
+    musicObject: MusicObject,
+    trailingIcon: (@Composable () -> Unit)? = null,
+    bottomBar: (@Composable () -> Unit)? = null,
 ) {
     val scrollState = rememberScrollState()
 
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start
-    ) {
+    val musicObjectHelper = MusicObjectHelper(musicObject)
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
         Row(
-        modifier = Modifier
-            .fillMaxWidth(0.8f)
-            .horizontalScroll(scrollState)
-            .clip(RoundedCornerShape(10.sdp))
+            modifier = modifier
+                .clip(RoundedCornerShape(10.sdp)),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
         ) {
             AsyncImage(
                 model = musicObject.image,
                 contentDescription = "music image",
                 contentScale = ContentScale.FillHeight,
                 modifier = Modifier
-                    .fillMaxHeight()
+                    .fillMaxHeight(0.9f)
                     .clip(RoundedCornerShape(10.sdp))
             )
 
-            Column(
+            Row(
                 modifier = Modifier
-                    .padding(start = 6.sdp)
-                    .fillMaxHeight(),
-                verticalArrangement = Arrangement.Center
+                    .width(185.sdp)
+                    .fillMaxHeight()
+                    .horizontalScroll(scrollState),
             ) {
-                Text(
+                Column(
                     modifier = Modifier
-                        .padding(bottom = 4.sdp),
-                    text = musicObject.name,
-                    fontSize = typography().bodyMedium.fontSize / 1.04f,
-                    maxLines = 1
-                )
+                        .padding(start = 9.sdp)
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .padding(bottom = 4.sdp),
+                        text = musicObject.name,
+                        fontSize = typography().bodyMedium.fontSize / 1.04f,
+                        maxLines = 1
+                    )
 
-                Text(
-                    modifier = Modifier
-                        .padding(top = 2.sdp),
-                    text = musicObject.artist_name,
-                    fontSize = typography().bodySmall.fontSize * 1.05f,
-                    color = Color.Gray,
-                    maxLines = 1
-                )
+                    Text(
+                        modifier = Modifier
+                            .padding(top = 2.sdp),
+                        text = musicObjectHelper.musicArtistName(),
+                        fontSize = typography().bodySmall.fontSize * 1.05f,
+                        color = Color.Gray,
+                        maxLines = 1
+                    )
+                }
             }
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            if (trailingIcon != null) {
+                trailingIcon()
+            }
+        }
+
+        if (bottomBar != null) {
+            bottomBar()
         }
     }
 }

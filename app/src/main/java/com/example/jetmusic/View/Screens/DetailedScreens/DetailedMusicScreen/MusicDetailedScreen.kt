@@ -35,6 +35,7 @@ import ir.kaaveh.sdpcompose.sdp
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
+import com.example.jetmusic.Helpers.MusicObjectHelper
 import com.example.jetmusic.Helpers.TimeHelper
 import com.example.jetmusic.View.Components.Slider.MusicPlayerSlider
 import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
@@ -48,12 +49,14 @@ fun MusicDetailedScreen(
     navigateBack: () -> Unit,
     onEvent: (MusicPlayerEvent) -> Unit,
 ) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
 
-    val isPlaying = musicControllerUiState.playerState == PlayerState.PLAYING
+
+
 
     musicControllerUiState.currentMusic?.let { musicObject ->
+        val musicObjectHelper = MusicObjectHelper(musicObject)
+        val isPlaying = musicControllerUiState.playerState == PlayerState.PLAYING
+
         Column(
             modifier = Modifier
                 .padding(horizontal = 20.sdp)
@@ -94,14 +97,14 @@ fun MusicDetailedScreen(
                 ) {
                     Text(
                         text = musicObject.name,
-                        style = typography().titleLarge,
+                        style = typography().titleMedium,
                         fontWeight = FontWeight.SemiBold
                     )
 
                     Text(
                         modifier = Modifier
                             .padding(top = 6.sdp),
-                        text = musicObject.artist_name,
+                        text = musicObjectHelper.musicArtistName(),
                         style = typography().titleMedium,
                         fontWeight = FontWeight.Normal,
                         color = Color.Gray
