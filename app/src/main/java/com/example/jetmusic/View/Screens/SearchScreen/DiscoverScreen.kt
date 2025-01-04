@@ -27,7 +27,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import com.example.jetmusic.BOTTOM_MUSIC_PLAYER_HEIGHT
 import com.example.jetmusic.BOTTOM_NAVIGATION_BAR_HEIGHT
-import com.example.jetmusic.data.DTOs.API.ArtistDTOs.ArtistResponse
+import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Simplified.SimplifiedArtistResponse
 import com.example.jetmusic.data.enums.Genres.MusicGenres
 import com.example.jetmusic.Resources.ResultResource
 import com.example.jetmusic.View.Components.Cards.ArtistCard
@@ -39,7 +39,7 @@ import ir.kaaveh.sdpcompose.sdp
 @Composable
 fun DiscoverScreen(
     modifier: Modifier,
-    trendingArtistsResult: ResultResource<ArtistResponse>,
+    trendingArtistsResult: ResultResource<SimplifiedArtistResponse>,
     musicControllerUiState: MusicControllerUiState,
 ) {
     val configuration = LocalConfiguration.current
