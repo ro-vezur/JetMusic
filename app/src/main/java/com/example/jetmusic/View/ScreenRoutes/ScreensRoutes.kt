@@ -1,9 +1,5 @@
 package com.example.jetmusic.View.ScreenRoutes
 
-import android.os.Parcelable
-import com.example.jetmusic.View.ScreenRoutes.ScreenRoutesAdditionalParameters.DetailedPlaylistRouteParameters
-import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
-import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -41,6 +37,9 @@ object ScreensRoutes {
 
         @Serializable
         data class DetailedPlaylistRoute (val parametersJson: String)
+
+        @Serializable
+        data class DetailedArtistRoute (val parametersJson: String)
     }
 
 }

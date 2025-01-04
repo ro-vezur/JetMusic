@@ -25,13 +25,13 @@ import com.example.jetmusic.BOTTOM_MUSIC_PLAYER_HEIGHT
 import com.example.jetmusic.Extensions.NavigateExtensions.navigateBack
 import com.example.jetmusic.Helpers.SerializationClass
 import com.example.jetmusic.View.Components.BottomBar.MusicBar.MusicBottomBar
-import com.example.jetmusic.View.ScreenRoutes.ScreenRoutesAdditionalParameters.DetailedPlaylistRouteParameters
 import com.example.jetmusic.View.Screens.DetailedScreens.DetailedMusicScreen.MusicDetailedScreen
 import com.example.jetmusic.View.Screens.DetailedScreens.DetailedPlaylistScreen.DetailedPlaylistScreen
 import com.example.jetmusic.View.Screens.HomeScreen.HomeScreen
 import com.example.jetmusic.View.Screens.SearchScreen.SearchScreen
 import com.example.jetmusic.View.Screens.StartScreen.startScreensGraph
 import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
+import com.example.jetmusic.View.Screens.DetailedScreens.DetailedArtistScreen
 import com.example.jetmusic.ViewModels.MusicPlayerViewModel
 import com.example.jetmusic.ViewModels.MainScreensViewModels.SearchViewModel
 import com.example.jetmusic.ViewModels.SharedViewModels.SharedMusicControllerViewModel
@@ -71,6 +71,7 @@ fun MainScreen(
         bottomBar = {
             if(showBottomBar) {
                 val selectedPlaylist by sharedMusicSelectionViewModel.selectedPlaylist.collectAsStateWithLifecycle()
+                val selectedArtist by sharedMusicSelectionViewModel.selectedArtist.collectAsStateWithLifecycle()
 
                 Column {
                     MusicBottomBar(
@@ -79,18 +80,16 @@ fun MainScreen(
                             .height(BOTTOM_MUSIC_PLAYER_HEIGHT.sdp)
                             .hazeChild(hazeState)
                             .clickable {
-                                selectedPlaylist?.apply {
-                                    if(id.isBlank()) {
+                                selectedPlaylist?.let { playlist ->
+                                    if (playlist.id.isBlank()) {
                                         navController.navigate(ScreensRoutes.DetailedScreens.DetailedMusicRoute)
                                     } else {
-                                        val playlistRouteParameters = DetailedPlaylistRouteParameters(
-                                            name = name,
-                                            image = musicControllerUiState.currentMusic?.image.toString(),
-                                            musicList = tracks
-                                        )
-
                                         navController.navigate(
-                                            ScreensRoutes.DetailedScreens.DetailedPlaylistRoute(Json.encodeToString(playlistRouteParameters))
+                                            ScreensRoutes.DetailedScreens.DetailedPlaylistRoute(
+                                                Json.encodeToString(
+                                                    playlist
+                                                )
+                                            )
                                         )
                                     }
                                 }
@@ -177,12 +176,24 @@ fun MainScreen(
             composable<ScreensRoutes.DetailedScreens.DetailedPlaylistRoute>() { navBackStackEntry ->
                 showBottomBar = false
 
-                val playlistObject = navBackStackEntry.toRoute<ScreensRoutes.DetailedScreens.DetailedPlaylistRoute>()
+                val playlistObjectJson = navBackStackEntry.toRoute<ScreensRoutes.DetailedScreens.DetailedPlaylistRoute>()
 
                 DetailedPlaylistScreen(
                     navController = navController,
-                    playlistObject = SerializationClass.decode(playlistObject.parametersJson),
+                    playlistObject = SerializationClass.decode(playlistObjectJson.parametersJson),
                     musicControllerUiState = musicControllerUiState,
+                )
+            }
+
+            composable<ScreensRoutes.DetailedScreens.DetailedArtistRoute> { navBackStackEntry ->
+                showBottomBar = false
+
+                val artistObjectJson = navBackStackEntry.toRoute<ScreensRoutes.DetailedScreens.DetailedArtistRoute>()
+
+                DetailedArtistScreen(
+                    navController = navController,
+                    artistObject = SerializationClass.decode(artistObjectJson.parametersJson),
+                    musicControllerUiState = musicControllerUiState
                 )
             }
         }

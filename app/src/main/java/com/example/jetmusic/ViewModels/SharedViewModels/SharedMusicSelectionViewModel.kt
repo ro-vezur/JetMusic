@@ -2,6 +2,7 @@ package com.example.jetmusic.ViewModels.SharedViewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Detailed.DetailedArtistObject
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
 import com.example.jetmusic.data.DTOs.API.PlaylistDTOs.Detailed.DetailedPlaylistObject
 import com.example.jetmusic.data.DTOs.API.PlaylistDTOs.Detailed.DetailedPlaylistResponse
@@ -30,6 +31,9 @@ class SharedMusicSelectionViewModel @Inject constructor(
     private val _selectedPlaylist: MutableStateFlow<DetailedPlaylistObject?> = MutableStateFlow(null)
     val selectedPlaylist: StateFlow<DetailedPlaylistObject?> = _selectedPlaylist.asStateFlow()
 
+    private val _selectedArtist: MutableStateFlow<DetailedArtistObject?> = MutableStateFlow(null)
+    val selectedArtist: StateFlow<DetailedArtistObject?> = _selectedArtist.asStateFlow()
+
     fun onEvent(event: MusicSelectionEvent) {
         when (event) {
             is MusicSelectionEvent.SetMediaItem -> setMediaItemUseCase(musicObject = event.musicObject)
@@ -46,5 +50,9 @@ class SharedMusicSelectionViewModel @Inject constructor(
 
     fun setPlaylist(playlist: DetailedPlaylistObject?) = viewModelScope.launch {
         _selectedPlaylist.emit(playlist)
+    }
+
+    fun setArtist(artistObject: DetailedArtistObject?) = viewModelScope.launch {
+        _selectedArtist.emit(artistObject)
     }
 }
