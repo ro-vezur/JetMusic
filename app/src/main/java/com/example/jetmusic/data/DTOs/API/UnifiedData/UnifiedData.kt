@@ -1,6 +1,6 @@
 package com.example.jetmusic.data.DTOs.API.UnifiedData
 
-import com.example.jetmusic.data.DTOs.API.ArtistDTOs.ArtistObject
+import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Simplified.SimplifiedArtistObject
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
 import com.example.jetmusic.data.DTOs.API.PlaylistDTOs.Simplified.SimplifiedPlaylistObject
 
@@ -20,7 +20,7 @@ data class UnifiedData(
             )
         }
 
-        fun fromArtist( artistObject: ArtistObject): UnifiedData {
+        fun fromArtist( artistObject: SimplifiedArtistObject): UnifiedData {
             return UnifiedData(
                 id = artistObject.id,
                 name = artistObject.name,

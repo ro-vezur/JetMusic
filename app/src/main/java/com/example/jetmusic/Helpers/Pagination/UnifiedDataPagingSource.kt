@@ -2,14 +2,14 @@ package com.example.jetmusic.Helpers.Pagination
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.jetmusic.data.DTOs.API.ArtistDTOs.ArtistResponse
+import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Simplified.SimplifiedArtistResponse
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicResponse
 import com.example.jetmusic.data.DTOs.API.PlaylistDTOs.Simplified.SimplifiedPlaylistResponse
 import com.example.jetmusic.data.DTOs.API.UnifiedData.UnifiedData
 
 class UnifiedDataPagingSource(
     val getMusicResponse: suspend (page: Int) -> MusicResponse,
-    val getArtistsResponse: suspend (page: Int) -> ArtistResponse,
+    val getArtistsResponse: suspend (page: Int) -> SimplifiedArtistResponse,
     val getPlaylistResponse: suspend (page: Int) -> SimplifiedPlaylistResponse,
 ): PagingSource<Int, UnifiedData>() {
 
