@@ -7,11 +7,11 @@ fun MediaItem.toMusic() =
     MusicObject(
         id = mediaId,
         name = mediaMetadata.title.toString(),
-        duration = 0,
         artist_id = "",
         artist_name = mediaMetadata.artist.toString(),
+        album_id = "",
+        album_name = mediaMetadata.albumArtist.toString(),
+        duration = 0,
         audio = mediaId,
-        downloadUrl = null,
         image = mediaMetadata.artworkUri.toString(),
-        downloadAllowed = false
     )
