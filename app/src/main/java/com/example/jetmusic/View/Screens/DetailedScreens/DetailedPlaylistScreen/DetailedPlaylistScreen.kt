@@ -1,5 +1,6 @@
 package com.example.jetmusic.View.Screens.DetailedScreens.DetailedPlaylistScreen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,8 +17,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.ArrowForwardIos
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
@@ -29,10 +33,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import coil.compose.AsyncImage
-import com.example.jetmusic.View.ScreenRoutes.ScreenRoutesAdditionalParameters.DetailedPlaylistRouteParameters
 import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
 import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
-import com.example.jetmusic.other.events.MusicSelectionEvent
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
 import androidx.compose.material3.MaterialTheme.colorScheme
@@ -41,6 +43,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.jetmusic.Extensions.NavigateExtensions.navigateBack
 import com.example.jetmusic.View.Components.Cards.MusicCards.MusicCard
+import com.example.jetmusic.View.Components.Slider.MusicPlayerSlider
 import com.example.jetmusic.ViewModels.MusicPlayerViewModel
 import com.example.jetmusic.data.DTOs.API.PlaylistDTOs.Detailed.DetailedPlaylistObject
 import com.example.jetmusic.other.events.MusicPlayerEvent
@@ -49,7 +52,7 @@ import com.example.jetmusic.states.PlayerState
 @Composable
 fun DetailedPlaylistScreen(
     navController: NavController,
-    playlistObject: DetailedPlaylistRouteParameters,
+    playlistObject: DetailedPlaylistObject,
     musicControllerUiState: MusicControllerUiState,
     musicPlayerViewModel: MusicPlayerViewModel = hiltViewModel(),
 ) {
@@ -64,7 +67,7 @@ fun DetailedPlaylistScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(190.sdp)
+                .fillMaxHeight(0.32f)
         ){
             AsyncImage(
                 model = musicControllerUiState.currentMusic?.image.toString(),
@@ -93,7 +96,6 @@ fun DetailedPlaylistScreen(
                     .background(
                         Brush.verticalGradient(
                             listOf(
-
                                 colorScheme.background.copy(0.3f),
                                 Color.Transparent, Color.Transparent,
                             )
@@ -129,7 +131,7 @@ fun DetailedPlaylistScreen(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "${playlistObject.musicList.size} Songs",
+                text = "${playlistObject.tracks.size} Songs",
                 style = typography().titleSmall,
                 fontWeight = FontWeight.W500,
                 modifier = Modifier
@@ -165,23 +167,64 @@ fun DetailedPlaylistScreen(
         ) {
             item { Spacer(modifier = Modifier.height(16.sdp)) }
 
-            items(playlistObject.musicList) { music ->
+            items(playlistObject.tracks) { music ->
                 MusicCard(
                     modifier = Modifier
-                        .padding(start = 10.sdp)
+                        .padding(horizontal = 10.sdp)
                         .height(46.sdp)
                         .fillMaxWidth()
+                        .clip(RoundedCornerShape(10.sdp))
                         .clickable {
-                            if (musicControllerUiState.currentMusic?.audio != music.audio) {
+                            Log.d("current music audio",musicControllerUiState.currentMusic?.audio.toString())
+                            Log.d("music to set",music.audio.toString())
+
+                            if (musicControllerUiState.currentMusic?.id != music.id) {
                                 musicPlayerViewModel.onEvent(
                                     MusicPlayerEvent.PlaySong(
-                                        playlistObject.musicList.indexOf(music)
+                                        playlistObject.tracks.indexOf(music)
                                     )
                                 )
                             }
-                            navController.navigate(ScreensRoutes.DetailedScreens.DetailedMusicRoute)
                         },
-                    musicObject = music
+                    musicObject = music,
+                    trailingIcon = {
+                        Box(
+                            modifier = Modifier
+                                .padding(end = 4.sdp)
+                                .size(32.sdp)
+                                .clip(RoundedCornerShape(10.sdp))
+                                .clickable {
+                                    if (musicControllerUiState.currentMusic?.audio != music.audio) {
+                                        musicPlayerViewModel.onEvent(
+                                            MusicPlayerEvent.PlaySong(
+                                                playlistObject.tracks.indexOf(music)
+                                            )
+                                        )
+                                    }
+
+                                    navController.navigate(ScreensRoutes.DetailedScreens.DetailedMusicRoute)
+                                },
+                            contentAlignment = Alignment.Center,
+                        ){
+                            Icon(
+                                imageVector = Icons.Filled.ArrowForwardIos,
+                                contentDescription = "detailed music",
+                                modifier = Modifier
+                                    .size(21.sdp)
+                            )
+                        }
+                    },
+                    bottomBar = {
+                        if(musicControllerUiState.currentMusic?.audio == music.audio) {
+                            MusicPlayerSlider(
+                                modifier = Modifier
+                                    .padding(start = 8.sdp, end = 8.sdp, top = 8.sdp)
+                                    .height(4.sdp),
+                                musicControllerUiState = musicControllerUiState,
+                                onEvent = musicPlayerViewModel::onEvent
+                            )
+                        }
+                    }
                 )
             }
 

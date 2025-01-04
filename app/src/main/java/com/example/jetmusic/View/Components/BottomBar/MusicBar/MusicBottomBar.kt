@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.example.jetmusic.Helpers.MusicObjectHelper
 import com.example.jetmusic.View.Components.Slider.MusicPlayerSlider
 import com.example.jetmusic.other.events.MusicPlayerEvent
 import com.example.jetmusic.ViewModels.MusicPlayerViewModel
@@ -47,6 +48,7 @@ fun MusicBottomBar(
 
     musicControllerUiState.currentMusic?.let { musicObject ->
 
+        val musicObjectHelper = MusicObjectHelper(musicObject)
         val isPlaying = musicControllerUiState.playerState == PlayerState.PLAYING
 
         Column(
@@ -87,7 +89,7 @@ fun MusicBottomBar(
                         )
 
                         Text(
-                            text = musicObject.artist_name,
+                            text = musicObjectHelper.musicArtistName(),
                             fontSize = typography().bodyMedium.fontSize,
                             color = Color.Gray
                         )
