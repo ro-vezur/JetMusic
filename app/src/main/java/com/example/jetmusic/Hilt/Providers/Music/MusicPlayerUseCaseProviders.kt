@@ -1,6 +1,5 @@
 package com.example.jetmusic.Hilt.Providers.Music
 
-import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
 import com.example.jetmusic.domain.service.MusicController
 import com.example.jetmusic.domain.usecases.musicController.DestroyMediaControllerUseCase
 import com.example.jetmusic.domain.usecases.musicController.SetMediaControllerCallbackUseCase
@@ -21,7 +20,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object MusicUseCaseProviders {
+object MusicPlayerUseCaseProviders {
 
     @Provides
     @Singleton
