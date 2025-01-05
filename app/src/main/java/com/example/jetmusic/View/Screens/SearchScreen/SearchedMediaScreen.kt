@@ -2,23 +2,19 @@ package com.example.jetmusic.View.Screens.SearchScreen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import com.example.jetmusic.BOTTOM_NAVIGATION_BAR_HEIGHT
 import com.example.jetmusic.data.DTOs.API.UnifiedData.UnifiedData
-import com.example.jetmusic.data.DTOs.API.UnifiedData.UnifiedDataTypes
+import com.example.jetmusic.data.DTOs.API.UnifiedData.MediaTypes
 import com.example.jetmusic.View.Components.Cards.UnifiedDataCards.UnifiedDataCard
 import ir.kaaveh.sdpcompose.sdp
 
@@ -48,9 +44,9 @@ fun SearchedMediaScreen(
                         .clip(RoundedCornerShape(8.sdp))
                         .clickable {
                             when(unifiedData.type) {
-                                UnifiedDataTypes.MUSIC -> { navigateToSelectedMusic(unifiedData.id) }
-                                UnifiedDataTypes.ARTIST -> { navigateToSelectedArtist(unifiedData.id) }
-                                UnifiedDataTypes.PLAYLIST -> { navigateToSelectedPlaylist(unifiedData.id) }
+                                MediaTypes.MUSIC -> { navigateToSelectedMusic(unifiedData.id) }
+                                MediaTypes.ARTIST -> { navigateToSelectedArtist(unifiedData.id) }
+                                MediaTypes.PLAYLIST -> { navigateToSelectedPlaylist(unifiedData.id) }
                             }
                         },
                     unifiedData = unifiedData

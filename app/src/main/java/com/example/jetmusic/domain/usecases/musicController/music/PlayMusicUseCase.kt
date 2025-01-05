@@ -5,6 +5,6 @@ import javax.inject.Inject
 
 class PlayMusicUseCase @Inject constructor(private  val musicController: MusicController) {
     operator fun invoke(mediaItemIndex: Int) {
-        musicController.play(mediaItemIndex)
+        musicController.select(mediaItemIndex)
     }
 }

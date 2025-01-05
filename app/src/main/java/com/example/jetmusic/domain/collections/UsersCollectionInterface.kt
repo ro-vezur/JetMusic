@@ -1,7 +1,7 @@
 package com.example.jetmusic.domain.collections
 
 import com.example.jetmusic.data.DTOs.UserDTOs.User
-import com.example.jetmusic.Resources.ResultResource
+import com.example.jetmusic.other.Resources.ResultResource
 import kotlinx.coroutines.flow.Flow
 
 interface UsersCollectionInterface {

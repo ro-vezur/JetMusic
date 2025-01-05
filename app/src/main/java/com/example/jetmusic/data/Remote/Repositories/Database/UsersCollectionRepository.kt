@@ -2,7 +2,7 @@ package com.example.jetmusic.data.Remote.Repositories.Database
 
 import com.example.jetmusic.data.DTOs.UserDTOs.User
 import com.example.jetmusic.domain.collections.UsersCollectionInterface
-import com.example.jetmusic.Resources.ResultResource
+import com.example.jetmusic.other.Resources.ResultResource
 import com.example.jetmusic.USERS_COLLECTION
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.catch

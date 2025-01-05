@@ -8,7 +8,7 @@ data class UnifiedData(
     val id: String,
     val name: String,
     val image: String?,
-    val type: UnifiedDataTypes,
+    val type: MediaTypes,
 ) {
     companion object {
         fun fromMusic( music: MusicObject): UnifiedData {
@@ -16,7 +16,7 @@ data class UnifiedData(
                 id = music.id,
                 name = music.name,
                 image = music.image,
-                type = UnifiedDataTypes.MUSIC
+                type = MediaTypes.MUSIC
             )
         }
 
@@ -25,7 +25,7 @@ data class UnifiedData(
                 id = artistObject.id,
                 name = artistObject.name,
                 image = artistObject.image,
-                type = UnifiedDataTypes.ARTIST
+                type = MediaTypes.ARTIST
             )
         }
 
@@ -34,7 +34,7 @@ data class UnifiedData(
                 id = playlistObject.id,
                 name = playlistObject.name,
                 image = "",
-                type = UnifiedDataTypes.PLAYLIST,
+                type = MediaTypes.PLAYLIST,
             )
         }
     }

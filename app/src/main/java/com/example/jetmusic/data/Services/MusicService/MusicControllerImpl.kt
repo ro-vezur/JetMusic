@@ -2,11 +2,6 @@ package com.example.jetmusic.data.Services.MusicService
 
 import android.content.ComponentName
 import android.content.Context
-import android.net.Uri
-import android.util.Log
-import androidx.media3.common.C
-import androidx.media3.common.MediaItem
-import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
@@ -81,7 +76,7 @@ class MusicControllerImpl(context: Context) : MusicController {
         mediaController?.setMediaItems(mediaItems)
     }
 
-    override fun play(mediaItemIndex: Int) {
+    override fun select(mediaItemIndex: Int) {
         mediaController?.apply {
             seekToDefaultPosition(mediaItemIndex)
 

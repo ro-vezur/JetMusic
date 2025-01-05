@@ -22,12 +22,12 @@ class MusicPlayerViewModel @Inject constructor(
 ) : ViewModel() {
     fun onEvent(event: MusicPlayerEvent) {
         when (event) {
-            is MusicPlayerEvent.PlaySong -> playMusicUseCase(event.mediaItemIndex)
-            MusicPlayerEvent.PauseSong -> pauseSongUseCase()
-            MusicPlayerEvent.ResumeSong -> resumeSongUseCase()
+            is MusicPlayerEvent.SelectMusic -> playMusicUseCase(event.mediaItemIndex)
+            MusicPlayerEvent.PauseMusic -> pauseSongUseCase()
+            MusicPlayerEvent.ResumeMusic -> resumeSongUseCase()
             is MusicPlayerEvent.SeekSongToPosition -> seekToPosition(event.position)
-            MusicPlayerEvent.SkipToNextSong -> skipToNextSongUseCase()
-            MusicPlayerEvent.SkipToPreviousSong -> skipToPreviousSong()
+            MusicPlayerEvent.SkipToNextMusic -> skipToNextSongUseCase()
+            MusicPlayerEvent.SkipToPreviousMusic -> skipToPreviousSong()
         }
     }
 

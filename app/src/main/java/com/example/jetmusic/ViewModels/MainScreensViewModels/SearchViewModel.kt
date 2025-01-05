@@ -11,7 +11,7 @@ import com.example.jetmusic.OFFSET_PER_PAGE
 import com.example.jetmusic.PAGE_SIZE
 import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Simplified.SimplifiedArtistResponse
 import com.example.jetmusic.data.DTOs.API.UnifiedData.UnifiedData
-import com.example.jetmusic.Resources.ResultResource
+import com.example.jetmusic.other.Resources.ResultResource
 import com.example.jetmusic.domain.usecases.api.musicAPI.artist.ArtistByIdUseCase
 import com.example.jetmusic.domain.usecases.api.musicAPI.artist.SearchArtistsUseCase
 import com.example.jetmusic.domain.usecases.api.musicAPI.artist.TrendingArtistsUseCase
@@ -41,7 +41,8 @@ class SearchViewModel @Inject constructor(
 
 ): ViewModel() {
 
-    private val _trendingArtists: MutableStateFlow<ResultResource<SimplifiedArtistResponse>> = MutableStateFlow(ResultResource.Loading())
+    private val _trendingArtists: MutableStateFlow<ResultResource<SimplifiedArtistResponse>> = MutableStateFlow(
+        ResultResource.Loading())
     val trendingArtists: StateFlow<ResultResource<SimplifiedArtistResponse>> = _trendingArtists.asStateFlow()
 
     private val _isRequestSent: MutableStateFlow<Boolean> = MutableStateFlow(false)

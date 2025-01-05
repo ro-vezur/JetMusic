@@ -21,7 +21,6 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -32,7 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.jetmusic.data.DTOs.UserDTOs.User
-import com.example.jetmusic.Resources.ResultResource
+import com.example.jetmusic.other.Resources.ResultResource
 import com.example.jetmusic.View.Components.Cards.MusicCards.MusicCard
 import com.example.jetmusic.View.Components.TabsRow.CustomScrollableTabRow
 import com.example.jetmusic.View.Screens.HomeScreen.TabsCategories.TabsHomeCategories
@@ -44,7 +43,6 @@ import com.example.jetmusic.other.events.MusicSelectionEvent
 import com.example.jetmusic.ui.theme.darkGrey
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
-import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
@@ -56,7 +54,6 @@ fun HomeScreen(
     onEvent: (MusicSelectionEvent) -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
-    val scope = rememberCoroutineScope()
 
     val pagerState = rememberPagerState { TabsHomeCategories.entries.size }
     val musicOfWeek by homeViewModel.musicOfWeek.collectAsStateWithLifecycle()
@@ -124,67 +121,66 @@ fun HomeScreen(
                 )
         ) {
 
-                when (musicOfWeek) {
-                    is ResultResource.Loading -> {
-                        Box(
+            when (musicOfWeek) {
+                is ResultResource.Loading -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ){
+                        CircularProgressIndicator()
+                    }
+                }
+
+                is ResultResource.Success -> {
+                    musicOfWeek.data?.let { musicResponse ->
+
+                        LazyColumn(
                             modifier = Modifier
                                 .fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ){
-                            CircularProgressIndicator()
-                        }
-                    }
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(10.sdp)
+                        ) {
+                            item {  }
 
-                    is ResultResource.Success -> {
-                        musicOfWeek.data?.let { musicResponse ->
+                            items(
+                                musicResponse.results,
+                                key = { it.id }
+                            ) { music ->
+                                MusicCard(
+                                    modifier = Modifier
+                                        .padding(start = 10.sdp)
+                                        .height(42.sdp)
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            if (musicControllerUiState.currentMusic?.audio != music.audio) {
+                                                val musicList = listOf(music)
 
-                            LazyColumn(
-                                modifier = Modifier
-                                    .fillMaxSize(),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.spacedBy(10.sdp)
-                            ) {
-                                item {  }
+                                                setPlaylist(DetailedPlaylistObject(musicList))
+                                                onEvent(MusicSelectionEvent.SetMediaItem(music))
+                                                onEvent(MusicSelectionEvent.SelectMusic(musicList, music))
+                                            }
 
-                                items(
-                                    musicResponse.results,
-                                    key = { it.id }
-                                ) { music ->
-                                    MusicCard(
-                                        modifier = Modifier
-                                            .padding(start = 10.sdp)
-                                            .height(46.sdp)
-                                            .fillMaxWidth()
-                                            .clickable {
-                                                if (musicControllerUiState.currentMusic?.audio != music.audio) {
-                                                    val musicList = listOf(music)
-
-                                                    setPlaylist(DetailedPlaylistObject(musicList))
-                                                    onEvent(MusicSelectionEvent.SetMediaItem(music))
-                                                    onEvent(MusicSelectionEvent.PlaySong(musicList, music))
-                                                }
-
-                                                navController.navigate(ScreensRoutes.DetailedScreens.DetailedMusicRoute)
-                                            },
-                                        musicObject = music
-                                    )
-                                }
+                                            navController.navigate(ScreensRoutes.DetailedScreens.DetailedMusicRoute)
+                                        },
+                                    musicObject = music
+                                )
                             }
                         }
                     }
+                }
 
-                    is ResultResource.Error -> {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(text = "error")
-                        }
+                is ResultResource.Error -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = "error")
                     }
                 }
             }
-
+        }
     }
 }
 

@@ -1,6 +1,6 @@
 package com.example.jetmusic.domain.auth
 
-import com.example.jetmusic.Resources.ResultResource
+import com.example.jetmusic.other.Resources.ResultResource
 import com.google.firebase.auth.AuthResult
 import kotlinx.coroutines.flow.Flow
 

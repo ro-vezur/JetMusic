@@ -8,7 +8,7 @@ import com.example.jetmusic.domain.auth.FirebaseAuthInterface
 import com.example.jetmusic.Helpers.Validation.Email.EmailValidation
 import com.example.jetmusic.Helpers.Validation.Password.PasswordValidation
 import com.example.jetmusic.Helpers.Validation.Result.ValidationResults
-import com.example.jetmusic.Resources.ResultResource
+import com.example.jetmusic.other.Resources.ResultResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

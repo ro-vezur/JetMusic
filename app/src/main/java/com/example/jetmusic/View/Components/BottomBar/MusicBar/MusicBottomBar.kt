@@ -105,8 +105,8 @@ fun MusicBottomBar(
                         .clip(RoundedCornerShape(8.sdp))
                         .clickable {
                             musicDetailedViewModel.onEvent(
-                                if (isPlaying) MusicPlayerEvent.PauseSong
-                                else MusicPlayerEvent.ResumeSong
+                                if (isPlaying) MusicPlayerEvent.PauseMusic
+                                else MusicPlayerEvent.ResumeMusic
                             )
                         },
                     imageVector = if(isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,

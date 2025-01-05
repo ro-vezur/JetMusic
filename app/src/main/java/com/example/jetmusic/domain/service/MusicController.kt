@@ -19,7 +19,7 @@ interface MusicController {
 
     fun setMediaItems(musicList: List<MusicObject>)
 
-    fun play(mediaItemIndex: Int)
+    fun select(mediaItemIndex: Int)
 
     fun resume()
 

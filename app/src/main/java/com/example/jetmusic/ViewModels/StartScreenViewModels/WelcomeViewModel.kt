@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.jetmusic.data.DTOs.UserDTOs.User
 import com.example.jetmusic.domain.collections.UsersCollectionInterface
 import com.example.jetmusic.data.Remote.Repositories.Auth.OtherPlatforms.GoogleManager
-import com.example.jetmusic.Resources.ResultResource
+import com.example.jetmusic.other.Resources.ResultResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
