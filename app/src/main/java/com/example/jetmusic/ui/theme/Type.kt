@@ -57,7 +57,7 @@ fun typography():Typography {
             fontFamily = FontFamily.Default,
             fontWeight = FontWeight.Normal,
             fontSize = 10.ssp,
-            lineHeight = 17.ssp,
+            lineHeight = 13.ssp,
             letterSpacing = 1.ssp
         ),
         headlineLarge = TextStyle(
@@ -82,12 +82,12 @@ fun typography():Typography {
         ),
         titleMedium = TextStyle(
             fontWeight = FontWeight.Normal,
-            fontSize = 18.ssp,
+            fontSize = 19.ssp,
             letterSpacing = 1.ssp
         ),
         titleSmall = TextStyle(
             fontWeight = FontWeight.Normal,
-            fontSize = 16.ssp,
+            fontSize = 17.ssp,
             letterSpacing = 1.ssp
         )
     )
