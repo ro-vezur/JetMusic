@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Detailed.DetailedArtistObject
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
 import com.example.jetmusic.data.DTOs.API.PlaylistDTOs.Detailed.DetailedPlaylistObject
-import com.example.jetmusic.data.DTOs.API.PlaylistDTOs.Detailed.DetailedPlaylistResponse
+import com.example.jetmusic.data.DTOs.API.UnifiedData.MediaTypes
 import com.example.jetmusic.domain.usecases.musicController.music.SetMediaItemsUseCase
 import com.example.jetmusic.domain.usecases.musicController.music.PauseMusicUseCase
 import com.example.jetmusic.domain.usecases.musicController.music.PlayMusicUseCase
@@ -28,6 +28,9 @@ class SharedMusicSelectionViewModel @Inject constructor(
     private val resumeMusicUseCase: ResumeMusicUseCase,
 ): ViewModel() {
 
+    private val _selectedMediaType: MutableStateFlow<MediaTypes> = MutableStateFlow(MediaTypes.MUSIC)
+    val selectedMediaType: StateFlow<MediaTypes> = _selectedMediaType.asStateFlow()
+
     private val _selectedPlaylist: MutableStateFlow<DetailedPlaylistObject?> = MutableStateFlow(null)
     val selectedPlaylist: StateFlow<DetailedPlaylistObject?> = _selectedPlaylist.asStateFlow()
 
@@ -40,19 +43,26 @@ class SharedMusicSelectionViewModel @Inject constructor(
 
             is MusicSelectionEvent.SetMediaItems -> setMediaItemsUseCase(musicList = event.musicList)
 
-            is MusicSelectionEvent.PlaySong ->  playMusicUseCase(event.musicList.indexOf(event.selectedMusic))
+            is MusicSelectionEvent.SelectMusic ->  playMusicUseCase(event.musicList.indexOf(event.selectedMusic))
 
-            MusicSelectionEvent.PauseSong -> pauseMusicUseCase()
+            MusicSelectionEvent.PauseMusic -> pauseMusicUseCase()
 
-            MusicSelectionEvent.ResumeSong -> resumeMusicUseCase()
+            MusicSelectionEvent.ResumeMusic -> resumeMusicUseCase()
         }
     }
 
     fun setPlaylist(playlist: DetailedPlaylistObject?) = viewModelScope.launch {
         _selectedPlaylist.emit(playlist)
+        _selectedMediaType.emit(MediaTypes.PLAYLIST)
     }
 
     fun setArtist(artistObject: DetailedArtistObject?) = viewModelScope.launch {
         _selectedArtist.emit(artistObject)
+        _selectedMediaType.emit(MediaTypes.ARTIST)
+    }
+
+    fun setMusic(musicObject: MusicObject) = viewModelScope.launch {
+        _selectedPlaylist.emit(DetailedPlaylistObject(listOf(musicObject)))
+        _selectedMediaType.emit(MediaTypes.MUSIC)
     }
 }
