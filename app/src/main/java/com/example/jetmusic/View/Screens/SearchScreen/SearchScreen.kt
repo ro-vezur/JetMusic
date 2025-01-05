@@ -44,6 +44,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.jetmusic.View.Components.Buttons.TextButton
 import com.example.jetmusic.View.Components.InputFields.SearchField
 import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
+import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Detailed.DetailedArtistObject
 import com.example.jetmusic.data.DTOs.API.PlaylistDTOs.Detailed.DetailedPlaylistObject
 import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
 import com.example.jetmusic.other.events.MusicSelectionEvent
@@ -55,8 +56,8 @@ import kotlinx.serialization.json.Json
 fun SearchScreen(
     navController: NavController,
     musicControllerUiState: MusicControllerUiState,
-    playlist: DetailedPlaylistObject?,
-    setPlaylist: (DetailedPlaylistObject?) -> Unit,
+    selectedPlaylist: DetailedPlaylistObject?,
+    selectedArtist: DetailedArtistObject?,
     onEvent: (MusicSelectionEvent) -> Unit,
     searchViewModel: SearchViewModel,
 ) {
@@ -212,12 +213,12 @@ fun SearchScreen(
                     scope.launch {
                         val selectedMusicResponse = searchViewModel.getMusicById(id)
                         if(selectedMusicResponse.results.isNotEmpty()) {
-                            val selectedMusic = selectedMusicResponse.results.first()
+                            val musicToSelect = selectedMusicResponse.results.first()
 
-                            if(musicControllerUiState.currentMusic?.audio != selectedMusic.audio) {
-                                setPlaylist(DetailedPlaylistObject(selectedMusicResponse.results))
-                                onEvent(MusicSelectionEvent.SetMediaItem(selectedMusic))
-                                onEvent(MusicSelectionEvent.PlaySong(selectedMusicResponse.results,selectedMusic))
+                            if(musicControllerUiState.currentMusic?.audio != musicToSelect.audio) {
+                                onEvent(MusicSelectionEvent.SetMediaItem(musicToSelect))
+                             //   onEvent(MusicSelectionEvent.PlaySong(selectedMusicResponse.results,musicToSelect))
+                                onEvent(MusicSelectionEvent.PauseMusic)
                             }
 
                             navController.navigate(ScreensRoutes.DetailedScreens.DetailedMusicRoute)
@@ -229,19 +230,19 @@ fun SearchScreen(
                         val selectedPlaylistResponse = searchViewModel.getPlaylistById(id)
 
                         if(selectedPlaylistResponse.results.isNotEmpty()) {
-                            val selectedPlaylist = selectedPlaylistResponse.results.first()
+                            val playlistToList = selectedPlaylistResponse.results.first()
 
-                            val playlistTracks = selectedPlaylist.tracks.filter { it.audio != null }
+                            val playlistTracks = playlistToList.tracks.filter { it.audio != null }
 
                             if(playlistTracks.isNotEmpty()) {
-                                if (selectedPlaylist.id != playlist?.id) {
-                                    setPlaylist(selectedPlaylist)
+                                if (playlistToList.id != selectedPlaylist?.id) {
                                     onEvent(MusicSelectionEvent.SetMediaItems(playlistTracks))
+                                    onEvent(MusicSelectionEvent.PauseMusic)
                                 }
 
                                 navController.navigate(
                                     ScreensRoutes.DetailedScreens.DetailedPlaylistRoute(
-                                        parametersJson = Json.encodeToString(selectedPlaylist)
+                                        parametersJson = Json.encodeToString(playlistToList)
                                     )
                                 )
                             }
@@ -253,18 +254,18 @@ fun SearchScreen(
                         val artistResponse = searchViewModel.getArtistById(id)
 
                         if(artistResponse.results.isNotEmpty()) {
-                            val selectedArtist = artistResponse.results.first()
-                            val artistTracks = selectedArtist.tracks
+                            val artistToSelect = artistResponse.results.first()
+                            val artistTracks = artistToSelect.tracks
 
                             if(artistTracks.isNotEmpty()) {
-                                if (artistTracks != playlist?.tracks) {
-                                    setPlaylist(DetailedPlaylistObject(artistTracks))
+                                if (artistToSelect.id != selectedArtist?.id) {
                                     onEvent(MusicSelectionEvent.SetMediaItems(artistTracks))
+                                    onEvent(MusicSelectionEvent.PauseMusic)
                                 }
 
                                 navController.navigate(
                                     ScreensRoutes.DetailedScreens.DetailedArtistRoute(
-                                        parametersJson = Json.encodeToString(selectedArtist)
+                                        parametersJson = Json.encodeToString(artistToSelect)
                                     )
                                 )
                             }
