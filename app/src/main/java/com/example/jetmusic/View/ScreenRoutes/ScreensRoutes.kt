@@ -39,7 +39,15 @@ object ScreensRoutes {
         data class DetailedPlaylistRoute (val parametersJson: String)
 
         @Serializable
-        data class DetailedArtistRoute (val parametersJson: String)
+        data class DetailedArtistRoute (val parametersJson: String) {
+            companion object{
+                @Serializable
+                object ArtistMainInfoRoute
+
+                @Serializable
+                object ArtistMoreTracksRoute
+            }
+        }
     }
 
 }

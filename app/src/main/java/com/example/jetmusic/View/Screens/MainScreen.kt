@@ -1,5 +1,6 @@
 package com.example.jetmusic.View.Screens
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController
 import com.example.jetmusic.View.Components.BottomBar.Navigation.BottomNavigationBar
 import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,12 +33,15 @@ import com.example.jetmusic.View.Screens.HomeScreen.HomeScreen
 import com.example.jetmusic.View.Screens.SearchScreen.SearchScreen
 import com.example.jetmusic.View.Screens.StartScreen.startScreensGraph
 import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
-import com.example.jetmusic.View.Screens.DetailedScreens.DetailedArtistScreen
+import com.example.jetmusic.View.Screens.DetailedScreens.DetailedArtistScreen.DetailedArtistScreen
 import com.example.jetmusic.ViewModels.MusicPlayerViewModel
 import com.example.jetmusic.ViewModels.MainScreensViewModels.SearchViewModel
 import com.example.jetmusic.ViewModels.SharedViewModels.SharedMusicControllerViewModel
 import com.example.jetmusic.ViewModels.SharedViewModels.SharedMusicSelectionViewModel
 import com.example.jetmusic.ViewModels.SharedViewModels.UserViewModel
+import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Detailed.DetailedArtistObject
+import com.example.jetmusic.data.DTOs.API.PlaylistDTOs.Detailed.DetailedPlaylistObject
+import com.example.jetmusic.data.DTOs.API.UnifiedData.MediaTypes
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
@@ -70,6 +75,7 @@ fun MainScreen(
         containerColor = colors.background,
         bottomBar = {
             if(showBottomBar) {
+                val selectedMediaType by sharedMusicSelectionViewModel.selectedMediaType.collectAsStateWithLifecycle()
                 val selectedPlaylist by sharedMusicSelectionViewModel.selectedPlaylist.collectAsStateWithLifecycle()
                 val selectedArtist by sharedMusicSelectionViewModel.selectedArtist.collectAsStateWithLifecycle()
 
@@ -80,15 +86,25 @@ fun MainScreen(
                             .height(BOTTOM_MUSIC_PLAYER_HEIGHT.sdp)
                             .hazeChild(hazeState)
                             .clickable {
-                                selectedPlaylist?.let { playlist ->
-                                    if (playlist.id.isBlank()) {
+                                when (selectedMediaType) {
+                                    MediaTypes.MUSIC -> {
                                         navController.navigate(ScreensRoutes.DetailedScreens.DetailedMusicRoute)
-                                    } else {
+                                    }
+
+                                    MediaTypes.ARTIST -> {
+                                        navController.navigate(
+                                            ScreensRoutes.DetailedScreens.DetailedArtistRoute(
+                                                parametersJson = Json.encodeToString(
+                                                    selectedArtist
+                                                )
+                                            )
+                                        )
+                                    }
+
+                                    MediaTypes.PLAYLIST -> {
                                         navController.navigate(
                                             ScreensRoutes.DetailedScreens.DetailedPlaylistRoute(
-                                                Json.encodeToString(
-                                                    playlist
-                                                )
+                                                Json.encodeToString(selectedPlaylist)
                                             )
                                         )
                                     }
@@ -145,13 +161,15 @@ fun MainScreen(
                 showBottomBar = true
 
                 val searchViewModel: SearchViewModel = hiltViewModel(viewModelStoreOwner)
+
                 val playerMusicList by sharedMusicSelectionViewModel.selectedPlaylist.collectAsStateWithLifecycle()
+                val selectedArtist by sharedMusicSelectionViewModel.selectedArtist.collectAsStateWithLifecycle()
 
                 SearchScreen(
                     navController = navController,
                     musicControllerUiState = musicControllerUiState,
-                    playlist = playerMusicList,
-                    setPlaylist = sharedMusicSelectionViewModel::setPlaylist,
+                    selectedPlaylist = playerMusicList,
+                    selectedArtist = selectedArtist,
                     onEvent = sharedMusicSelectionViewModel::onEvent,
                     searchViewModel = searchViewModel,
                 )
@@ -165,22 +183,46 @@ fun MainScreen(
                 showBottomBar = false
 
                 val musicDetailedViewModel: MusicPlayerViewModel = hiltViewModel()
+                val selectedArtist by sharedMusicSelectionViewModel.selectedArtist.collectAsStateWithLifecycle()
+                val selectedPlaylist by sharedMusicSelectionViewModel.selectedPlaylist.collectAsStateWithLifecycle()
 
-                MusicDetailedScreen(
-                    musicControllerUiState = musicControllerUiState,
-                    navigateBack = { navController.navigateBack() },
-                    onEvent = musicDetailedViewModel::onEvent,
-                )
+                val artistTracks = selectedArtist?.tracks
+                val playlistTracks = selectedPlaylist?.tracks
+
+                musicControllerUiState.currentMusic?.let { currentMusic ->
+
+                    LaunchedEffect(null) {
+                        val findInArtistTracks = artistTracks?.find { currentMusic.audio?.contains(it.id) == true }
+                        val findInPlaylistTracks = playlistTracks?.find { currentMusic.audio?.contains(it.id) == true }
+
+                        if(findInArtistTracks == null && findInPlaylistTracks == null) {
+                            sharedMusicSelectionViewModel.setMusic(currentMusic)
+                        }
+                    }
+
+                    MusicDetailedScreen(
+                        musicControllerUiState = musicControllerUiState,
+                        navigateBack = { navController.navigateBack() },
+                        onEvent = musicDetailedViewModel::onEvent,
+                    )
+                }
             }
 
-            composable<ScreensRoutes.DetailedScreens.DetailedPlaylistRoute>() { navBackStackEntry ->
+            composable<ScreensRoutes.DetailedScreens.DetailedPlaylistRoute> { navBackStackEntry ->
                 showBottomBar = false
 
+                val selectedPlaylist by sharedMusicSelectionViewModel.selectedPlaylist.collectAsStateWithLifecycle()
+
                 val playlistObjectJson = navBackStackEntry.toRoute<ScreensRoutes.DetailedScreens.DetailedPlaylistRoute>()
+                val playlistObject: DetailedPlaylistObject = SerializationClass.decode(playlistObjectJson.parametersJson)
+
+                if(selectedPlaylist?.id != playlistObject.id) {
+                    sharedMusicSelectionViewModel.setPlaylist(playlistObject)
+                }
 
                 DetailedPlaylistScreen(
                     navController = navController,
-                    playlistObject = SerializationClass.decode(playlistObjectJson.parametersJson),
+                    playlistObject = playlistObject,
                     musicControllerUiState = musicControllerUiState,
                 )
             }
@@ -188,11 +230,18 @@ fun MainScreen(
             composable<ScreensRoutes.DetailedScreens.DetailedArtistRoute> { navBackStackEntry ->
                 showBottomBar = false
 
+                val selectedArtistObject by sharedMusicSelectionViewModel.selectedArtist.collectAsStateWithLifecycle()
+
                 val artistObjectJson = navBackStackEntry.toRoute<ScreensRoutes.DetailedScreens.DetailedArtistRoute>()
+                val artistObject: DetailedArtistObject = SerializationClass.decode(artistObjectJson.parametersJson)
+
+                if(selectedArtistObject?.id != artistObject.id) {
+                    sharedMusicSelectionViewModel.setArtist(artistObject)
+                }
 
                 DetailedArtistScreen(
                     navController = navController,
-                    artistObject = SerializationClass.decode(artistObjectJson.parametersJson),
+                    artistObject = artistObject,
                     musicControllerUiState = musicControllerUiState
                 )
             }
