@@ -7,7 +7,7 @@ import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
 
 fun MusicObject.toMediaItem(): MediaItem {
     return MediaItem.Builder()
-        .setMediaId(this.id)
+        .setMediaId(this.audio.toString())
         .setUri(this.audio)
         .setMediaMetadata(
             MediaMetadata.Builder()
