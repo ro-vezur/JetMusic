@@ -1,6 +1,5 @@
 package com.example.jetmusic.View.Screens.DetailedScreens.DetailedPlaylistScreen
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -125,7 +124,7 @@ fun DetailedPlaylistScreen(
 
         Row(
             modifier = Modifier
-                .padding(horizontal = 18.sdp)
+                .padding(horizontal = 12.sdp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
@@ -144,7 +143,7 @@ fun DetailedPlaylistScreen(
                     .clip(CircleShape)
                     .background(colorScheme.inversePrimary)
                     .clickable {
-                        musicPlayerViewModel.onEvent(if (isPlaying) MusicPlayerEvent.PauseSong else MusicPlayerEvent.ResumeSong)
+                        musicPlayerViewModel.onEvent(if (isPlaying) MusicPlayerEvent.PauseMusic else MusicPlayerEvent.ResumeMusic)
                     },
                 contentAlignment = Alignment.Center
             ) {
@@ -156,7 +155,6 @@ fun DetailedPlaylistScreen(
                         .size(28.sdp)
                 )
             }
-
         }
 
         LazyColumn(
@@ -171,16 +169,13 @@ fun DetailedPlaylistScreen(
                 MusicCard(
                     modifier = Modifier
                         .padding(horizontal = 10.sdp)
-                        .height(46.sdp)
+                        .height(42.sdp)
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(10.sdp))
                         .clickable {
-                            Log.d("current music audio",musicControllerUiState.currentMusic?.audio.toString())
-                            Log.d("music to set",music.audio.toString())
-
-                            if (musicControllerUiState.currentMusic?.id != music.id) {
+                            if (musicControllerUiState.currentMusic?.audio?.contains(music.id) == false) {
                                 musicPlayerViewModel.onEvent(
-                                    MusicPlayerEvent.PlaySong(
+                                    MusicPlayerEvent.SelectMusic(
                                         playlistObject.tracks.indexOf(music)
                                     )
                                 )
@@ -194,9 +189,9 @@ fun DetailedPlaylistScreen(
                                 .size(32.sdp)
                                 .clip(RoundedCornerShape(10.sdp))
                                 .clickable {
-                                    if (musicControllerUiState.currentMusic?.audio != music.audio) {
+                                    if (musicControllerUiState.currentMusic?.audio?.contains(music.id) == false) {
                                         musicPlayerViewModel.onEvent(
-                                            MusicPlayerEvent.PlaySong(
+                                            MusicPlayerEvent.SelectMusic(
                                                 playlistObject.tracks.indexOf(music)
                                             )
                                         )
@@ -215,7 +210,7 @@ fun DetailedPlaylistScreen(
                         }
                     },
                     bottomBar = {
-                        if(musicControllerUiState.currentMusic?.audio == music.audio) {
+                        if(musicControllerUiState.currentMusic?.audio?.contains(music.id) == true) {
                             MusicPlayerSlider(
                                 modifier = Modifier
                                     .padding(start = 8.sdp, end = 8.sdp, top = 8.sdp)

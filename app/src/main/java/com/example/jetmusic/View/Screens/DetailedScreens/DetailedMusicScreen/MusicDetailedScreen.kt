@@ -33,8 +33,6 @@ import coil.compose.AsyncImage
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
 import androidx.compose.material3.MaterialTheme.colorScheme
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.platform.LocalContext
 import com.example.jetmusic.Helpers.MusicObjectHelper
 import com.example.jetmusic.Helpers.TimeHelper
 import com.example.jetmusic.View.Components.Slider.MusicPlayerSlider
@@ -154,7 +152,7 @@ fun MusicDetailedScreen(
                         .size(33.sdp)
                         .clip(RoundedCornerShape(8.sdp))
                         .clickable {
-                            onEvent(MusicPlayerEvent.SkipToPreviousSong)
+                            onEvent(MusicPlayerEvent.SkipToPreviousMusic)
                         }
                 )
 
@@ -165,9 +163,9 @@ fun MusicDetailedScreen(
                         .background(colorScheme.inversePrimary)
                         .clickable {
                             if (isPlaying) {
-                                onEvent(MusicPlayerEvent.PauseSong)
+                                onEvent(MusicPlayerEvent.PauseMusic)
                             } else {
-                                onEvent(MusicPlayerEvent.ResumeSong)
+                                onEvent(MusicPlayerEvent.ResumeMusic)
                             }
                         },
                     contentAlignment = Alignment.Center,
@@ -189,7 +187,7 @@ fun MusicDetailedScreen(
                         .size(33.sdp)
                         .clip(RoundedCornerShape(8.sdp))
                         .clickable {
-                            onEvent(MusicPlayerEvent.SkipToNextSong)
+                            onEvent(MusicPlayerEvent.SkipToNextMusic)
                         }
                 )
             }
