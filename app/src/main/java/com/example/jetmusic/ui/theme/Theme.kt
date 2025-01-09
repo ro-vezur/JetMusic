@@ -2,7 +2,6 @@ package com.example.jetmusic.ui.theme
 
 import android.app.Activity
 import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -17,7 +16,8 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    background = background,
+    background = backgroundDarkTheme,
+    secondary = secondaryDarkTheme,
     inversePrimary = Color.White,
     error = errorColor,
     outline = borderColor,
