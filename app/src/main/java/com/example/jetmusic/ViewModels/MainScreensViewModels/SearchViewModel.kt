@@ -85,11 +85,31 @@ class SearchViewModel @Inject constructor(
     }
 
     fun setSearchedData(limit: Int = OFFSET_PER_PAGE) = viewModelScope.launch {
+
+
         val paginatedData = Pager(PagingConfig(pageSize = PAGE_SIZE)) {
             UnifiedDataPagingSource(
-                getMusicResponse = { page -> searchMusicUseCase(_searchText.value,page * OFFSET_PER_PAGE,limit) },
-                getArtistsResponse = { page -> searchArtistsUseCase(_searchText.value,page * OFFSET_PER_PAGE,limit) },
-                getPlaylistResponse = { page -> searchPlaylistsUseCase(_searchText.value,page * OFFSET_PER_PAGE,limit) }
+                getMusicResponse = { page ->
+                    searchMusicUseCase(
+                        _searchText.value,
+                        page * OFFSET_PER_PAGE,
+                        limit
+                    )
+                },
+                getArtistsResponse = { page ->
+                    searchArtistsUseCase(
+                        _searchText.value,
+                        page * OFFSET_PER_PAGE,
+                        limit
+                    )
+                },
+                getPlaylistResponse = { page ->
+                    searchPlaylistsUseCase(
+                        _searchText.value,
+                        page * OFFSET_PER_PAGE,
+                        limit
+                    )
+                }
             )
         }.flow
 

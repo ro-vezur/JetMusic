@@ -32,6 +32,7 @@ import com.example.jetmusic.data.enums.Genres.MusicGenres
 import com.example.jetmusic.other.Resources.ResultResource
 import com.example.jetmusic.View.Components.Cards.ArtistCard
 import com.example.jetmusic.View.Components.Cards.MusicCards.MusicGenreCard
+import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
 import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
@@ -40,7 +41,7 @@ import ir.kaaveh.sdpcompose.sdp
 fun DiscoverScreen(
     modifier: Modifier,
     trendingArtistsResult: ResultResource<SimplifiedArtistResponse>,
-    musicControllerUiState: MusicControllerUiState,
+    currentMusicObject: MusicObject?,
 ) {
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp
@@ -149,7 +150,7 @@ fun DiscoverScreen(
         }
 
         item {
-            if(musicControllerUiState.currentMusic == null) {
+            if(currentMusicObject == null) {
                 Spacer(modifier = Modifier.height((BOTTOM_NAVIGATION_BAR_HEIGHT + 15).sdp))
             } else {
                 Spacer(
