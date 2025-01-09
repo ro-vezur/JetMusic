@@ -24,7 +24,22 @@ object ScreensRoutes {
     object SearchRoute {}
 
     @Serializable
-    object LibraryRoute {}
+    object LibraryNavigationGraph {
+        @Serializable
+        object LibraryRoute
+
+        @Serializable
+        object LikedSongs
+
+        @Serializable
+        object LikedPlaylists
+
+        @Serializable
+        object LikedArtists
+
+        @Serializable
+        object Downloads
+    }
 
     @Serializable
     object ProfileRoute {}
