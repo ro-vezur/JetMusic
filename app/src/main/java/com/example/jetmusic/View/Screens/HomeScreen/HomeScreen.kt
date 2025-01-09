@@ -37,7 +37,7 @@ import com.example.jetmusic.View.Components.TabsRow.CustomScrollableTabRow
 import com.example.jetmusic.View.Screens.HomeScreen.TabsCategories.TabsHomeCategories
 import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
 import com.example.jetmusic.ViewModels.MainScreensViewModels.HomeViewModel
-import com.example.jetmusic.data.DTOs.API.PlaylistDTOs.Detailed.DetailedPlaylistObject
+import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
 import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
 import com.example.jetmusic.other.events.MusicSelectionEvent
 import com.example.jetmusic.ui.theme.darkGrey
@@ -46,12 +46,8 @@ import ir.kaaveh.sdpcompose.sdp
 
 @Composable
 fun HomeScreen(
-    navController: NavController,
     user: User,
-    musicControllerUiState: MusicControllerUiState,
-    playlist: DetailedPlaylistObject?,
-    setPlaylist: (DetailedPlaylistObject?) -> Unit,
-    onEvent: (MusicSelectionEvent) -> Unit,
+    selectMusic: (MusicObject) -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
 
@@ -113,7 +109,10 @@ fun HomeScreen(
                 .padding(top = 18.sdp)
                 .fillMaxWidth(0.9f)
                 .fillMaxHeight(0.78f)
-                .shadow(8.sdp, shape = RoundedCornerShape(14.sdp))
+                .shadow(
+                    elevation = 8.sdp,
+                    shape = RoundedCornerShape(14.sdp),
+                )
                 .background(
                     Brush.verticalGradient(
                         colors = listOf(Color.DarkGray, colorScheme.background)
@@ -152,17 +151,7 @@ fun HomeScreen(
                                         .padding(start = 10.sdp)
                                         .height(42.sdp)
                                         .fillMaxWidth()
-                                        .clickable {
-                                            if (musicControllerUiState.currentMusic?.audio != music.audio) {
-                                                val musicList = listOf(music)
-
-                                                setPlaylist(DetailedPlaylistObject(musicList))
-                                                onEvent(MusicSelectionEvent.SetMediaItem(music))
-                                                onEvent(MusicSelectionEvent.SelectMusic(musicList, music))
-                                            }
-
-                                            navController.navigate(ScreensRoutes.DetailedScreens.DetailedMusicRoute)
-                                        },
+                                        .clickable { selectMusic(music) },
                                     musicObject = music
                                 )
                             }
