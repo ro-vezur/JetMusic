@@ -43,7 +43,7 @@ class SharedMusicSelectionViewModel @Inject constructor(
 
             is MusicSelectionEvent.SetMediaItems -> setMediaItemsUseCase(musicList = event.musicList)
 
-            is MusicSelectionEvent.SelectMusic ->  playMusicUseCase(event.musicList.indexOf(event.selectedMusic))
+            is MusicSelectionEvent.SelectMusic ->  playMusicUseCase(event.musicIndex)
 
             MusicSelectionEvent.PauseMusic -> pauseMusicUseCase()
 
@@ -53,16 +53,17 @@ class SharedMusicSelectionViewModel @Inject constructor(
 
     fun setPlaylist(playlist: DetailedPlaylistObject?) = viewModelScope.launch {
         _selectedPlaylist.emit(playlist)
-        _selectedMediaType.emit(MediaTypes.PLAYLIST)
     }
 
     fun setArtist(artistObject: DetailedArtistObject?) = viewModelScope.launch {
         _selectedArtist.emit(artistObject)
-        _selectedMediaType.emit(MediaTypes.ARTIST)
     }
 
     fun setMusic(musicObject: MusicObject) = viewModelScope.launch {
         _selectedPlaylist.emit(DetailedPlaylistObject(listOf(musicObject)))
-        _selectedMediaType.emit(MediaTypes.MUSIC)
+    }
+
+    fun setMediaType(mediaType: MediaTypes) = viewModelScope.launch {
+        _selectedMediaType.emit(mediaType)
     }
 }
