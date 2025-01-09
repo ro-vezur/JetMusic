@@ -8,6 +8,9 @@ data class User(
     val email: String,
     val password: String,
     val customProviderUsed: Boolean,
+    val likedSongsIds: MutableList<String> = mutableListOf(),
+    val likedPlaylistsIds: MutableList<String> = mutableListOf(),
+    val likedArtistsIds: MutableList<String> = mutableListOf(),
 ) {
 
     constructor(): this("","","","",false)

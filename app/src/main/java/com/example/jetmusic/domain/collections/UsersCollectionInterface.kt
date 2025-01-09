@@ -8,6 +8,8 @@ interface UsersCollectionInterface {
 
     suspend fun addUser(user: User): Flow<ResultResource<User>>
 
+    suspend fun updateUser(user: User)
+
     suspend fun getUser(id: String): User?
 
     suspend fun checkIsEmailRegistered(email: String): Boolean

@@ -12,7 +12,7 @@ import javax.inject.Singleton
 
 @Singleton
 class UsersCollectionRepository(
-    private val db: FirebaseFirestore
+    db: FirebaseFirestore
 ): UsersCollectionInterface {
 
     private val collection = db.collection(USERS_COLLECTION)
@@ -30,6 +30,14 @@ class UsersCollectionRepository(
 
     }.catch { e ->
         emit(ResultResource.Error(message = e.message.toString()))
+    }
+
+    override suspend fun updateUser(user: User) {
+        val userDocument = collection.document(user.id).get().await()
+
+        if(userDocument.exists()) {
+            collection.document(user.id).set(user)
+        }
     }
 
     override suspend fun getUser(id: String): User? {

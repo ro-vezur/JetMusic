@@ -36,6 +36,10 @@ class UserViewModel @Inject constructor(
         _firebaseUser.emit(auth.currentUser)
     }
 
+    fun updateUser(newUser: User) = viewModelScope.launch {
+        usersCollectionRepository.updateUser(newUser)
+    }
+
     fun logOut() {
         auth.signOut()
         setUser(null)
