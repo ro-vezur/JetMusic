@@ -1,9 +1,8 @@
 package com.example.jetmusic.View.Screens.DetailedScreens.DetailedArtistScreen
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,14 +29,11 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.jetmusic.Extensions.NavigateExtensions.navigateBack
-import com.example.jetmusic.ViewModels.MusicPlayerViewModel
 import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Detailed.DetailedArtistObject
 import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
-import com.example.jetmusic.other.events.MusicPlayerEvent
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
 import androidx.compose.material3.MaterialTheme.colorScheme
@@ -185,7 +180,9 @@ fun DetailedArtistScreen(
                     .fillMaxSize()
                     .background(colorScheme.background),
                 navController = innerNavController,
-                startDestination = ScreensRoutes.DetailedScreens.DetailedArtistRoute.Companion.ArtistMainInfoRoute
+                startDestination = ScreensRoutes.DetailedScreens.DetailedArtistRoute.Companion.ArtistMainInfoRoute,
+                enterTransition = { EnterTransition.None },
+                exitTransition = { ExitTransition.None }
             ) {
                 composable<ScreensRoutes.DetailedScreens.DetailedArtistRoute.Companion.ArtistMainInfoRoute> {
                     ArtistMainInfoScreen(

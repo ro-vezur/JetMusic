@@ -24,6 +24,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,6 +45,7 @@ import com.example.jetmusic.other.events.MusicPlayerEvent
 import com.example.jetmusic.states.PlayerState
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
+import kotlinx.coroutines.delay
 
 @Composable
 fun MoreArtistMusicsScreen(
@@ -49,6 +55,13 @@ fun MoreArtistMusicsScreen(
     musicPlayerViewModel: MusicPlayerViewModel = hiltViewModel(),
 ) {
     val isPlaying = musicControllerUiState.playerState == PlayerState.PLAYING
+
+    var showTracks by remember { mutableStateOf(false) }
+
+    LaunchedEffect(null) {
+        delay(200)
+        showTracks = true
+    }
 
     Column(
         modifier = Modifier
@@ -91,69 +104,74 @@ fun MoreArtistMusicsScreen(
             }
         }
 
-        LazyColumn(
-            modifier = Modifier
-                .padding(top = 12.sdp),
-            verticalArrangement = Arrangement.spacedBy(8.sdp)
-        ) {
-            item { Spacer(modifier = Modifier.height(4.sdp)) }
+        if(showTracks) {
+            LazyColumn(
+                modifier = Modifier
+                    .padding(top = 12.sdp),
+                verticalArrangement = Arrangement.spacedBy(8.sdp)
+            ) {
+                item { Spacer(modifier = Modifier.height(4.sdp)) }
 
-            items(artistObject.tracks) { music ->
-                MusicCard(
-                    modifier = Modifier
-                        .padding(horizontal = 10.sdp)
-                        .height(42.sdp)
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(10.sdp))
-                        .clickable {
-                            if (musicControllerUiState.currentMusic?.audio?.contains(music.id) == false) {
-                                musicPlayerViewModel.onEvent(
-                                    MusicPlayerEvent.SelectMusic(
-                                        artistObject.tracks.indexOf(music)
+                items(artistObject.tracks) { music ->
+                    MusicCard(
+                        modifier = Modifier
+                            .padding(horizontal = 10.sdp)
+                            .height(42.sdp)
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(10.sdp))
+                            .clickable {
+                                if (musicControllerUiState.currentMusic?.audio?.contains(music.id) == false) {
+                                    musicPlayerViewModel.onEvent(
+                                        MusicPlayerEvent.SelectMusic(
+                                            artistObject.tracks.indexOf(music)
+                                        )
                                     )
+                                }
+                            },
+                        musicObject = music,
+                        trailingIcon = {
+                            Box(
+                                modifier = Modifier
+                                    .padding(end = 4.sdp)
+                                    .size(32.sdp)
+                                    .clip(RoundedCornerShape(10.sdp))
+                                    .clickable {
+                                        if (musicControllerUiState.currentMusic?.audio?.contains(
+                                                music.id
+                                            ) == false
+                                        ) {
+                                            musicPlayerViewModel.onEvent(
+                                                MusicPlayerEvent.SelectMusic(
+                                                    artistObject.tracks.indexOf(music)
+                                                )
+                                            )
+                                        }
+
+                                        navController.navigate(ScreensRoutes.DetailedScreens.DetailedMusicRoute)
+                                    },
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowForwardIos,
+                                    contentDescription = "detailed music",
+                                    modifier = Modifier
+                                        .size(21.sdp)
                                 )
                             }
                         },
-                    musicObject = music,
-                    trailingIcon = {
-                        Box(
-                            modifier = Modifier
-                                .padding(end = 4.sdp)
-                                .size(32.sdp)
-                                .clip(RoundedCornerShape(10.sdp))
-                                .clickable {
-                                    if (musicControllerUiState.currentMusic?.audio?.contains(music.id) == false) {
-                                        musicPlayerViewModel.onEvent(
-                                            MusicPlayerEvent.SelectMusic(
-                                                artistObject.tracks.indexOf(music)
-                                            )
-                                        )
-                                    }
-
-                                    navController.navigate(ScreensRoutes.DetailedScreens.DetailedMusicRoute)
-                                },
-                            contentAlignment = Alignment.Center,
-                        ){
-                            Icon(
-                                imageVector = Icons.Filled.ArrowForwardIos,
-                                contentDescription = "detailed music",
-                                modifier = Modifier
-                                    .size(21.sdp)
-                            )
+                        bottomBar = {
+                            if (musicControllerUiState.currentMusic?.audio?.contains(music.id) == true) {
+                                MusicPlayerSlider(
+                                    modifier = Modifier
+                                        .padding(start = 8.sdp, end = 8.sdp, top = 8.sdp)
+                                        .height(4.sdp),
+                                    musicControllerUiState = musicControllerUiState,
+                                    onEvent = musicPlayerViewModel::onEvent
+                                )
+                            }
                         }
-                    },
-                    bottomBar = {
-                        if(musicControllerUiState.currentMusic?.audio?.contains(music.id) == true) {
-                            MusicPlayerSlider(
-                                modifier = Modifier
-                                    .padding(start = 8.sdp, end = 8.sdp, top = 8.sdp)
-                                    .height(4.sdp),
-                                musicControllerUiState = musicControllerUiState,
-                                onEvent = musicPlayerViewModel::onEvent
-                            )
-                        }
-                    }
-                )
+                    )
+                }
             }
         }
     }
