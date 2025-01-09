@@ -27,7 +27,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.example.jetmusic.Helpers.MusicObjectHelper
 import com.example.jetmusic.View.Components.Slider.MusicPlayerSlider
 import com.example.jetmusic.other.events.MusicPlayerEvent
 import com.example.jetmusic.ViewModels.MusicPlayerViewModel
@@ -36,7 +35,6 @@ import com.example.jetmusic.states.PlayerState
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MusicBottomBar(
     modifier: Modifier = Modifier,
@@ -48,7 +46,6 @@ fun MusicBottomBar(
 
     musicControllerUiState.currentMusic?.let { musicObject ->
 
-        val musicObjectHelper = MusicObjectHelper(musicObject)
         val isPlaying = musicControllerUiState.playerState == PlayerState.PLAYING
 
         Column(
@@ -88,11 +85,13 @@ fun MusicBottomBar(
                             fontSize = typography().bodyMedium.fontSize * 1.05f,
                         )
 
-                        Text(
-                            text = musicObjectHelper.musicArtistName(),
-                            fontSize = typography().bodyMedium.fontSize,
-                            color = Color.Gray
-                        )
+                        if(musicObject.artist_name != "null" && !musicObject.artist_name.isNullOrBlank()) {
+                            Text(
+                                text = musicObject.artist_name.toString(),
+                                fontSize = typography().bodyMedium.fontSize,
+                                color = Color.Gray
+                            )
+                        }
                     }
                 }
 

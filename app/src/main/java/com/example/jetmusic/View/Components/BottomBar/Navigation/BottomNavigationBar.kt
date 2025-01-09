@@ -54,7 +54,7 @@ fun BottomNavigationBar(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.Black.copy(1f)),
+            .background(Color.Black.copy(0.85f)),
         contentAlignment = Alignment.Center
     ) {
         Row(
