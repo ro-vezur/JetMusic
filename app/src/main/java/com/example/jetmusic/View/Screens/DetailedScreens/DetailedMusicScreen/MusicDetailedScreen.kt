@@ -11,14 +11,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
+import androidx.compose.material.icons.outlined.Download
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -33,9 +37,16 @@ import coil.compose.AsyncImage
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
 import androidx.compose.material3.MaterialTheme.colorScheme
-import com.example.jetmusic.Helpers.MusicObjectHelper
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.style.TextOverflow
+import com.example.jetmusic.Helpers.MusicHelper
 import com.example.jetmusic.Helpers.TimeHelper
 import com.example.jetmusic.View.Components.Slider.MusicPlayerSlider
+import com.example.jetmusic.ViewModels.LikedSongsViewModel
+import com.example.jetmusic.data.DTOs.UserDTOs.User
 import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
 import com.example.jetmusic.other.events.MusicPlayerEvent
 import com.example.jetmusic.states.PlayerState
@@ -44,16 +55,20 @@ import com.example.jetmusic.states.PlayerState
 @Composable
 fun MusicDetailedScreen(
     musicControllerUiState: MusicControllerUiState,
+    user: User,
     navigateBack: () -> Unit,
+    updateUser: (User) -> Unit,
     onEvent: (MusicPlayerEvent) -> Unit,
+    removeMusicFromLikedList: (String) -> Unit,
 ) {
 
-
-
-
     musicControllerUiState.currentMusic?.let { musicObject ->
-        val musicObjectHelper = MusicObjectHelper(musicObject)
+        val likedSongs = user.likedSongsIds
         val isPlaying = musicControllerUiState.playerState == PlayerState.PLAYING
+        val musicId = MusicHelper.getTrackIdFromUrl(musicObject.audio)
+
+        var isLiked by remember{ mutableStateOf(likedSongs.contains(musicId)) }
+        val isDownloaded = false
 
         Column(
             modifier = Modifier
@@ -81,7 +96,7 @@ fun MusicDetailedScreen(
                 contentDescription = "music image",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .padding(top = 25.sdp)
+                    .padding(top = 24.sdp)
                     .size(250.sdp)
                     .clip(RoundedCornerShape(15.sdp))
             )
@@ -89,23 +104,68 @@ fun MusicDetailedScreen(
             Row(
                 modifier = Modifier
                     .padding(top = 16.sdp)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.Top,
             ) {
                 Column(
+                    modifier = Modifier
+                        .width(180.sdp)
                 ) {
                     Text(
                         text = musicObject.name,
-                        style = typography().titleMedium,
-                        fontWeight = FontWeight.SemiBold
+                        style = typography().titleSmall,
+                        fontWeight = FontWeight.SemiBold,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier
+                            .height(20.sdp)
                     )
 
-                    Text(
+                    if(musicObject.artist_name != "null" && !musicObject.artist_name.isNullOrBlank()) {
+                        Text(
+                            modifier = Modifier
+                                .padding(top = 6.sdp)
+                                .height(20.sdp),
+                            text = musicObject.artist_name,
+                            style = typography().titleSmall,
+                            fontWeight = FontWeight.Normal,
+                            color = Color.Gray
+                        )
+                    }
+                }
+
+                Row(
+                    modifier = Modifier,
+                    horizontalArrangement = Arrangement.spacedBy(10.sdp)
+                ) {
+                    Icon(
+                        imageVector = if(isLiked) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                        contentDescription = "like",
                         modifier = Modifier
-                            .padding(top = 6.sdp),
-                        text = musicObjectHelper.musicArtistName(),
-                        style = typography().titleMedium,
-                        fontWeight = FontWeight.Normal,
-                        color = Color.Gray
+                            .size(30.sdp)
+                            .clip(RoundedCornerShape(6.sdp))
+                            .clickable {
+                                isLiked = if (isLiked) {
+                                    likedSongs.remove(musicId)
+                                    updateUser(user.copy(likedSongsIds = likedSongs))
+                                    removeMusicFromLikedList(musicId)
+                                    likedSongs.contains(musicId)
+                                } else {
+                                    likedSongs.add(musicId)
+                                    updateUser(user.copy(likedSongsIds = likedSongs))
+                                    likedSongs.contains(musicId)
+                                }
+                            }
+                    )
+
+                    Icon(
+                        imageVector = Icons.Outlined.Download,
+                        contentDescription = "like",
+                        modifier = Modifier
+                            .size(30.sdp)
+                            .clip(RoundedCornerShape(6.sdp))
+                            .clickable {
+
+                            }
                     )
                 }
             }

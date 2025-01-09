@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -20,7 +18,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.AsyncImage
-import com.example.jetmusic.Helpers.MusicObjectHelper
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
@@ -34,7 +31,6 @@ fun MusicCard(
 ) {
     val scrollState = rememberScrollState()
 
-    val musicObjectHelper = MusicObjectHelper(musicObject)
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -74,14 +70,16 @@ fun MusicCard(
                         maxLines = 1
                     )
 
-                    Text(
-                        modifier = Modifier
-                            .padding(top = 2.sdp),
-                        text = musicObjectHelper.musicArtistName(),
-                        fontSize = typography().bodySmall.fontSize * 1.05f,
-                        color = Color.Gray,
-                        maxLines = 1
-                    )
+                    if(musicObject.artist_name != "null" && !musicObject.artist_name.isNullOrBlank()) {
+                        Text(
+                            modifier = Modifier
+                                .padding(top = 2.sdp),
+                            text = musicObject.artist_name,
+                            fontSize = typography().bodySmall.fontSize * 1.05f,
+                            color = Color.Gray,
+                            maxLines = 1
+                        )
+                    }
                 }
             }
 
