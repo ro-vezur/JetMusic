@@ -17,7 +17,7 @@ fun NavGraphBuilder.startScreensGraph(
 ) {
 
     navigation<ScreensRoutes.StartScreens>(
-        startDestination = ScreensRoutes.StartScreens.WelcomeRoute
+        startDestination = ScreensRoutes.StartScreens.WelcomeRoute,
     ) {
 
         composable<ScreensRoutes.StartScreens.WelcomeRoute> {

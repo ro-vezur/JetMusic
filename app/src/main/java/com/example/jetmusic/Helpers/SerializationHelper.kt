@@ -1,12 +1,10 @@
 package com.example.jetmusic.Helpers
 
 import kotlinx.serialization.InternalSerializationApi
-import kotlinx.serialization.Serializer
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
 
-class SerializationClass {
+class SerializationHelper {
 
     companion object {
         @OptIn(InternalSerializationApi::class)
