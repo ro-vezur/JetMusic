@@ -17,6 +17,6 @@ enum class BottomNavigationBarItems(
     val route: Any
 ) {
     HOME_SCREEN(Icons.Filled.Home,Icons.Outlined.Home,"Home", ScreensRoutes.HomeRoute),
-    SEARCH_SCREEN(Icons.Filled.Search,Icons.Outlined.Search,"Search", ScreensRoutes.SearchRoute),
+    SEARCH_SCREEN(Icons.Filled.Search,Icons.Outlined.Search,"Search", ScreensRoutes.MainSearchRoute),
     LIBRARY_SCREEN(Icons.Filled.LibraryMusic,Icons.Outlined.LibraryMusic,"Library", ScreensRoutes.LibraryNavigationGraph),
 }
