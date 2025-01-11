@@ -70,14 +70,14 @@ fun MoreArtistMusicsScreen(
     ) {
         Row(
             modifier = Modifier
-                .padding(top = 12.sdp)
+                .padding(top = 12.sdp,start = 5.sdp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = "${artistObject.tracks.size} Songs",
-                style = typography().titleLarge,
+                style = typography().titleMedium,
                 fontWeight = FontWeight.Normal
             )
 

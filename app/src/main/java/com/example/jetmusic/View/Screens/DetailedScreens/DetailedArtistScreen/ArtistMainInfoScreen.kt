@@ -1,5 +1,6 @@
 package com.example.jetmusic.View.Screens.DetailedScreens.DetailedArtistScreen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,10 +14,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForwardIos
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
@@ -34,29 +38,38 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.jetmusic.View.Components.Buttons.TextButton
 import com.example.jetmusic.View.Components.Cards.MusicCards.MusicCard
 import com.example.jetmusic.View.Components.Slider.MusicPlayerSlider
 import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
 import com.example.jetmusic.ViewModels.MusicPlayerViewModel
 import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Detailed.DetailedArtistObject
+import com.example.jetmusic.data.DTOs.UserDTOs.User
 import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
 import com.example.jetmusic.other.events.MusicPlayerEvent
 import com.example.jetmusic.states.PlayerState
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
 import kotlinx.coroutines.delay
+import androidx.compose.material3.MaterialTheme.colorScheme
+import com.example.jetmusic.Helpers.MusicHelper
 
 @Composable
 fun ArtistMainInfoScreen(
     navController: NavController,
     artistObject: DetailedArtistObject,
     musicControllerUiState: MusicControllerUiState,
+    user: User,
+    updateUser: (User) -> Unit,
     seeMoreTracks: () -> Unit,
     musicPlayerViewModel: MusicPlayerViewModel = hiltViewModel(),
 ) {
     val isPlaying = musicControllerUiState.playerState == PlayerState.PLAYING
+    val currentMusicId = MusicHelper.getTrackIdFromUrl(musicControllerUiState.currentMusic?.audio)
+    val likedArtistsIds = user.likedArtistsIds
 
     var showTracks by remember { mutableStateOf(false) }
+    var isLiked by remember { mutableStateOf(likedArtistsIds.contains(artistObject.id)) }
 
     LaunchedEffect(null) {
         delay(200)
@@ -65,6 +78,7 @@ fun ArtistMainInfoScreen(
 
     LazyColumn(
         modifier = Modifier
+            .padding(top = 16.sdp)
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(8.sdp)
     ) {
@@ -78,6 +92,25 @@ fun ArtistMainInfoScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
+                TextButton(
+                    text = if(isLiked) "Unfollow" else "Follow",
+                    style = typography().bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+                    background = colorScheme.inversePrimary,
+                    height = 36.sdp,
+                    width = 80.sdp,
+                    onClick = {
+                        isLiked = if (isLiked) {
+                            likedArtistsIds.remove(artistObject.id)
+                            updateUser(user.copy(likedArtistsIds = likedArtistsIds))
+                            likedArtistsIds.contains(artistObject.id)
+                        } else {
+                            likedArtistsIds.add(artistObject.id)
+                            updateUser(user.copy(likedArtistsIds = likedArtistsIds))
+                            likedArtistsIds.contains(artistObject.id)
+                        }
+                    }
+                )
+
                 Spacer(modifier = Modifier.weight(1f))
 
                 Box(
@@ -85,7 +118,7 @@ fun ArtistMainInfoScreen(
                         .padding(end = 14.sdp)
                         .size(35.sdp)
                         .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.inversePrimary)
+                        .background(colorScheme.inversePrimary)
                         .clickable {
                             musicPlayerViewModel.onEvent(if (isPlaying) MusicPlayerEvent.PauseMusic else MusicPlayerEvent.ResumeMusic)
                         },
@@ -94,7 +127,7 @@ fun ArtistMainInfoScreen(
                     Icon(
                         imageVector = if(isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
                         contentDescription = "play/pause",
-                        tint = MaterialTheme.colorScheme.background,
+                        tint = colorScheme.background,
                         modifier = Modifier
                             .size(28.sdp)
                     )
@@ -133,7 +166,7 @@ fun ArtistMainInfoScreen(
         item { Spacer(modifier = Modifier.height(4.sdp)) }
 
         if(showTracks) {
-            items(artistObject.tracks.take(5)) { music ->
+            itemsIndexed(artistObject.tracks.take(5)) { index,music ->
                 MusicCard(
                     modifier = Modifier
                         .padding(horizontal = 10.sdp)
@@ -141,11 +174,14 @@ fun ArtistMainInfoScreen(
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(10.sdp))
                         .clickable {
-                            if (musicControllerUiState.currentMusic?.audio?.contains(music.id) == false) {
+                            Log.d("current music",musicControllerUiState.currentMusic.toString())
+                            Log.d("id of current music",currentMusicId)
+                            Log.d("music to set",music.toString())
+                            Log.d("is ids not equal?",(currentMusicId != music.id).toString())
+                            Log.d("index of music to select", index.toString())
+                            if (currentMusicId != music.id) {
                                 musicPlayerViewModel.onEvent(
-                                    MusicPlayerEvent.SelectMusic(
-                                        artistObject.tracks.indexOf(music)
-                                    )
+                                    MusicPlayerEvent.SelectMusic(index)
                                 )
                             }
                         },
@@ -157,7 +193,8 @@ fun ArtistMainInfoScreen(
                                 .size(32.sdp)
                                 .clip(RoundedCornerShape(10.sdp))
                                 .clickable {
-                                    if (musicControllerUiState.currentMusic?.audio?.contains(music.id) == false) {
+                                    Log.d("is ids not equal?",(MusicHelper.getTrackIdFromUrl(musicControllerUiState.currentMusic?.audio) != music.id).toString())
+                                    if (MusicHelper.getTrackIdFromUrl(musicControllerUiState.currentMusic?.audio) != music.id) {
                                         musicPlayerViewModel.onEvent(
                                             MusicPlayerEvent.SelectMusic(
                                                 artistObject.tracks.indexOf(music)

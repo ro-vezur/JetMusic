@@ -37,25 +37,29 @@ import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
 import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.draw.rotate
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
+import com.example.jetmusic.data.DTOs.UserDTOs.User
 
 @Composable
 fun DetailedArtistScreen(
     navController: NavController,
     artistObject: DetailedArtistObject,
     musicControllerUiState: MusicControllerUiState,
+    user: User,
+    updateUser: (User) -> Unit,
 ) {
     val innerNavController = rememberNavController()
     val currentBackStackEntry by innerNavController.currentBackStackEntryAsState()
 
     var showAllTracks by remember { mutableStateOf(false) }
-    var mainInfoScreenHeight by remember { mutableStateOf(0.68f) }
-    var iconRotateDegrees by remember { mutableStateOf(0f) }
+    var mainInfoScreenHeight by rememberSaveable { mutableStateOf(0.68f) }
+    var iconRotateDegrees by rememberSaveable { mutableStateOf(0f) }
 
     LaunchedEffect(currentBackStackEntry) {
         val currentRoute = currentBackStackEntry?.destination?.route.toString()
@@ -74,7 +78,7 @@ fun DetailedArtistScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-    ){
+    ) {
         Box(
             modifier = Modifier
                 .align(Alignment.TopCenter)
@@ -144,7 +148,7 @@ fun DetailedArtistScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(1f - animateFloatAsState(targetValue = mainInfoScreenHeight).value)
+                    .fillMaxHeight(animateFloatAsState(targetValue = 1f - mainInfoScreenHeight).value)
                     .background(
                         Brush.verticalGradient(
                             listOf(
@@ -189,10 +193,12 @@ fun DetailedArtistScreen(
                         navController = navController,
                         artistObject = artistObject,
                         musicControllerUiState = musicControllerUiState,
+                        user = user,
                         seeMoreTracks = {
                             showAllTracks = true
                             innerNavController.navigate(ScreensRoutes.DetailedScreens.DetailedArtistRoute.Companion.ArtistMoreTracksRoute)
-                        }
+                        },
+                        updateUser = updateUser
                     )
                 }
 
