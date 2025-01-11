@@ -20,6 +20,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.ArrowForwardIos
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
@@ -37,6 +39,10 @@ import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
 import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -45,6 +51,7 @@ import com.example.jetmusic.View.Components.Cards.MusicCards.MusicCard
 import com.example.jetmusic.View.Components.Slider.MusicPlayerSlider
 import com.example.jetmusic.ViewModels.MusicPlayerViewModel
 import com.example.jetmusic.data.DTOs.API.PlaylistDTOs.Detailed.DetailedPlaylistObject
+import com.example.jetmusic.data.DTOs.UserDTOs.User
 import com.example.jetmusic.other.events.MusicPlayerEvent
 import com.example.jetmusic.states.PlayerState
 
@@ -53,10 +60,17 @@ fun DetailedPlaylistScreen(
     navController: NavController,
     playlistObject: DetailedPlaylistObject,
     musicControllerUiState: MusicControllerUiState,
+    user: User,
+    updateUser: (User) -> Unit,
     musicPlayerViewModel: MusicPlayerViewModel = hiltViewModel(),
 ) {
 
     val isPlaying = musicControllerUiState.playerState == PlayerState.PLAYING
+    val likedPlaylists = user.likedPlaylistsIds
+
+    var isLiked by remember(likedPlaylists.contains(playlistObject.id)) {
+        mutableStateOf(likedPlaylists.contains(playlistObject.id))
+    }
 
     Column(
         modifier = Modifier
@@ -134,6 +148,23 @@ fun DetailedPlaylistScreen(
                 style = typography().titleSmall,
                 fontWeight = FontWeight.W500,
                 modifier = Modifier
+            )
+
+            Icon(
+                imageVector = if(isLiked) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                contentDescription = "like",
+                modifier = Modifier
+                    .size(30.sdp)
+                    .clip(RoundedCornerShape(6.sdp))
+                    .clickable {
+                        if (isLiked) {
+                            likedPlaylists.remove(playlistObject.id)
+                            updateUser(user.copy(likedPlaylistsIds = likedPlaylists))
+                        } else {
+                            likedPlaylists.add(playlistObject.id)
+                            updateUser(user.copy(likedPlaylistsIds = likedPlaylists))
+                        }
+                    }
             )
 
             Box(
