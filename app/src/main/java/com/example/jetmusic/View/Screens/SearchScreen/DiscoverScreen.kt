@@ -1,7 +1,7 @@
 package com.example.jetmusic.View.Screens.SearchScreen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.TrendingUp
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,10 +29,11 @@ import com.example.jetmusic.BOTTOM_NAVIGATION_BAR_HEIGHT
 import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Simplified.SimplifiedArtistResponse
 import com.example.jetmusic.data.enums.Genres.MusicGenres
 import com.example.jetmusic.other.Resources.ResultResource
-import com.example.jetmusic.View.Components.Cards.ArtistCard
+import com.example.jetmusic.View.Components.Cards.ArtistCards.TrendingArtistCard
 import com.example.jetmusic.View.Components.Cards.MusicCards.MusicGenreCard
+import com.example.jetmusic.View.Screens.ResultScreens.ErrorScreen
+import com.example.jetmusic.View.Screens.ResultScreens.LoadingScreen
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
-import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
 
@@ -42,6 +42,7 @@ fun DiscoverScreen(
     modifier: Modifier,
     trendingArtistsResult: ResultResource<SimplifiedArtistResponse>,
     currentMusicObject: MusicObject?,
+    selectArtist: (String) -> Unit,
 ) {
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp
@@ -73,15 +74,12 @@ fun DiscoverScreen(
 
                 when (trendingArtistsResult) {
                     is ResultResource.Loading -> {
-                        Box(
+                        LoadingScreen(
                             modifier = Modifier
                                 .padding(top = 15.sdp)
                                 .fillMaxWidth()
-                                .height(85.sdp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
-                        }
+                                .height(85.sdp)
+                        )
                     }
 
                     is ResultResource.Success -> {
@@ -96,10 +94,11 @@ fun DiscoverScreen(
                             trendingArtistsResult.data?.let { artists ->
                                 items(artists.results) { artist ->
                                     if (artist.name.isNotBlank() && artist.image.isNotBlank()) {
-                                        ArtistCard(
+                                        TrendingArtistCard(
                                             modifier = Modifier
                                                 .height(85.sdp)
-                                                .width(50.sdp),
+                                                .width(50.sdp)
+                                                .clickable { selectArtist(artist.id) },
                                             artistObject = artist
                                         )
                                     }
@@ -111,7 +110,13 @@ fun DiscoverScreen(
                     }
 
                     is ResultResource.Error -> {
-
+                        ErrorScreen(
+                            modifier = Modifier
+                                .padding(top = 15.sdp)
+                                .fillMaxWidth()
+                                .height(85.sdp),
+                            errorText = trendingArtistsResult.message.toString()
+                        )
                     }
                 }
             }

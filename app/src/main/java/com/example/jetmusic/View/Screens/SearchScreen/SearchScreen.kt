@@ -40,6 +40,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.jetmusic.View.Components.Buttons.TextButton
 import com.example.jetmusic.View.Components.InputFields.SearchField
@@ -61,12 +62,12 @@ fun SearchScreen(
     selectArtist: (DetailedArtistObject) -> Unit,
     searchViewModel: SearchViewModel,
 ) {
+
     val focusManager = LocalFocusManager.current
     val scope = rememberCoroutineScope()
 
     val searchText by searchViewModel.searchText.collectAsStateWithLifecycle()
     val isRequestSent by searchViewModel.isRequestSent.collectAsStateWithLifecycle()
-
 
     var searchBarWidth by remember { mutableStateOf(if(isRequestSent) 200  else 235 ) }
     var searchBarTrailingIconWidth by remember { mutableStateOf(if(isRequestSent) 72 else 32) }
@@ -194,7 +195,16 @@ fun SearchScreen(
                 modifier = Modifier
                     .padding(innerPadding),
                 trendingArtistsResult = trendingArtistsResult,
-                currentMusicObject = currentMusicObject
+                currentMusicObject = currentMusicObject,
+                selectArtist = { id ->
+                    scope.launch {
+                        val detailedArtistResponse = searchViewModel.getArtistById(id)
+                        if(detailedArtistResponse.results.isNotEmpty()) {
+                            val detailedArtistObject = detailedArtistResponse.results.first()
+                            selectArtist(detailedArtistObject)
+                        }
+                    }
+                },
             )
         }
 
@@ -208,6 +218,7 @@ fun SearchScreen(
             SearchedMediaScreen(
                 modifier = Modifier
                     .padding(innerPadding),
+                currentMusic = currentMusicObject,
                 paginatedSearchedData = searchedData,
                 navigateToSelectedMusic = { id ->
                     scope.launch {
