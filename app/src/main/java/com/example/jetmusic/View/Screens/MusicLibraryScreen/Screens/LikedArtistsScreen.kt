@@ -1,5 +1,6 @@
 package com.example.jetmusic.View.Screens.MusicLibraryScreen.Screens
 
+import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Detailed.DetailedArtistObject
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,8 +14,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
@@ -32,13 +36,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
 import com.example.jetmusic.BOTTOM_MUSIC_PLAYER_HEIGHT
 import com.example.jetmusic.BOTTOM_NAVIGATION_BAR_HEIGHT
 import com.example.jetmusic.Extensions.NavigateExtensions.navigateBack
-import com.example.jetmusic.View.Components.Cards.MusicCards.MusicCard
+import com.example.jetmusic.View.Components.Cards.ArtistCards.LikedArtistCard
 import com.example.jetmusic.View.Components.InputFields.SearchField
 import com.example.jetmusic.View.Screens.ResultScreens.ErrorScreen
 import com.example.jetmusic.View.Screens.ResultScreens.LoadingScreen
@@ -48,14 +51,13 @@ import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
 
 @Composable
-fun LikedSongsScreen(
+fun LikedArtistsScreen(
     navController: NavController,
     currentMusicObject: MusicObject?,
-    likedSongsCount: Int,
-    likedMusicResult: ResultResource<List<MusicObject>>,
-    selectMusic: (MusicObject) -> Unit,
+    likedArtistsCount: Int,
+    likedArtistsResult: ResultResource<List<DetailedArtistObject>>,
+    selectArtist: (DetailedArtistObject) -> Unit,
 ) {
-
     var searchText by remember { mutableStateOf("") }
 
     Scaffold(
@@ -79,7 +81,7 @@ fun LikedSongsScreen(
                 )
 
                 Text(
-                    text = "Liked Songs",
+                    text = "Liked Artists",
                     style = typography().headlineSmall,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
@@ -91,27 +93,26 @@ fun LikedSongsScreen(
         Column(
             modifier = Modifier
                 .padding(innerPadding)
-                .fillMaxSize(),
+                .fillMaxSize()
         ) {
-
-            when(likedMusicResult){
+            when(likedArtistsResult) {
                 is ResultResource.Loading -> { LoadingScreen(Modifier.fillMaxSize()) }
                 is ResultResource.Success -> {
-                    likedMusicResult.data?.let { data ->
+                    likedArtistsResult.data?.let { data ->
                         val sortedData = remember(data,searchText) {
                             data.filter { it.name.contains(searchText,true) }
                         }
                         Text(
                             modifier = Modifier
                                 .padding(start = 16.sdp,top = 4.sdp),
-                            text = "$likedSongsCount Songs",
+                            text = "$likedArtistsCount Songs",
                             style = typography().titleSmall,
                             color = Color.Gray
                         )
 
                         Box(
                             modifier = Modifier
-                                .padding(top = 12.sdp)
+                                .padding(top = 12.sdp, bottom = 10.sdp)
                                 .fillMaxWidth(),
                             contentAlignment = Alignment.Center,
                         ) {
@@ -120,7 +121,7 @@ fun LikedSongsScreen(
                                 background = MaterialTheme.colorScheme.inversePrimary,
                                 textColor = MaterialTheme.colorScheme.background,
                                 focusedBorder = BorderStroke(0.sdp, Color.Transparent),
-                                unfocusedBorder = BorderStroke(0.sdp,Color.Transparent),
+                                unfocusedBorder = BorderStroke(0.sdp, Color.Transparent),
                                 onTextChange = { value ->
                                     searchText = value
                                 },
@@ -141,26 +142,25 @@ fun LikedSongsScreen(
                             )
                         }
 
-                        LazyColumn(
+                        LazyVerticalGrid(
                             modifier = Modifier
-                                .padding(top = 10.sdp)
-                                .fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(8.sdp)
+                                .padding(horizontal = 12.sdp),
+                            columns = GridCells.Fixed(2),
+                            horizontalArrangement = Arrangement.spacedBy(14.sdp),
+                            verticalArrangement = Arrangement.spacedBy(14.sdp),
                         ) {
-                            items(sortedData) { music ->
-                                MusicCard(
+                            items(sortedData) { artist ->
+                                LikedArtistCard(
                                     modifier = Modifier
-                                        .padding(start = 10.sdp)
-                                        .height(42.sdp)
-                                        .fillMaxWidth()
-                                        .clickable { selectMusic(music) },
-                                    musicObject = music
+                                        .width(132.sdp)
+                                        .clip(RoundedCornerShape(10.sdp))
+                                        .clickable { selectArtist(artist) },
+                                    artistObject = artist
                                 )
                             }
 
-                            item {
-                                if (currentMusicObject == null) {
+                            item(span = { GridItemSpan(maxLineSpan) } ) {
+                                if(currentMusicObject == null) {
                                     Spacer(modifier = Modifier.height((BOTTOM_NAVIGATION_BAR_HEIGHT + 15).sdp))
                                 } else {
                                     Spacer(
@@ -175,7 +175,7 @@ fun LikedSongsScreen(
                 is ResultResource.Error -> {
                     ErrorScreen(
                         modifier = Modifier.fillMaxSize(),
-                        errorText = likedMusicResult.message.toString()
+                        errorText = likedArtistsResult.message.toString()
                     )
                 }
             }

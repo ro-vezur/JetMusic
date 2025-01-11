@@ -133,7 +133,7 @@ private fun NavigationTileCard(
     Box(
         modifier = Modifier
             .width(120.sdp)
-            .height(100.sdp)
+            .height(92.sdp)
             .border(
                 border = BorderStroke(1.sdp, colorScheme.secondary),
                 shape = RoundedCornerShape(12.sdp)
@@ -161,7 +161,7 @@ private fun NavigationTileCard(
                 imageVector = icon,
                 contentDescription = "icon",
                 modifier = Modifier
-                    .padding(top = 10.sdp)
+                    .padding(top = 8.sdp)
                     .size(26.sdp)
             )
 
@@ -170,7 +170,7 @@ private fun NavigationTileCard(
                 style = typography().bodyLarge,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
-                    .padding(top = 8.sdp)
+                    .padding(top = 6.sdp)
             )
 
             Text(
@@ -179,7 +179,7 @@ private fun NavigationTileCard(
                 fontWeight = FontWeight.Normal,
                 color = Color.Gray,
                 modifier = Modifier
-                    .padding(top = 6.sdp)
+                    .padding(top = 5.sdp)
             )
         }
     }
