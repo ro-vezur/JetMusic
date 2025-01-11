@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -31,11 +33,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -59,6 +63,8 @@ fun SignUpScreen(
     setUser: (newUser: User) -> Unit,
     signUpViewModel: SignUpViewModel = hiltViewModel(),
 ) {
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp
 
     val nameValidationResult by signUpViewModel.nameValidation.collectAsStateWithLifecycle()
     var fullName by remember { mutableStateOf("") }
@@ -97,14 +103,14 @@ fun SignUpScreen(
 
         Text(
             modifier = Modifier
-                .padding(top = 32.sdp),
+                .padding(top = screenHeight.dp / 12),
             text = "Sign Up",
             style = typography().headlineMedium
         )
 
         Text(
             modifier = Modifier
-                .padding(top = 28.sdp),
+                .padding(top = 20.sdp),
             text = "First Create Your Account",
             style = typography().titleSmall,
             color = Color.LightGray.copy(0.85f)
@@ -112,8 +118,8 @@ fun SignUpScreen(
 
         Column(
             modifier = Modifier
-                .padding(top = 50.sdp),
-            verticalArrangement = Arrangement.spacedBy(13.sdp)
+                .padding(top = screenHeight.dp / 16),
+            verticalArrangement = Arrangement.spacedBy(11.sdp)
         ){
             ValidationTextInputField(
                 text = fullName,
@@ -185,9 +191,10 @@ fun SignUpScreen(
             )
         }
 
+        Spacer(modifier = Modifier.weight(1f))
+
         TextButton(
-            modifier = Modifier
-                .padding(top = 40.sdp),
+            modifier = Modifier,
             text = "Sign Up",
             onClick = {
                 CoroutineScope(Dispatchers.IO).launch {
@@ -203,10 +210,7 @@ fun SignUpScreen(
                             name = fullName,
                             email = email,
                             password = password,
-                            onSuccess = { newUser ->
-                                setUser(newUser)
-                                //  navController.navigate(ScreensRoutes.HomeRoute)
-                            }
+                            onSuccess = setUser
                         )
                     }
                 }
@@ -215,7 +219,7 @@ fun SignUpScreen(
 
         Row(
             modifier = Modifier
-                .padding(top = 12.sdp),
+                .padding(top = 8.sdp, bottom =  screenHeight.dp / 22),
             horizontalArrangement = Arrangement.spacedBy(5.sdp),
             verticalAlignment = Alignment.CenterVertically,
         ) {

@@ -1,5 +1,6 @@
 package com.example.jetmusic.ViewModels.StartScreenViewModels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jetmusic.data.DTOs.UserDTOs.User
@@ -56,8 +57,9 @@ class SignUpViewModel @Inject constructor(
         val validateName = NameValidation.validate(name)
         val validateEmail = EmailValidation.validate(
             email = email,
-            additionalValidators = checkIsEmailRegistered(email) || !checkIsCustomProviderUsed(email)
+            additionalValidators = checkIsEmailRegistered(email) && checkIsCustomProviderUsed(email)
         )
+
         val validatePassword = PasswordValidation.validate(password)
         val validatePasswordConfirm = PasswordConfirmValidation.validate(password,passwordConfirm)
 
