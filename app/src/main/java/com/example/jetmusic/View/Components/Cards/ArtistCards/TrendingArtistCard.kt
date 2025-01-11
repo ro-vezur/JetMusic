@@ -1,4 +1,4 @@
-package com.example.jetmusic.View.Components.Cards
+package com.example.jetmusic.View.Components.Cards.ArtistCards
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,7 +18,7 @@ import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
 
 @Composable
-fun ArtistCard(
+fun TrendingArtistCard(
     modifier: Modifier = Modifier,
     artistObject: SimplifiedArtistObject
 ) {
