@@ -1,5 +1,6 @@
 package com.example.jetmusic.View.Screens.DetailedScreens.DetailedMusicScreen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -42,10 +43,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetmusic.Helpers.MusicHelper
 import com.example.jetmusic.Helpers.TimeHelper
 import com.example.jetmusic.View.Components.Slider.MusicPlayerSlider
-import com.example.jetmusic.ViewModels.LikedSongsViewModel
+import com.example.jetmusic.ViewModels.MusicPlayerViewModel
 import com.example.jetmusic.data.DTOs.UserDTOs.User
 import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
 import com.example.jetmusic.other.events.MusicPlayerEvent
@@ -58,8 +60,7 @@ fun MusicDetailedScreen(
     user: User,
     navigateBack: () -> Unit,
     updateUser: (User) -> Unit,
-    onEvent: (MusicPlayerEvent) -> Unit,
-    removeMusicFromLikedList: (String) -> Unit,
+    musicPlayerViewModel: MusicPlayerViewModel = hiltViewModel(),
 ) {
 
     musicControllerUiState.currentMusic?.let { musicObject ->
@@ -78,7 +79,7 @@ fun MusicDetailedScreen(
         ) {
             Row(
                 modifier = Modifier
-                    .padding(top = 20.sdp)
+                    .padding(top = 15.sdp)
                     .fillMaxWidth()
             ) {
                 Icon(
@@ -96,14 +97,14 @@ fun MusicDetailedScreen(
                 contentDescription = "music image",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .padding(top = 24.sdp)
-                    .size(250.sdp)
+                    .padding(top = 14.sdp)
+                    .size(235.sdp)
                     .clip(RoundedCornerShape(15.sdp))
             )
 
             Row(
                 modifier = Modifier
-                    .padding(top = 16.sdp)
+                    .padding(top = 14.sdp)
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.Top,
             ) {
@@ -147,7 +148,6 @@ fun MusicDetailedScreen(
                                 isLiked = if (isLiked) {
                                     likedSongs.remove(musicId)
                                     updateUser(user.copy(likedSongsIds = likedSongs))
-                                    removeMusicFromLikedList(musicId)
                                     likedSongs.contains(musicId)
                                 } else {
                                     likedSongs.add(musicId)
@@ -172,11 +172,11 @@ fun MusicDetailedScreen(
 
             MusicPlayerSlider(
                 modifier = Modifier
-                    .padding(top = 14.sdp)
-                    .height(20.sdp)
+                    .padding(top = 12.sdp)
+                    .height(18.sdp)
                     .fillMaxWidth(),
                 musicControllerUiState = musicControllerUiState,
-                onEvent = onEvent
+                onEvent = musicPlayerViewModel::onEvent
             )
 
             Row(
@@ -200,7 +200,7 @@ fun MusicDetailedScreen(
 
             Row(
                 modifier = Modifier
-                    .padding(top = 10.sdp),
+                    .padding(top = 6.sdp),
                 horizontalArrangement = Arrangement.spacedBy(12.sdp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -209,23 +209,23 @@ fun MusicDetailedScreen(
                     contentDescription = "skip previous",
                     tint = colorScheme.inversePrimary,
                     modifier = Modifier
-                        .size(33.sdp)
+                        .size(32.sdp)
                         .clip(RoundedCornerShape(8.sdp))
                         .clickable {
-                            onEvent(MusicPlayerEvent.SkipToPreviousMusic)
+                            musicPlayerViewModel.onEvent(MusicPlayerEvent.SkipToPreviousMusic)
                         }
                 )
 
                 Box(
                     modifier = Modifier
-                        .size(46.sdp)
+                        .size(42.sdp)
                         .clip(CircleShape)
                         .background(colorScheme.inversePrimary)
                         .clickable {
                             if (isPlaying) {
-                                onEvent(MusicPlayerEvent.PauseMusic)
+                                musicPlayerViewModel.onEvent(MusicPlayerEvent.PauseMusic)
                             } else {
-                                onEvent(MusicPlayerEvent.ResumeMusic)
+                                musicPlayerViewModel.onEvent(MusicPlayerEvent.ResumeMusic)
                             }
                         },
                     contentAlignment = Alignment.Center,
@@ -235,7 +235,7 @@ fun MusicDetailedScreen(
                         contentDescription = "play/pause",
                         tint = colorScheme.background,
                         modifier = Modifier
-                            .size(33.sdp)
+                            .size(32.sdp)
                     )
                 }
 
@@ -244,10 +244,10 @@ fun MusicDetailedScreen(
                     contentDescription = "skip next",
                     tint = colorScheme.inversePrimary,
                     modifier = Modifier
-                        .size(33.sdp)
+                        .size(32.sdp)
                         .clip(RoundedCornerShape(8.sdp))
                         .clickable {
-                            onEvent(MusicPlayerEvent.SkipToNextMusic)
+                            musicPlayerViewModel.onEvent(MusicPlayerEvent.SkipToNextMusic)
                         }
                 )
             }
