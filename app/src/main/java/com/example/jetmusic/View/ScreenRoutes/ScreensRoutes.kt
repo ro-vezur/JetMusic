@@ -21,7 +21,13 @@ object ScreensRoutes {
     object HomeRoute {}
 
     @Serializable
-    object SearchRoute {}
+    object MainSearchRoute {
+        @Serializable
+        object DiscoverRoute
+
+        @Serializable
+        object SearchedMediaRoute
+    }
 
     @Serializable
     object LibraryNavigationGraph {
