@@ -6,15 +6,19 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.example.jetmusic.Helpers.Pagination.SongsPagingSource
 import com.example.jetmusic.Helpers.Pagination.UnifiedDataPagingSource
 import com.example.jetmusic.OFFSET_PER_PAGE
 import com.example.jetmusic.PAGE_SIZE
+import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
 import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Simplified.SimplifiedArtistResponse
+import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
 import com.example.jetmusic.data.DTOs.API.UnifiedData.UnifiedData
 import com.example.jetmusic.other.Resources.ResultResource
 import com.example.jetmusic.domain.usecases.api.musicAPI.artist.ArtistByIdUseCase
 import com.example.jetmusic.domain.usecases.api.musicAPI.artist.SearchArtistsUseCase
 import com.example.jetmusic.domain.usecases.api.musicAPI.artist.TrendingArtistsUseCase
+import com.example.jetmusic.domain.usecases.api.musicAPI.music.DiscoverSongsUseCase
 import com.example.jetmusic.domain.usecases.api.musicAPI.music.MusicByIdUseCase
 import com.example.jetmusic.domain.usecases.api.musicAPI.music.SearchMusicUseCase
 import com.example.jetmusic.domain.usecases.api.musicAPI.playlist.PlaylistByIdUseCase
@@ -31,6 +35,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
+    private val discoverSongsUseCase: DiscoverSongsUseCase,
     private val trendingArtistsUseCase: TrendingArtistsUseCase,
     private val musicByIdUseCase: MusicByIdUseCase,
     private val playlistsByIdUseCase: PlaylistByIdUseCase,
@@ -53,6 +58,9 @@ class SearchViewModel @Inject constructor(
 
     private val _searchedData: MutableStateFlow<PagingData<UnifiedData>> = MutableStateFlow(PagingData.empty())
     val searchedData: StateFlow<PagingData<UnifiedData>> = _searchedData.asStateFlow()
+
+    private val _discoveredSongsByGenre: MutableStateFlow<PagingData<MusicObject>> = MutableStateFlow(PagingData.empty())
+    val discoveredSongsByGenre: StateFlow<PagingData<MusicObject>> = _discoveredSongsByGenre.asStateFlow()
 
     init {
         setTrendingArtists()
@@ -122,6 +130,32 @@ class SearchViewModel @Inject constructor(
 
     fun clearSearchedData() = viewModelScope.launch {
         _searchedData.emit(PagingData.empty())
+    }
+
+    fun discoverSongs(
+        tags: String,
+        limit: Int = OFFSET_PER_PAGE
+    ) = viewModelScope.launch {
+        val paginatedSongs = Pager(PagingConfig(pageSize = PAGE_SIZE)) {
+            SongsPagingSource(
+                getMusicResponse = { page ->
+                    discoverSongsUseCase(
+                        tags = tags,
+                        offset = page * limit
+                    )
+                }
+            )
+        }.flow
+
+        paginatedSongs
+            .cachedIn(viewModelScope)
+            .collectLatest { pagingData ->
+                _discoveredSongsByGenre.emit(pagingData)
+            }
+    }
+
+    fun clearDiscoveredSongs() = viewModelScope.launch {
+        _discoveredSongsByGenre.emit(PagingData.empty())
     }
 
     suspend fun getMusicById(id: String) = musicByIdUseCase(id)

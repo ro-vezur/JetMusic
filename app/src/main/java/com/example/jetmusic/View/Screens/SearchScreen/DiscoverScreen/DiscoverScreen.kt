@@ -1,4 +1,4 @@
-package com.example.jetmusic.View.Screens.SearchScreen
+package com.example.jetmusic.View.Screens.SearchScreen.DiscoverScreen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.jetmusic.BOTTOM_MUSIC_PLAYER_HEIGHT
 import com.example.jetmusic.BOTTOM_NAVIGATION_BAR_HEIGHT
 import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Simplified.SimplifiedArtistResponse
@@ -31,6 +32,7 @@ import com.example.jetmusic.data.enums.Genres.MusicGenres
 import com.example.jetmusic.other.Resources.ResultResource
 import com.example.jetmusic.View.Components.Cards.ArtistCards.TrendingArtistCard
 import com.example.jetmusic.View.Components.Cards.MusicCards.MusicGenreCard
+import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
 import com.example.jetmusic.View.Screens.ResultScreens.ErrorScreen
 import com.example.jetmusic.View.Screens.ResultScreens.LoadingScreen
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
@@ -39,7 +41,8 @@ import ir.kaaveh.sdpcompose.sdp
 
 @Composable
 fun DiscoverScreen(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
+    navController: NavController,
     trendingArtistsResult: ResultResource<SimplifiedArtistResponse>,
     currentMusicObject: MusicObject?,
     selectArtist: (String) -> Unit,
@@ -147,7 +150,12 @@ fun DiscoverScreen(
                             .padding(horizontal = 5.sdp)
                             .width(screenWidth.dp / 2.32f)
                             .height(88.sdp)
-                            .clip(RoundedCornerShape(14.sdp)),
+                            .clip(RoundedCornerShape(14.sdp))
+                            .clickable {
+                                navController.navigate(
+                                    ScreensRoutes.MainSearchRoute.BrowsedMusicListRoute(musicGenre)
+                                )
+                            },
                         musicGenre = musicGenre
                     )
                 }
