@@ -73,7 +73,11 @@ fun BottomNavigationBar(
                     selected = isItemSelected,
                     select = {
                         if(!isItemSelected) {
-                            navController.navigate(item.route)
+                            navController.navigate(item.route) {
+                                popUpTo(item.route) {
+                                    inclusive = true
+                                }
+                            }
                         }
                     }
                 )
