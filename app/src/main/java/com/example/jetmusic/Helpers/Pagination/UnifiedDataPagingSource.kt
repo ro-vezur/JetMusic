@@ -17,7 +17,7 @@ class UnifiedDataPagingSource(
         ((state.anchorPosition ?: 0) - state.config.initialLoadSize / 2)
             .coerceAtLeast(0)
 
-    override suspend fun load(params: PagingSource.LoadParams<Int>): PagingSource.LoadResult<Int, UnifiedData> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, UnifiedData> {
 
         return try {
             val page = params.key ?: 1
