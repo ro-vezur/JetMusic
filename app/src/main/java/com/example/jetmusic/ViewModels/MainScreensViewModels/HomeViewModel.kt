@@ -3,8 +3,9 @@ package com.example.jetmusic.ViewModels.MainScreensViewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicResponse
+import com.example.jetmusic.data.Remote.API.WEEK_POPULARITY
 import com.example.jetmusic.other.Resources.ResultResource
-import com.example.jetmusic.domain.usecases.api.musicAPI.music.BestMusicOfWeekUseCase
+import com.example.jetmusic.domain.usecases.api.musicAPI.music.DiscoverSongsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getBestMusicOfWeekUseCase: BestMusicOfWeekUseCase,
+    private val getBestMusicOfWeekUseCase: DiscoverSongsUseCase,
 ): ViewModel() {
 
     private val _musicOfWeek: MutableStateFlow<ResultResource<MusicResponse>> =
@@ -27,7 +28,7 @@ class HomeViewModel @Inject constructor(
    fun getMusicOfWeek(tags: String, offset: Int, ) = viewModelScope.launch {
        flow {
            emit(ResultResource.Loading())
-           val response = getBestMusicOfWeekUseCase(tags,offset)
+           val response = getBestMusicOfWeekUseCase(tags,offset,WEEK_POPULARITY)
            if(response.results.isNotEmpty()) {
                emit(ResultResource.Success(data = response))
            } else {

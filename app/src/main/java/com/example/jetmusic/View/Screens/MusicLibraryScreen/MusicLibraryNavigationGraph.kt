@@ -14,9 +14,9 @@ import com.example.jetmusic.View.Screens.MusicLibraryScreen.Screens.LikedArtists
 import com.example.jetmusic.View.Screens.MusicLibraryScreen.Screens.LikedPlaylistsScreen
 import com.example.jetmusic.View.Screens.MusicLibraryScreen.Screens.LikedSongsScreen
 import com.example.jetmusic.View.Screens.MusicLibraryScreen.Screens.MainLibraryScreen
-import com.example.jetmusic.ViewModels.LibraryScreenViewModels.LikedArtistsViewModel
-import com.example.jetmusic.ViewModels.LibraryScreenViewModels.LikedPlaylistsViewModel
-import com.example.jetmusic.ViewModels.LibraryScreenViewModels.LikedSongsViewModel
+import com.example.jetmusic.ViewModels.MainScreensViewModels.LibraryScreenViewModels.LikedArtistsViewModel
+import com.example.jetmusic.ViewModels.MainScreensViewModels.LibraryScreenViewModels.LikedPlaylistsViewModel
+import com.example.jetmusic.ViewModels.MainScreensViewModels.LibraryScreenViewModels.LikedSongsViewModel
 import com.example.jetmusic.ViewModels.SharedViewModels.UserViewModel
 import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Detailed.DetailedArtistObject
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject

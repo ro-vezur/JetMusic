@@ -1,4 +1,4 @@
-package com.example.jetmusic.ViewModels.LibraryScreenViewModels
+package com.example.jetmusic.ViewModels.MainScreensViewModels.LibraryScreenViewModels
 
 import androidx.lifecycle.ViewModel
 import com.example.jetmusic.data.DTOs.API.PlaylistDTOs.Detailed.DetailedPlaylistObject

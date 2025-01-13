@@ -1,4 +1,4 @@
-package com.example.jetmusic.ViewModels.LibraryScreenViewModels
+package com.example.jetmusic.ViewModels.MainScreensViewModels.LibraryScreenViewModels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
