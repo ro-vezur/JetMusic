@@ -43,6 +43,7 @@ import com.example.jetmusic.BOTTOM_NAVIGATION_BAR_HEIGHT
 import com.example.jetmusic.Extensions.NavigateExtensions.navigateBack
 import com.example.jetmusic.View.Components.Cards.ArtistCards.LikedArtistCard
 import com.example.jetmusic.View.Components.InputFields.SearchField
+import com.example.jetmusic.View.Components.TopBars.TopBarWithNavigateBack
 import com.example.jetmusic.View.Screens.ResultScreens.ErrorScreen
 import com.example.jetmusic.View.Screens.ResultScreens.LoadingScreen
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
@@ -62,32 +63,10 @@ fun LikedArtistsScreen(
 
     Scaffold(
         topBar = {
-            Row(
-                modifier = Modifier
-                    .height(70.sdp)
-                    .background(MaterialTheme.colorScheme.background),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBackIosNew,
-                    contentDescription = "back",
-                    modifier = Modifier
-                        .padding(start = 18.sdp)
-                        .size(25.sdp)
-                        .clip(RoundedCornerShape(6.sdp))
-                        .clickable {
-                            navController.navigateBack()
-                        }
-                )
-
-                Text(
-                    text = "Liked Artists",
-                    style = typography().headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .padding(start = 22.sdp)
-                )
-            }
+            TopBarWithNavigateBack(
+                title = "Liked Artists",
+                turnBack = { navController.navigateBack() }
+            )
         }
     ) { innerPadding ->
         Column(
@@ -102,6 +81,7 @@ fun LikedArtistsScreen(
                         val sortedData = remember(data,searchText) {
                             data.filter { it.name.contains(searchText,true) }
                         }
+
                         Text(
                             modifier = Modifier
                                 .padding(start = 16.sdp,top = 4.sdp),

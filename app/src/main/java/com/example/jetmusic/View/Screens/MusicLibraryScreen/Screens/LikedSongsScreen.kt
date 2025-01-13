@@ -40,6 +40,7 @@ import com.example.jetmusic.BOTTOM_NAVIGATION_BAR_HEIGHT
 import com.example.jetmusic.Extensions.NavigateExtensions.navigateBack
 import com.example.jetmusic.View.Components.Cards.MusicCards.MusicCard
 import com.example.jetmusic.View.Components.InputFields.SearchField
+import com.example.jetmusic.View.Components.TopBars.TopBarWithNavigateBack
 import com.example.jetmusic.View.Screens.ResultScreens.ErrorScreen
 import com.example.jetmusic.View.Screens.ResultScreens.LoadingScreen
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
@@ -60,32 +61,10 @@ fun LikedSongsScreen(
 
     Scaffold(
         topBar = {
-            Row(
-                modifier = Modifier
-                    .height(70.sdp)
-                    .background(MaterialTheme.colorScheme.background),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBackIosNew,
-                    contentDescription = "back",
-                    modifier = Modifier
-                        .padding(start = 18.sdp)
-                        .size(25.sdp)
-                        .clip(RoundedCornerShape(6.sdp))
-                        .clickable {
-                            navController.navigateBack()
-                        }
-                )
-
-                Text(
-                    text = "Liked Songs",
-                    style = typography().headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .padding(start = 22.sdp)
-                )
-            }
+            TopBarWithNavigateBack(
+                title = "Liked Songs",
+                turnBack = { navController.navigateBack() }
+            )
         }
     ) { innerPadding ->
         Column(
