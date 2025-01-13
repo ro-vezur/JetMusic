@@ -29,6 +29,7 @@ interface ApiService {
     suspend fun bestMusicsOfWeek(
         @Query("tags") tags: String,
         @Query("offset") offset: Int,
+        @Query("order") order: String,
     ): MusicResponse
 
     @GET("artists/?limit=20")
@@ -54,4 +55,5 @@ interface ApiService {
         @Query("offset") offset: Int,
         @Query("limit") limit: Int,
     ): SimplifiedPlaylistResponse
+
 }
