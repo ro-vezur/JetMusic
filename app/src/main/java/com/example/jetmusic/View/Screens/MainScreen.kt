@@ -247,10 +247,6 @@ fun MainScreen(
                             }
                         }
 
-                        Log.d("media type",selectedMediaType.name.toString())
-                        Log.d("selected playlist",selectedPlaylist.toString())
-                        Log.d("selected artist",selectedArtist.toString())
-
                         MusicDetailedScreen(
                             musicControllerUiState = musicControllerUiState,
                             user = checkedUser,
@@ -274,10 +270,6 @@ fun MainScreen(
                     sharedMusicSelectionViewModel.setMediaType(MediaTypes.PLAYLIST)
                     sharedMusicSelectionViewModel.setArtist(null)
                 }
-
-                Log.d("media type",selectedMediaType.title)
-                Log.d("selected playlist",selectedPlaylist.toString())
-                Log.d("selected artist",selectedArtist.toString())
 
                 user?.let { checkedUser ->
                     DetailedPlaylistScreen(
@@ -304,10 +296,6 @@ fun MainScreen(
                     sharedMusicSelectionViewModel.setMediaType(MediaTypes.ARTIST)
                     sharedMusicSelectionViewModel.setPlaylist(null)
                 }
-
-                Log.d("media type",selectedMediaType.title)
-                Log.d("selected playlist",selectedPlaylist.toString())
-                Log.d("selected artist",selectedArtist.toString())
 
                 user?.let { checkedUser ->
                     DetailedArtistScreen(

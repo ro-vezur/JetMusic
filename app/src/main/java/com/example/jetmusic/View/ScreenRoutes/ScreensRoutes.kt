@@ -1,5 +1,6 @@
 package com.example.jetmusic.View.ScreenRoutes
 
+import com.example.jetmusic.data.enums.Genres.MusicGenres
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -22,6 +23,9 @@ object ScreensRoutes {
 
     @Serializable
     object MainSearchRoute {
+
+        @Serializable
+        data class BrowsedMusicListRoute(val genre: MusicGenres)
         @Serializable
         object DiscoverRoute
 
