@@ -74,9 +74,7 @@ fun BottomNavigationBar(
                     select = {
                         if(!isItemSelected) {
                             navController.navigate(item.route) {
-                                popUpTo(item.route) {
-                                    inclusive = true
-                                }
+                          //      popUpTo(item.route) { inclusive = true }
                             }
                         }
                     }
