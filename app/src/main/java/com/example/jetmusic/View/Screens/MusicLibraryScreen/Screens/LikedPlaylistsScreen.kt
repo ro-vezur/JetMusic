@@ -85,7 +85,7 @@ fun LikedPlaylistsScreen(
                         Text(
                             modifier = Modifier
                                 .padding(start = 16.sdp,top = 4.sdp),
-                            text = "$likedPlaylistsCount Songs",
+                            text = "$likedPlaylistsCount Playlists",
                             style = typography().titleSmall,
                             color = Color.Gray
                         )
