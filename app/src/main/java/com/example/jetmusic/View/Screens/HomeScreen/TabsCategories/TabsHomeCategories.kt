@@ -1,7 +1,6 @@
 package com.example.jetmusic.View.Screens.HomeScreen.TabsCategories
 
 enum class TabsHomeCategories(val title: String, val genreId: String? = null) {
-    FOR_YOU("For you"),
     RELAX("Relax", "ambient"),
     WORKOUT("Workout", "dance"),
     TRAVEL("Travel", "world"),
@@ -13,9 +12,9 @@ enum class TabsHomeCategories(val title: String, val genreId: String? = null) {
     ROMANCE("Romance", "latin");
 
     companion object {
-
-        fun fromGenreId(genreId: String): TabsHomeCategories? {
-            return entries.find { it.genreId == genreId }
+        fun indexFromGenreId(genreId: String): Int {
+            val genre = entries.find { it.genreId == genreId }?: TabsHomeCategories.entries.first()
+            return TabsHomeCategories.entries.indexOf(genre)
         }
     }
 }
