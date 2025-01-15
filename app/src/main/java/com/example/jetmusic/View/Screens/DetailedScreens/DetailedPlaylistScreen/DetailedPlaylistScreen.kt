@@ -68,9 +68,7 @@ fun DetailedPlaylistScreen(
     val isPlaying = musicControllerUiState.playerState == PlayerState.PLAYING
     val likedPlaylists = user.likedPlaylistsIds
 
-    var isLiked by remember(likedPlaylists.contains(playlistObject.id)) {
-        mutableStateOf(likedPlaylists.contains(playlistObject.id))
-    }
+    var isLiked by remember { mutableStateOf(likedPlaylists.contains(playlistObject.id)) }
 
     Column(
         modifier = Modifier
@@ -157,12 +155,14 @@ fun DetailedPlaylistScreen(
                     .size(30.sdp)
                     .clip(RoundedCornerShape(6.sdp))
                     .clickable {
-                        if (isLiked) {
+                        isLiked =  if (isLiked) {
                             likedPlaylists.remove(playlistObject.id)
                             updateUser(user.copy(likedPlaylistsIds = likedPlaylists))
+                            likedPlaylists.contains(playlistObject.id)
                         } else {
                             likedPlaylists.add(playlistObject.id)
                             updateUser(user.copy(likedPlaylistsIds = likedPlaylists))
+                            likedPlaylists.contains(playlistObject.id)
                         }
                     }
             )

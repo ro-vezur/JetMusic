@@ -39,6 +39,7 @@ import ir.kaaveh.sdpcompose.sdp
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -164,17 +165,18 @@ fun DetailedArtistScreen(
                         style = typography().headlineSmall,
                         fontWeight = FontWeight.Normal,
                         modifier = Modifier
-                            .padding(bottom = 20.sdp)
                             .align(Alignment.BottomCenter)
+                            .padding(bottom = 20.sdp)
                     )
                 } else {
                     Text(
                         text = artistObject.name,
+                        textAlign = TextAlign.Center,
                         style = typography().headlineMedium,
                         fontWeight = FontWeight.W500,
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
-                            .padding(bottom = 20.sdp)
+                            .padding(20.sdp)
                     )
                 }
             }
