@@ -39,20 +39,20 @@ object ScreensRoutes {
         object LibraryRoute
 
         @Serializable
-        object LikedSongs
+        object LikedSongsRoute
 
         @Serializable
-        object LikedPlaylists
+        object LikedPlaylistsRoute
 
         @Serializable
-        object LikedArtists
+        object LikedArtistsRoute
 
         @Serializable
-        object Downloads
+        object DownloadsRoute
+
+        @Serializable
+        object ProfileRoute
     }
-
-    @Serializable
-    object ProfileRoute {}
 
     @Serializable
     object DetailedScreens {

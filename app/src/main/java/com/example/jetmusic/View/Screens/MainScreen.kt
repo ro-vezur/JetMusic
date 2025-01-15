@@ -39,6 +39,7 @@ import com.example.jetmusic.View.Screens.StartScreen.startScreensGraph
 import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
 import com.example.jetmusic.View.Screens.DetailedScreens.DetailedArtistScreen.DetailedArtistScreen
 import com.example.jetmusic.View.Screens.MusicLibraryScreen.musicLibraryNavigationGraph
+import com.example.jetmusic.ViewModels.MainScreensViewModels.HomeViewModel
 import com.example.jetmusic.ViewModels.MainScreensViewModels.SearchViewModel
 import com.example.jetmusic.ViewModels.SharedViewModels.SharedMusicControllerViewModel
 import com.example.jetmusic.ViewModels.SharedViewModels.SharedMusicSelectionViewModel
@@ -191,11 +192,14 @@ fun MainScreen(
                 showBottomBar = true
 
                 val user by userViewModel.user.collectAsStateWithLifecycle()
+                val homeViewModel: HomeViewModel = hiltViewModel(viewModelStoreOwner)
 
                 user?.let { checkedUser ->
                     HomeScreen(
+                        navController = navController,
                         user = checkedUser,
                         selectMusic = selectMusic,
+                        homeViewModel = homeViewModel
                     )
                 }
             }
