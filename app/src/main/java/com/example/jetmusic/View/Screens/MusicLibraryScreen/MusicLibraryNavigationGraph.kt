@@ -14,6 +14,7 @@ import com.example.jetmusic.View.Screens.MusicLibraryScreen.Screens.LikedArtists
 import com.example.jetmusic.View.Screens.MusicLibraryScreen.Screens.LikedPlaylistsScreen
 import com.example.jetmusic.View.Screens.MusicLibraryScreen.Screens.LikedSongsScreen
 import com.example.jetmusic.View.Screens.MusicLibraryScreen.Screens.MainLibraryScreen
+import com.example.jetmusic.View.Screens.ProfileScreen.MainProfileScreen
 import com.example.jetmusic.ViewModels.MainScreensViewModels.LibraryScreenViewModels.LikedArtistsViewModel
 import com.example.jetmusic.ViewModels.MainScreensViewModels.LibraryScreenViewModels.LikedPlaylistsViewModel
 import com.example.jetmusic.ViewModels.MainScreensViewModels.LibraryScreenViewModels.LikedSongsViewModel
@@ -48,7 +49,21 @@ fun NavGraphBuilder.musicLibraryNavigationGraph(
             }
         }
 
-        composable<ScreensRoutes.LibraryNavigationGraph.LikedSongs> {
+        composable<ScreensRoutes.LibraryNavigationGraph.ProfileRoute> {
+            showBottomBar(true)
+
+            val userViewModel: UserViewModel = hiltViewModel(viewModelStoreOwner)
+            val user by userViewModel.user.collectAsStateWithLifecycle()
+
+            user?.let { checkedUser ->
+                MainProfileScreen(
+                    navController = navController,
+                    user = checkedUser,
+                )
+            }
+        }
+
+        composable<ScreensRoutes.LibraryNavigationGraph.LikedSongsRoute> {
             showBottomBar(true)
 
             val userViewModel: UserViewModel = hiltViewModel(viewModelStoreOwner)
@@ -74,7 +89,7 @@ fun NavGraphBuilder.musicLibraryNavigationGraph(
             }
         }
 
-        composable<ScreensRoutes.LibraryNavigationGraph.LikedPlaylists> {
+        composable<ScreensRoutes.LibraryNavigationGraph.LikedPlaylistsRoute> {
             showBottomBar(true)
 
             val userViewModel: UserViewModel = hiltViewModel(viewModelStoreOwner)
@@ -100,7 +115,7 @@ fun NavGraphBuilder.musicLibraryNavigationGraph(
             }
         }
 
-        composable<ScreensRoutes.LibraryNavigationGraph.LikedArtists> {
+        composable<ScreensRoutes.LibraryNavigationGraph.LikedArtistsRoute> {
             showBottomBar(true)
 
             val userViewModel: UserViewModel = hiltViewModel(viewModelStoreOwner)
@@ -126,7 +141,7 @@ fun NavGraphBuilder.musicLibraryNavigationGraph(
             }
         }
 
-        composable<ScreensRoutes.LibraryNavigationGraph.Downloads> {
+        composable<ScreensRoutes.LibraryNavigationGraph.DownloadsRoute> {
             showBottomBar(true)
 
 

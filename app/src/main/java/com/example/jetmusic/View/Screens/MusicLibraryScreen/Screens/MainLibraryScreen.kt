@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import com.example.jetmusic.View.Components.TopBars.TitleTopBar
 import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
 import com.example.jetmusic.data.DTOs.UserDTOs.User
 
@@ -46,20 +47,9 @@ fun MainLibraryScreen(
 ) {
     Scaffold(
         topBar = {
-            Box(
-                modifier = Modifier
-                    .height(70.sdp)
-                    .background(colorScheme.background)
-            ) {
-                Text(
-                    text = "Your Library",
-                    style = typography().headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .align(Alignment.CenterStart)
-                        .padding(start = 16.sdp)
-                )
-            }
+            TitleTopBar(
+                title = "Your Library"
+            )
         }
     ) { innerPadding ->
         Column(
@@ -81,7 +71,7 @@ fun MainLibraryScreen(
                         shortInfo = "${user.likedSongsIds.size} songs",
                         icon = Icons.Filled.FavoriteBorder,
                         onClick = {
-                            navController.navigate(ScreensRoutes.LibraryNavigationGraph.LikedSongs)
+                            navController.navigate(ScreensRoutes.LibraryNavigationGraph.LikedSongsRoute)
                         }
                     )
                 }
@@ -92,7 +82,7 @@ fun MainLibraryScreen(
                         shortInfo = "0 downloads",
                         icon = Icons.Filled.Download,
                         onClick = {
-                            navController.navigate(ScreensRoutes.LibraryNavigationGraph.Downloads)
+                            navController.navigate(ScreensRoutes.LibraryNavigationGraph.DownloadsRoute)
                         }
                     )
                 }
@@ -103,7 +93,7 @@ fun MainLibraryScreen(
                         shortInfo = "${user.likedPlaylistsIds.size} playlists",
                         icon = Icons.Filled.QueueMusic,
                         onClick = {
-                            navController.navigate(ScreensRoutes.LibraryNavigationGraph.LikedPlaylists)
+                            navController.navigate(ScreensRoutes.LibraryNavigationGraph.LikedPlaylistsRoute)
                         }
                     )
                 }
@@ -114,7 +104,7 @@ fun MainLibraryScreen(
                         shortInfo = "${user.likedArtistsIds.size} artists",
                         icon = Icons.Filled.Person,
                         onClick = {
-                            navController.navigate(ScreensRoutes.LibraryNavigationGraph.LikedArtists)
+                            navController.navigate(ScreensRoutes.LibraryNavigationGraph.LikedArtistsRoute)
                         }
                     )
                 }
