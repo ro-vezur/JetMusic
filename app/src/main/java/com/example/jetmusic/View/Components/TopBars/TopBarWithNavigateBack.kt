@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,15 +33,20 @@ fun TopBarWithNavigateBack(
             .background(MaterialTheme.colorScheme.background),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(
-            imageVector = Icons.Filled.ArrowBackIosNew,
-            contentDescription = "back",
+
+        IconButton(
             modifier = Modifier
-                .padding(start = 18.sdp)
-                .size(25.sdp)
-                .clip(RoundedCornerShape(6.sdp))
-                .clickable { turnBack() }
-        )
+                .padding(start = 18.sdp),
+            onClick = { turnBack() }
+        ) {
+            Icon(
+                imageVector = Icons.Filled.ArrowBackIosNew,
+                contentDescription = "back",
+                modifier = Modifier
+                    .size(25.sdp)
+                    .clip(RoundedCornerShape(6.sdp))
+            )
+        }
 
         Text(
             text = title,
