@@ -11,16 +11,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import coil.compose.AsyncImage
-import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Simplified.SimplifiedArtistObject
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
 
 @Composable
-fun TrendingArtistCard(
+fun ArtistCard(
     modifier: Modifier = Modifier,
-    artistObject: SimplifiedArtistObject
+    artistImage: String,
+    artistName: String,
+    textStyle: TextStyle = typography().bodySmall,
 ) {
     Column(
         modifier = modifier,
@@ -28,7 +30,7 @@ fun TrendingArtistCard(
         verticalArrangement = Arrangement.Top
     ) {
         AsyncImage(
-            model = artistObject.image,
+            model = artistImage,
             contentDescription = "artist image",
             contentScale = ContentScale.FillWidth,
             modifier = Modifier
@@ -39,8 +41,8 @@ fun TrendingArtistCard(
         Text(
             modifier = Modifier
                 .padding(top = 7.sdp),
-            text = artistObject.name,
-            style = typography().bodySmall,
+            text = artistName,
+            style = textStyle,
             textAlign = TextAlign.Center
         )
     }
