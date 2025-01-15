@@ -30,7 +30,7 @@ import com.example.jetmusic.BOTTOM_NAVIGATION_BAR_HEIGHT
 import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Simplified.SimplifiedArtistResponse
 import com.example.jetmusic.data.enums.Genres.MusicGenres
 import com.example.jetmusic.other.Resources.ResultResource
-import com.example.jetmusic.View.Components.Cards.ArtistCards.TrendingArtistCard
+import com.example.jetmusic.View.Components.Cards.ArtistCards.ArtistCard
 import com.example.jetmusic.View.Components.Cards.MusicCards.MusicGenreCard
 import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
 import com.example.jetmusic.View.Screens.ResultScreens.ErrorScreen
@@ -97,12 +97,14 @@ fun DiscoverScreen(
                             trendingArtistsResult.data?.let { artists ->
                                 items(artists.results) { artist ->
                                     if (artist.name.isNotBlank() && artist.image.isNotBlank()) {
-                                        TrendingArtistCard(
+                                        ArtistCard(
                                             modifier = Modifier
                                                 .height(85.sdp)
                                                 .width(50.sdp)
+                                                .clip(RoundedCornerShape(8.sdp))
                                                 .clickable { selectArtist(artist.id) },
-                                            artistObject = artist
+                                            artistImage = artist.image,
+                                            artistName = artist.name,
                                         )
                                     }
                                 }
