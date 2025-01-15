@@ -2,6 +2,7 @@ package com.example.jetmusic.ViewModels.MainScreensViewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.jetmusic.View.Screens.HomeScreen.TabsCategories.TabsHomeCategories
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicResponse
 import com.example.jetmusic.data.Remote.API.WEEK_POPULARITY
 import com.example.jetmusic.other.Resources.ResultResource
@@ -21,15 +22,23 @@ class HomeViewModel @Inject constructor(
     private val getBestMusicOfWeekUseCase: DiscoverSongsUseCase,
 ): ViewModel() {
 
+    private val _selectedTag: MutableStateFlow<String> = MutableStateFlow("")
+    val selectedTag: StateFlow<String> = _selectedTag.asStateFlow()
+
     private val _musicOfWeek: MutableStateFlow<ResultResource<MusicResponse>> =
         MutableStateFlow(ResultResource.Loading())
     val musicOfWeek: StateFlow<ResultResource<MusicResponse>> = _musicOfWeek.asStateFlow()
 
-   fun getMusicOfWeek(tags: String, offset: Int, ) = viewModelScope.launch {
+    init {
+        getMusicOfWeek(TabsHomeCategories.entries.first().title)
+    }
+
+   fun getMusicOfWeek(tags: String, offset: Int = 0) = viewModelScope.launch {
        flow {
            emit(ResultResource.Loading())
            val response = getBestMusicOfWeekUseCase(tags,offset,WEEK_POPULARITY)
            if(response.results.isNotEmpty()) {
+               _selectedTag.emit(tags)
                emit(ResultResource.Success(data = response))
            } else {
                emit(ResultResource.Error(message = "empty result"))
@@ -40,8 +49,4 @@ class HomeViewModel @Inject constructor(
            _musicOfWeek.emit(result)
        }
    }
-
-    fun setMusicOfWeekLoading() = viewModelScope.launch {
-        _musicOfWeek.emit(ResultResource.Loading())
-    }
 }

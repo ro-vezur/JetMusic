@@ -1,28 +1,40 @@
 package com.example.jetmusic.View.Screens.HomeScreen
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -41,18 +53,23 @@ import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
 import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
 import com.example.jetmusic.other.events.MusicSelectionEvent
 import com.example.jetmusic.ui.theme.darkGrey
+import com.example.jetmusic.ui.theme.tidalGradient
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
 
 @Composable
 fun HomeScreen(
+    navController: NavController,
     user: User,
     selectMusic: (MusicObject) -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
-
-    val pagerState = rememberPagerState { TabsHomeCategories.entries.size }
+    val selectedTag by homeViewModel.selectedTag.collectAsStateWithLifecycle()
     val musicOfWeek by homeViewModel.musicOfWeek.collectAsStateWithLifecycle()
+
+    val pagerState = rememberPagerState(
+        initialPage = TabsHomeCategories.indexFromGenreId(selectedTag)
+    ) { TabsHomeCategories.entries.size }
 
     Column(
         modifier = Modifier
@@ -83,6 +100,25 @@ fun HomeScreen(
                     style = typography().titleMedium
                 )
             }
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Box(
+                modifier = Modifier
+                    .padding(end = 28.sdp)
+                    .size(42.sdp)
+                    .clip(CircleShape)
+                    .border(BorderStroke(1.sdp, tidalGradient), CircleShape)
+                    .clickable { navController.navigate(ScreensRoutes.LibraryNavigationGraph.ProfileRoute) },
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .size(32.sdp),
+                    imageVector = Icons.Filled.Person,
+                    contentDescription = "user icon"
+                )
+            }
         }
 
         CustomScrollableTabRow(
@@ -94,10 +130,8 @@ fun HomeScreen(
             textColor = Color.Gray,
             containerColor = darkGrey,
             onClick = { index ->
-                homeViewModel.setMusicOfWeekLoading()
                 homeViewModel.getMusicOfWeek(
                     tags = TabsHomeCategories.entries[index].genreId.toString(),
-                    offset = 0
                 )
             }
         )
