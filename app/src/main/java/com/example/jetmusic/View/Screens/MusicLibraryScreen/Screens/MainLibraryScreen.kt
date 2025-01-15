@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.QueueMusic
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,7 +37,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
-import com.example.jetmusic.View.Components.TopBars.TitleTopBar
 import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
 import com.example.jetmusic.data.DTOs.UserDTOs.User
 
@@ -47,9 +47,20 @@ fun MainLibraryScreen(
 ) {
     Scaffold(
         topBar = {
-            TitleTopBar(
-                title = "Your Library"
-            )
+            Box(
+                modifier = Modifier
+                    .height(70.sdp)
+                    .background(MaterialTheme.colorScheme.background)
+            ) {
+                Text(
+                    text = "Your Library",
+                    style = typography().headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .padding(start = 16.sdp)
+                )
+            }
         }
     ) { innerPadding ->
         Column(
