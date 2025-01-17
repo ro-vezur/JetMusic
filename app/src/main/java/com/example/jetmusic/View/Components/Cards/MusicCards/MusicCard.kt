@@ -29,8 +29,6 @@ fun MusicCard(
     trailingIcon: (@Composable () -> Unit)? = null,
     bottomBar: (@Composable () -> Unit)? = null,
 ) {
-    val scrollState = rememberScrollState()
-
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -52,9 +50,9 @@ fun MusicCard(
 
             Row(
                 modifier = Modifier
-                    .width(185.sdp)
+                    .weight(1f)
                     .fillMaxHeight()
-                    .horizontalScroll(scrollState),
+                    .horizontalScroll(rememberScrollState()),
             ) {
                 Column(
                     modifier = Modifier
@@ -82,8 +80,6 @@ fun MusicCard(
                     }
                 }
             }
-
-            Spacer(modifier = Modifier.weight(1f))
 
             if (trailingIcon != null) {
                 trailingIcon()
