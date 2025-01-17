@@ -226,6 +226,7 @@ fun MainScreen(
                 selectMusic = selectMusic,
                 selectPlaylist = selectPlaylist,
                 selectArtist = selectArtist,
+                logOut = { userViewModel.logOut() }
             )
 
             composable<ScreensRoutes.DetailedScreens.DetailedMusicRoute> { navBackStackEntry ->

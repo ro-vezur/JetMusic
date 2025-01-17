@@ -25,7 +25,7 @@ object ScreensRoutes {
     object MainSearchRoute {
 
         @Serializable
-        data class BrowsedMusicListRoute(val genre: MusicGenres)
+        data class BrowsedMusicListRoute(val genre: String)
         @Serializable
         object DiscoverRoute
 
