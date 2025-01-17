@@ -68,7 +68,13 @@ fun WelcomeScreen(
             TextButton(
                 modifier = Modifier,
                 text = "Sign Up",
-                onClick = { navController.navigate(ScreensRoutes.StartScreens.SignUpRoute)},
+                onClick = {
+                    navController.navigate(ScreensRoutes.StartScreens.SignUpRoute) {
+                        popUpTo(ScreensRoutes.StartScreens.SignUpRoute) {
+                            inclusive = true
+                        }
+                    }
+                          },
             )
 
             TextButton(
@@ -117,7 +123,13 @@ fun WelcomeScreen(
             TextButton(
                 modifier = Modifier,
                 text = "Log In",
-                onClick = { navController.navigate(ScreensRoutes.StartScreens.LogInRoute)},
+                onClick = {
+                    navController.navigate(ScreensRoutes.StartScreens.LogInRoute) {
+                        popUpTo(ScreensRoutes.StartScreens.LogInRoute) {
+                            inclusive = true
+                        }
+                    }
+                          },
                 background = Color.Transparent,
                 textColor = Color.White,
                 borderStroke = BorderStroke(0.sdp,Color.Transparent),

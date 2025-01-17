@@ -190,13 +190,20 @@ fun LogInScreen(
             Text(
                 modifier = Modifier
                     .clip(RoundedCornerShape(2.sdp))
-                    .clickable { navController.navigate(ScreensRoutes.StartScreens.SignUpRoute) },
-                text = "Sign up",
-                style = typography().bodyLarge.copy(
-                    brush = tidalGradient
-                ),
-                textDecoration = TextDecoration.Underline
-            )
-        }
+                    .clickable {
+                        navController.navigate(ScreensRoutes.StartScreens.SignUpRoute) {
+                            popUpTo(ScreensRoutes.StartScreens.LogInRoute) {
+                                inclusive = true
+                            }
+                        }
+
+                        },
+                        text = "Sign up",
+                        style = typography().bodyLarge.copy(
+                            brush = tidalGradient
+                        ),
+                        textDecoration = TextDecoration.Underline
+                        )
+                    }
     }
 }
