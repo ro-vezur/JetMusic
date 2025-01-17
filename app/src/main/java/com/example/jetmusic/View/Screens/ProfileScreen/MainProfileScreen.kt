@@ -48,6 +48,7 @@ import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
 fun MainProfileScreen(
     navController: NavController,
     user: User,
+    logOut: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -178,6 +179,13 @@ fun MainProfileScreen(
                     }
                 )
             }
+
+            TextButton(
+                modifier = Modifier
+                    .padding(top = 25.sdp),
+                text = "Log Out",
+                onClick = { logOut() }
+            )
 
         }
     }
