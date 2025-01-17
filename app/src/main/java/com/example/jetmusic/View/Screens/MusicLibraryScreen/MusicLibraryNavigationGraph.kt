@@ -31,6 +31,7 @@ fun NavGraphBuilder.musicLibraryNavigationGraph(
     selectMusic: (MusicObject) -> Unit,
     selectPlaylist: (DetailedPlaylistObject) -> Unit,
     selectArtist: (DetailedArtistObject) -> Unit,
+    logOut: () -> Unit,
 ) {
     navigation<ScreensRoutes.LibraryNavigationGraph>(
         startDestination = ScreensRoutes.LibraryNavigationGraph.LibraryRoute
@@ -59,6 +60,7 @@ fun NavGraphBuilder.musicLibraryNavigationGraph(
                 MainProfileScreen(
                     navController = navController,
                     user = checkedUser,
+                    logOut = logOut,
                 )
             }
         }
