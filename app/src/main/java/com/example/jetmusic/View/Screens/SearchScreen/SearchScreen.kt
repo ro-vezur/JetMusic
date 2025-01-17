@@ -222,14 +222,9 @@ fun SearchScreen(
 
                 showSearchBar = true
 
-                LaunchedEffect(null) {
-                    searchViewModel.clearDiscoveredSongs()
-                }
-
                 DiscoverScreen(
                     modifier = Modifier
                         .padding(innerPadding),
-                    navController = innerNavController,
                     trendingArtistsResult = trendingArtistsResult,
                     currentMusicObject = currentMusicObject,
                     selectArtist = { id ->
@@ -241,6 +236,12 @@ fun SearchScreen(
                             }
                         }
                     },
+                    setDiscoveredSongsByGenre = { genre ->
+                        searchViewModel.discoverSongs(genre.tag)
+                        innerNavController.navigate(
+                            ScreensRoutes.MainSearchRoute.BrowsedMusicListRoute(genre.displayName)
+                        )
+                    }
                 )
             }
 
@@ -305,15 +306,11 @@ fun SearchScreen(
 
                 showSearchBar = false
 
-                LaunchedEffect(null) {
-                    searchViewModel.discoverSongs(arguments.genre.tag)
-                }
-
                 BrowsedMusicList(
                     modifier = Modifier
                         .padding(horizontal = 12.sdp),
                     currentMusic = currentMusicObject,
-                    genre = arguments.genre.displayName,
+                    genre = arguments.genre,
                     paginatedSongs = paginatedDiscoveredSongs,
                     turnBack = {
                         innerNavController.navigateBack()

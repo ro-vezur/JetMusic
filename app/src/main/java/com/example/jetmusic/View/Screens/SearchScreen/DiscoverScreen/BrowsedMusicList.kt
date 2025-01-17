@@ -1,5 +1,6 @@
 package com.example.jetmusic.View.Screens.SearchScreen.DiscoverScreen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
@@ -36,6 +37,10 @@ fun BrowsedMusicList(
     turnBack: () -> Unit,
     navigateToSelectedMusic: (MusicObject) -> Unit,
 ) {
+    BackHandler {
+        turnBack()
+    }
+
     Scaffold(
         topBar = {
             TopBarWithNavigateBack(
@@ -52,7 +57,9 @@ fun BrowsedMusicList(
                     modifier,
                     verticalArrangement = Arrangement.spacedBy(14.sdp),
                 ) {
-                    item { }
+                    item {
+                        Spacer(modifier = Modifier.height(innerPadding.calculateTopPadding()))
+                    }
 
                     items(
                         paginatedSongs.itemCount,

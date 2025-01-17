@@ -1,5 +1,6 @@
 package com.example.jetmusic.View.Screens.SearchScreen.DiscoverScreen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -42,11 +43,12 @@ import ir.kaaveh.sdpcompose.sdp
 @Composable
 fun DiscoverScreen(
     modifier: Modifier = Modifier,
-    navController: NavController,
     trendingArtistsResult: ResultResource<SimplifiedArtistResponse>,
     currentMusicObject: MusicObject?,
     selectArtist: (String) -> Unit,
+    setDiscoveredSongsByGenre: (MusicGenres) -> Unit,
 ) {
+
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp
 
@@ -154,9 +156,7 @@ fun DiscoverScreen(
                             .height(88.sdp)
                             .clip(RoundedCornerShape(14.sdp))
                             .clickable {
-                                navController.navigate(
-                                    ScreensRoutes.MainSearchRoute.BrowsedMusicListRoute(musicGenre)
-                                )
+                                setDiscoveredSongsByGenre(musicGenre)
                             },
                         musicGenre = musicGenre
                     )
