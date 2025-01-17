@@ -3,6 +3,7 @@ package com.example.jetmusic.View.Components.TopBars
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -29,6 +30,7 @@ fun TopBarWithNavigateBack(
 ) {
     Row(
         modifier = Modifier
+            .fillMaxWidth()
             .height(70.sdp)
             .background(MaterialTheme.colorScheme.background),
         verticalAlignment = Alignment.CenterVertically,
@@ -36,7 +38,8 @@ fun TopBarWithNavigateBack(
 
         IconButton(
             modifier = Modifier
-                .padding(start = 18.sdp),
+                .padding(start = 18.sdp)
+                .size(30.sdp),
             onClick = { turnBack() }
         ) {
             Icon(
