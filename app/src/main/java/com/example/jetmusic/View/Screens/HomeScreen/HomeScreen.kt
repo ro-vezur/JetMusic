@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -17,21 +18,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonColors
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,9 +49,6 @@ import com.example.jetmusic.View.Screens.HomeScreen.TabsCategories.TabsHomeCateg
 import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
 import com.example.jetmusic.ViewModels.MainScreensViewModels.HomeViewModel
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
-import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
-import com.example.jetmusic.other.events.MusicSelectionEvent
-import com.example.jetmusic.ui.theme.darkGrey
 import com.example.jetmusic.ui.theme.tidalGradient
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
@@ -64,12 +60,8 @@ fun HomeScreen(
     selectMusic: (MusicObject) -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
-    val selectedTag by homeViewModel.selectedTag.collectAsStateWithLifecycle()
+    val selectedTabIndex by homeViewModel.selectedTabIndex.collectAsStateWithLifecycle()
     val musicOfWeek by homeViewModel.musicOfWeek.collectAsStateWithLifecycle()
-
-    val pagerState = rememberPagerState(
-        initialPage = TabsHomeCategories.indexFromGenreId(selectedTag)
-    ) { TabsHomeCategories.entries.size }
 
     Column(
         modifier = Modifier
@@ -125,20 +117,18 @@ fun HomeScreen(
             modifier = Modifier
                 .padding(top = 20.sdp, start = 6.sdp, end = 6.sdp)
                 .fillMaxWidth(),
-            pagerState = pagerState,
+            selectedIndex = selectedTabIndex,
             items = TabsHomeCategories.entries.map { it.title },
             textColor = Color.Gray,
-            containerColor = darkGrey,
             onClick = { index ->
+                homeViewModel.setTabIndex(index)
                 homeViewModel.getMusicOfWeek(
                     tags = TabsHomeCategories.entries[index].genreId.toString(),
                 )
             }
         )
 
-        HorizontalPager(
-            userScrollEnabled = false,
-            state = pagerState,
+        Box(
             modifier = Modifier
                 .padding(top = 18.sdp)
                 .fillMaxWidth(0.9f)
@@ -153,7 +143,6 @@ fun HomeScreen(
                     )
                 )
         ) {
-
             when (musicOfWeek) {
                 is ResultResource.Loading -> {
                     Box(
@@ -172,7 +161,8 @@ fun HomeScreen(
                             modifier = Modifier
                                 .fillMaxSize(),
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(10.sdp)
+                            verticalArrangement = Arrangement.spacedBy(10.sdp),
+                            contentPadding = PaddingValues(horizontal = 10.sdp)
                         ) {
                             item {  }
 
@@ -182,9 +172,9 @@ fun HomeScreen(
                             ) { music ->
                                 MusicCard(
                                     modifier = Modifier
-                                        .padding(start = 10.sdp)
                                         .height(42.sdp)
                                         .fillMaxWidth()
+                                        .clip(RoundedCornerShape(8.sdp))
                                         .clickable { selectMusic(music) },
                                     musicObject = music
                                 )

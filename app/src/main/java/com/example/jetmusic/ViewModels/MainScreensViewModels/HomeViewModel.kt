@@ -22,8 +22,8 @@ class HomeViewModel @Inject constructor(
     private val getBestMusicOfWeekUseCase: DiscoverSongsUseCase,
 ): ViewModel() {
 
-    private val _selectedTag: MutableStateFlow<String> = MutableStateFlow("")
-    val selectedTag: StateFlow<String> = _selectedTag.asStateFlow()
+    private val _selectedTabIndex: MutableStateFlow<Int> = MutableStateFlow(0)
+    val selectedTabIndex: StateFlow<Int> = _selectedTabIndex.asStateFlow()
 
     private val _musicOfWeek: MutableStateFlow<ResultResource<MusicResponse>> =
         MutableStateFlow(ResultResource.Loading())
@@ -38,7 +38,6 @@ class HomeViewModel @Inject constructor(
            emit(ResultResource.Loading())
            val response = getBestMusicOfWeekUseCase(tags,offset,WEEK_POPULARITY)
            if(response.results.isNotEmpty()) {
-               _selectedTag.emit(tags)
                emit(ResultResource.Success(data = response))
            } else {
                emit(ResultResource.Error(message = "empty result"))
@@ -49,4 +48,8 @@ class HomeViewModel @Inject constructor(
            _musicOfWeek.emit(result)
        }
    }
+
+    fun setTabIndex(tabIndex: Int) = viewModelScope.launch {
+        _selectedTabIndex.emit(tabIndex)
+    }
 }
