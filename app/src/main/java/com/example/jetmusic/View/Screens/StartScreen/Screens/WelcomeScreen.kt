@@ -25,7 +25,7 @@ import androidx.navigation.NavController
 import com.example.jetmusic.data.DTOs.UserDTOs.User
 import com.example.jetmusic.R
 import com.example.jetmusic.View.Components.Buttons.TextButton
-import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
+import com.example.jetmusic.View.ScreensRoutes
 import com.example.jetmusic.ViewModels.StartScreenViewModels.WelcomeViewModel
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
@@ -80,7 +80,7 @@ fun WelcomeScreen(
             TextButton(
                 modifier = Modifier,
                 text = "Continue With Phone Number",
-                onClick = {},
+                onClick = { navController.navigate(ScreensRoutes.StartScreens.ContinueWithPhoneNumber) },
                 background = Color.Transparent,
                 textColor = Color.White,
                 style = typography().bodyMedium.copy(
@@ -114,7 +114,7 @@ fun WelcomeScreen(
                         modifier = modifier
                             .padding(start = 14.sdp)
                             .size(27.sdp),
-                        painter = painterResource(id = R.drawable.google__g__logo_svg),
+                        painter = painterResource(id = R.drawable.ic_google_logo),
                         contentDescription = "phone",
                     )
                 }
