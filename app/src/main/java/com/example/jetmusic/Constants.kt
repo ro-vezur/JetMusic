@@ -22,3 +22,5 @@ const val RESPONSE_FORMAT = "json"
 const val OFFSET_PER_PAGE = 15
 
 const val PAGE_SIZE = 15
+
+const val PHONE_FIELD_MASK = "000 000 00 00"
