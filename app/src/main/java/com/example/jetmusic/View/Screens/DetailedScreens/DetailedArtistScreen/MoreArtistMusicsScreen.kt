@@ -37,7 +37,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.jetmusic.View.Components.Cards.MusicCards.MusicCard
 import com.example.jetmusic.View.Components.Slider.MusicPlayerSlider
-import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
+import com.example.jetmusic.View.ScreensRoutes
 import com.example.jetmusic.ViewModels.MusicPlayerViewModel
 import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Detailed.DetailedArtistObject
 import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
@@ -59,7 +59,7 @@ fun MoreArtistMusicsScreen(
     var showTracks by remember { mutableStateOf(false) }
 
     LaunchedEffect(null) {
-        delay(200)
+        delay(150)
         showTracks = true
     }
 
@@ -70,7 +70,7 @@ fun MoreArtistMusicsScreen(
     ) {
         Row(
             modifier = Modifier
-                .padding(top = 12.sdp,start = 5.sdp)
+                .padding(top = 12.sdp, start = 5.sdp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
@@ -90,7 +90,11 @@ fun MoreArtistMusicsScreen(
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.inversePrimary)
                     .clickable {
-                        musicPlayerViewModel.onEvent(if (isPlaying) MusicPlayerEvent.PauseMusic else MusicPlayerEvent.ResumeMusic)
+                        if(isPlaying) {
+                            musicPlayerViewModel.onEvent(MusicPlayerEvent.PauseMusic)
+                        } else {
+                            musicPlayerViewModel.onEvent(MusicPlayerEvent.ResumeMusic)
+                        }
                     },
                 contentAlignment = Alignment.Center
             ) {
@@ -172,6 +176,8 @@ fun MoreArtistMusicsScreen(
                         }
                     )
                 }
+                
+                item { Spacer(modifier = Modifier.height(4.sdp)) }
             }
         }
     }

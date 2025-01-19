@@ -13,18 +13,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForwardIos
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,7 +37,7 @@ import androidx.navigation.NavController
 import com.example.jetmusic.View.Components.Buttons.TextButton
 import com.example.jetmusic.View.Components.Cards.MusicCards.MusicCard
 import com.example.jetmusic.View.Components.Slider.MusicPlayerSlider
-import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
+import com.example.jetmusic.View.ScreensRoutes
 import com.example.jetmusic.ViewModels.MusicPlayerViewModel
 import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Detailed.DetailedArtistObject
 import com.example.jetmusic.data.DTOs.UserDTOs.User
@@ -72,7 +68,7 @@ fun ArtistMainInfoScreen(
     var isLiked by remember { mutableStateOf(likedArtistsIds.contains(artistObject.id)) }
 
     LaunchedEffect(null) {
-        delay(200)
+        delay(150)
         showTracks = true
     }
 
@@ -120,7 +116,11 @@ fun ArtistMainInfoScreen(
                         .clip(CircleShape)
                         .background(colorScheme.inversePrimary)
                         .clickable {
-                            musicPlayerViewModel.onEvent(if (isPlaying) MusicPlayerEvent.PauseMusic else MusicPlayerEvent.ResumeMusic)
+                            if(isPlaying) {
+                                musicPlayerViewModel.onEvent(MusicPlayerEvent.PauseMusic)
+                            } else {
+                                musicPlayerViewModel.onEvent(MusicPlayerEvent.ResumeMusic)
+                            }
                         },
                     contentAlignment = Alignment.Center
                 ) {
