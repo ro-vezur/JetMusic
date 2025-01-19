@@ -53,7 +53,7 @@ import com.example.jetmusic.REQUESTED_SEARCH_BAR_ICON_WIDTH
 import com.example.jetmusic.REQUESTED_SEARCH_BAR_WIDTH
 import com.example.jetmusic.View.Components.Buttons.TextButton
 import com.example.jetmusic.View.Components.InputFields.SearchField
-import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
+import com.example.jetmusic.View.ScreensRoutes
 import com.example.jetmusic.View.Screens.ResultScreens.LoadingScreen
 import com.example.jetmusic.View.Screens.SearchScreen.DiscoverScreen.BrowsedMusicList
 import com.example.jetmusic.View.Screens.SearchScreen.DiscoverScreen.DiscoverScreen

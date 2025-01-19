@@ -1,9 +1,10 @@
 package com.example.jetmusic.View.Screens.SearchScreen.DiscoverScreen
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,9 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.example.jetmusic.BOTTOM_MUSIC_PLAYER_HEIGHT
 import com.example.jetmusic.BOTTOM_NAVIGATION_BAR_HEIGHT
 import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Simplified.SimplifiedArtistResponse
@@ -33,13 +31,13 @@ import com.example.jetmusic.data.enums.Genres.MusicGenres
 import com.example.jetmusic.other.Resources.ResultResource
 import com.example.jetmusic.View.Components.Cards.ArtistCards.ArtistCard
 import com.example.jetmusic.View.Components.Cards.MusicCards.MusicGenreCard
-import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
 import com.example.jetmusic.View.Screens.ResultScreens.ErrorScreen
 import com.example.jetmusic.View.Screens.ResultScreens.LoadingScreen
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DiscoverScreen(
     modifier: Modifier = Modifier,
@@ -49,8 +47,6 @@ fun DiscoverScreen(
     setDiscoveredSongsByGenre: (MusicGenres) -> Unit,
 ) {
 
-    val configuration = LocalConfiguration.current
-    val screenWidth = configuration.screenWidthDp
 
     LazyColumn(
         modifier = modifier
@@ -92,13 +88,12 @@ fun DiscoverScreen(
                             modifier = Modifier
                                 .padding(top = 15.sdp)
                                 .height(85.sdp),
-                            horizontalArrangement = Arrangement.spacedBy(9.sdp)
+                            horizontalArrangement = Arrangement.spacedBy(15.sdp)
                         ) {
                             item { }
 
                             trendingArtistsResult.data?.let { artists ->
                                 items(artists.results) { artist ->
-                                    if (artist.name.isNotBlank() && artist.image.isNotBlank()) {
                                         ArtistCard(
                                             modifier = Modifier
                                                 .height(85.sdp)
@@ -108,7 +103,7 @@ fun DiscoverScreen(
                                             artistImage = artist.image,
                                             artistName = artist.name,
                                         )
-                                    }
+
                                 }
                             }
 
@@ -138,21 +133,18 @@ fun DiscoverScreen(
             )
         }
 
-        items(
-            MusicGenres.entries.toList().chunked(2),
-            key = { it }
-        ) { musicGenresChunk ->
-            Row(
+        item {
+            FlowRow(
                 modifier = Modifier
-                    .padding(horizontal = 7.sdp, vertical = 5.sdp)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .padding(horizontal = 6.sdp),
+                maxItemsInEachRow = 2,
+                horizontalArrangement = Arrangement.spacedBy(10.sdp),
+                verticalArrangement = Arrangement.spacedBy(10.sdp)
             ) {
-                musicGenresChunk.forEach { musicGenre ->
+                MusicGenres.entries.toList().forEach { musicGenre ->
                     MusicGenreCard(
                         modifier = Modifier
-                            .padding(horizontal = 5.sdp)
-                            .width(screenWidth.dp / 2.32f)
+                            .weight(1f)
                             .height(88.sdp)
                             .clip(RoundedCornerShape(14.sdp))
                             .clickable {
