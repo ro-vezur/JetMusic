@@ -9,11 +9,12 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
+import com.example.jetmusic.View.ScreensRoutes
 import com.example.jetmusic.View.Screens.MusicLibraryScreen.Screens.LikedArtistsScreen
 import com.example.jetmusic.View.Screens.MusicLibraryScreen.Screens.LikedPlaylistsScreen
 import com.example.jetmusic.View.Screens.MusicLibraryScreen.Screens.LikedSongsScreen
 import com.example.jetmusic.View.Screens.MusicLibraryScreen.Screens.MainLibraryScreen
+import com.example.jetmusic.View.Screens.ProfileScreen.EditProfileScreen
 import com.example.jetmusic.View.Screens.ProfileScreen.MainProfileScreen
 import com.example.jetmusic.ViewModels.MainScreensViewModels.LibraryScreenViewModels.LikedArtistsViewModel
 import com.example.jetmusic.ViewModels.MainScreensViewModels.LibraryScreenViewModels.LikedPlaylistsViewModel
@@ -63,6 +64,11 @@ fun NavGraphBuilder.musicLibraryNavigationGraph(
                     logOut = logOut,
                 )
             }
+        }
+
+        composable<ScreensRoutes.LibraryNavigationGraph.EditProfileRoute> {
+            showBottomBar(false)
+            EditProfileScreen()
         }
 
         composable<ScreensRoutes.LibraryNavigationGraph.LikedSongsRoute> {

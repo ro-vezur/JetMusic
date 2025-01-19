@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -29,10 +28,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.jetmusic.View.Components.Buttons.TextButton
 import com.example.jetmusic.data.DTOs.UserDTOs.User
-import com.example.jetmusic.ui.theme.JetMusicTheme
 import com.example.jetmusic.ui.theme.tidalGradient
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
@@ -42,7 +39,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
-import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
+import com.example.jetmusic.View.ScreensRoutes
 
 @Composable
 fun MainProfileScreen(
@@ -75,7 +72,7 @@ fun MainProfileScreen(
                     width = 75.sdp,
                     height = 24.sdp,
                     onClick = {
-
+                        navController.navigate(ScreensRoutes.LibraryNavigationGraph.EditProfileRoute)
                     },
                     leadingIcon = { modifier ->
                         Icon(

@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -47,7 +46,7 @@ import com.example.jetmusic.Helpers.Validation.Result.ValidationResults
 import com.example.jetmusic.View.Components.Buttons.TextButton
 import com.example.jetmusic.View.Components.Buttons.TurnBackButton
 import com.example.jetmusic.View.Components.InputFields.ValidationTextInputField
-import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
+import com.example.jetmusic.View.ScreensRoutes
 import com.example.jetmusic.ViewModels.StartScreenViewModels.LogInViewModel
 import com.example.jetmusic.ui.theme.tidalGradient
 import com.example.jetmusic.ui.theme.typography

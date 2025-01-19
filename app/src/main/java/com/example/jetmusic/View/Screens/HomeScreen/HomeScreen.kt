@@ -28,9 +28,6 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,7 +43,7 @@ import com.example.jetmusic.other.Resources.ResultResource
 import com.example.jetmusic.View.Components.Cards.MusicCards.MusicCard
 import com.example.jetmusic.View.Components.TabsRow.CustomScrollableTabRow
 import com.example.jetmusic.View.Screens.HomeScreen.TabsCategories.TabsHomeCategories
-import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
+import com.example.jetmusic.View.ScreensRoutes
 import com.example.jetmusic.ViewModels.MainScreensViewModels.HomeViewModel
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
 import com.example.jetmusic.ui.theme.tidalGradient

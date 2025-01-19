@@ -37,7 +37,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
-import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
+import com.example.jetmusic.View.ScreensRoutes
 import com.example.jetmusic.data.DTOs.UserDTOs.User
 
 @Composable

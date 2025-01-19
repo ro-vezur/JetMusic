@@ -34,7 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import coil.compose.AsyncImage
-import com.example.jetmusic.View.ScreenRoutes.ScreensRoutes
+import com.example.jetmusic.View.ScreensRoutes
 import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
