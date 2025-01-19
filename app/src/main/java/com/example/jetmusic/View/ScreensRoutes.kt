@@ -1,4 +1,4 @@
-package com.example.jetmusic.View.ScreenRoutes
+package com.example.jetmusic.View
 
 import com.example.jetmusic.data.enums.Genres.MusicGenres
 import kotlinx.serialization.Serializable
@@ -16,6 +16,9 @@ object ScreensRoutes {
 
         @Serializable
         object LogInRoute
+
+        @Serializable
+        object ContinueWithPhoneNumber
     }
 
     @Serializable
@@ -52,6 +55,9 @@ object ScreensRoutes {
 
         @Serializable
         object ProfileRoute
+
+        @Serializable
+        object EditProfileRoute
     }
 
     @Serializable
