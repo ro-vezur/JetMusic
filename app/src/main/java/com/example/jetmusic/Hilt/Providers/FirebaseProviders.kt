@@ -5,6 +5,7 @@ import com.example.jetmusic.domain.collections.UsersCollectionInterface
 import com.example.jetmusic.domain.auth.FirebaseAuthInterface
 import com.example.jetmusic.data.Remote.Repositories.Auth.AuthRepository
 import com.example.jetmusic.data.Remote.Repositories.Auth.OtherPlatforms.GoogleManager
+import com.example.jetmusic.data.Remote.Repositories.Auth.OtherPlatforms.PhoneNumberManager
 import com.example.jetmusic.data.Remote.Repositories.Database.UsersCollectionRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -46,5 +47,17 @@ object FirebaseProviders {
         auth: FirebaseAuth
     ): GoogleManager {
         return GoogleManager(context,auth)
+    }
+
+    @Provides
+    @Singleton
+    fun providePhoneManager(
+        @ApplicationContext context: Context,
+        auth: FirebaseAuth,
+    ): PhoneNumberManager {
+        return PhoneNumberManager(
+            context = context,
+            auth = auth,
+        )
     }
 }
