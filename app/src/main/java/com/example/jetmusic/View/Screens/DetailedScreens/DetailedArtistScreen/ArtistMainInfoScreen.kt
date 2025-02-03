@@ -174,11 +174,6 @@ fun ArtistMainInfoScreen(
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(10.sdp))
                         .clickable {
-                            Log.d("current music",musicControllerUiState.currentMusic.toString())
-                            Log.d("id of current music",currentMusicId)
-                            Log.d("music to set",music.toString())
-                            Log.d("is ids not equal?",(currentMusicId != music.id).toString())
-                            Log.d("index of music to select", index.toString())
                             if (currentMusicId != music.id) {
                                 musicPlayerViewModel.onEvent(
                                     MusicPlayerEvent.SelectMusic(index)
@@ -193,7 +188,6 @@ fun ArtistMainInfoScreen(
                                 .size(32.sdp)
                                 .clip(RoundedCornerShape(10.sdp))
                                 .clickable {
-                                    Log.d("is ids not equal?",(MusicHelper.getTrackIdFromUrl(musicControllerUiState.currentMusic?.audio) != music.id).toString())
                                     if (MusicHelper.getTrackIdFromUrl(musicControllerUiState.currentMusic?.audio) != music.id) {
                                         musicPlayerViewModel.onEvent(
                                             MusicPlayerEvent.SelectMusic(

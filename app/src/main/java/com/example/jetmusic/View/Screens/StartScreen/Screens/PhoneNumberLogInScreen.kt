@@ -23,8 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.jetmusic.View.Components.Buttons.TurnBackButton
-import com.example.jetmusic.View.Components.InputFields.ValidationTextInputField
-import com.example.jetmusic.View.ScreensRoutes
 import com.example.jetmusic.ui.theme.JetMusicTheme
 import ir.kaaveh.sdpcompose.sdp
 import androidx.compose.runtime.setValue
@@ -37,10 +35,12 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.jetmusic.BASE_BUTTON_HEIGHT
 import com.example.jetmusic.Helpers.Context.findActivity
 import com.example.jetmusic.Helpers.CountryCodePicker.getPhoneCodeByCountryCode
 import com.example.jetmusic.View.Components.Buttons.TextButton
+import com.example.jetmusic.View.ScreensRoutes
 import com.example.jetmusic.ViewModels.StartScreenViewModels.PhoneNumberViewModel
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.PhoneAuthCredential
@@ -48,6 +48,7 @@ import com.google.firebase.auth.PhoneAuthProvider
 
 @Composable
 fun PhoneNumberLogInScreen(
+    navController: NavController,
     phoneNumberViewModel: PhoneNumberViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
@@ -66,7 +67,6 @@ fun PhoneNumberLogInScreen(
         }
 
         override fun onCodeAutoRetrievalTimeOut(p0: String) {
-            Log.d("VERIF TIME OUT",p0)
             Toast.makeText(context,"TIME OUT",Toast.LENGTH_SHORT).show()
         }
     }
@@ -74,7 +74,7 @@ fun PhoneNumberLogInScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .background(colorScheme.background),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
@@ -89,7 +89,7 @@ fun PhoneNumberLogInScreen(
                 background = Color.Transparent,
                 iconColor = Color.White,
                 turnBack = {
-                  //  navController.navigate(ScreensRoutes.StartScreens.WelcomeRoute)
+                    navController.navigate(ScreensRoutes.StartScreens.WelcomeRoute)
                 }
             )
         }
@@ -143,13 +143,5 @@ fun PhoneNumberLogInScreen(
             }
         )
 
-    }
-}
-
-@Preview
-@Composable
-private fun phoneNuMBER() {
-    JetMusicTheme {
-        PhoneNumberLogInScreen( )
     }
 }

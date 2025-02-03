@@ -10,7 +10,6 @@ class MusicHelper {
                 val uri = Uri.parse(url)
                 uri.getQueryParameter("trackid").toString()
             } catch (e: Exception) {
-                Log.e("get track id error",e.message.toString())
                 ""
             }
         }
