@@ -57,7 +57,7 @@ class SignUpViewModel @Inject constructor(
         val validateName = NameValidation.validate(name)
         val validateEmail = EmailValidation.validate(
             email = email,
-            additionalValidators = checkIsEmailRegistered(email) && checkIsCustomProviderUsed(email)
+            additionalValidators = checkIsEmailRegistered(email)
         )
 
         val validatePassword = PasswordValidation.validate(password)
@@ -133,9 +133,5 @@ class SignUpViewModel @Inject constructor(
 
     private suspend fun checkIsEmailRegistered(email: String): Boolean {
         return usersCollectionRepository.checkIsEmailRegistered(email)
-    }
-
-    private suspend fun checkIsCustomProviderUsed(email: String) : Boolean {
-        return usersCollectionRepository.checkIsCustomProviderUsed(email)
     }
 }

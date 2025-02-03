@@ -46,7 +46,9 @@ import com.example.jetmusic.data.DTOs.UserDTOs.User
 import com.example.jetmusic.Helpers.Validation.Result.ValidationResults
 import com.example.jetmusic.View.Components.Buttons.TextButton
 import com.example.jetmusic.View.Components.Buttons.TurnBackButton
-import com.example.jetmusic.View.Components.InputFields.ValidationTextInputField
+import com.example.jetmusic.View.Components.InputFields.ValidationTextField.DefaultValidationLeadingIcon
+import com.example.jetmusic.View.Components.InputFields.ValidationTextField.DefaultValidationTrailingIcon
+import com.example.jetmusic.View.Components.InputFields.ValidationTextField.ValidationTextInputField
 import com.example.jetmusic.View.ScreensRoutes
 import com.example.jetmusic.ViewModels.StartScreenViewModels.SignUpViewModel
 import com.example.jetmusic.ui.theme.tidalGradient
@@ -128,8 +130,13 @@ fun SignUpScreen(
                 },
                 placeHolder = "Full Name",
                 validationResults = nameValidationResult,
-                leadingIcon = Icons.Filled.Person,
-                )
+                leadingIcon = { tint ->
+                    DefaultValidationLeadingIcon(
+                        icon = Icons.Filled.Person,
+                        tint = tint,
+                    )
+                },
+            )
 
             ValidationTextInputField(
                 text = email,
@@ -139,7 +146,12 @@ fun SignUpScreen(
                 },
                 placeHolder = "Email",
                 validationResults = emailValidationResult,
-                leadingIcon = Icons.Filled.Email,
+                leadingIcon = { tint ->
+                    DefaultValidationLeadingIcon(
+                        icon = Icons.Filled.Email,
+                        tint = tint,
+                    )
+                },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             )
 
@@ -151,16 +163,20 @@ fun SignUpScreen(
                 },
                 placeHolder = "Password",
                 validationResults = passwordValidationResult,
-                leadingIcon = Icons.Filled.Lock,
-                trailingIcon = {
-                   Icon(
-                       imageVector = if(showPassword) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                       contentDescription = "visibility",
-                       modifier = Modifier
-                           .clip(RoundedCornerShape(10.sdp))
-                           .size(24.sdp)
-                           .clickable { showPassword = !showPassword }
-                   )
+                leadingIcon = { tint ->
+                    DefaultValidationLeadingIcon(
+                        icon = Icons.Filled.Lock,
+                        tint = tint,
+                    )
+                },
+                trailingIcon = { tint ->
+                    DefaultValidationTrailingIcon(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(10.sdp))
+                            .clickable { showPassword = !showPassword },
+                        icon = if(showPassword) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                        tint = tint,
+                    )
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 visualTransformation = if(showPassword) VisualTransformation.None else PasswordVisualTransformation()
@@ -174,15 +190,19 @@ fun SignUpScreen(
                 },
                 placeHolder = "Password Confirm",
                 validationResults = passwordConfirmValidationResult,
-                leadingIcon = Icons.Filled.Lock,
-                trailingIcon = {
-                    Icon(
-                        imageVector = if(showPassword) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                        contentDescription = "visibility",
+                leadingIcon = { tint ->
+                    DefaultValidationLeadingIcon(
+                        icon = Icons.Filled.Lock,
+                        tint = tint,
+                    )
+                },
+                trailingIcon = { tint ->
+                    DefaultValidationTrailingIcon(
                         modifier = Modifier
                             .clip(RoundedCornerShape(10.sdp))
-                            .size(24.sdp)
-                            .clickable { showPassword = !showPassword }
+                            .clickable { showPassword = !showPassword },
+                        icon = if(showPassword) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                        tint = tint,
                     )
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
