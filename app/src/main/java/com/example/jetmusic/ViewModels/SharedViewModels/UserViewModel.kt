@@ -38,6 +38,7 @@ class UserViewModel @Inject constructor(
 
     fun updateUser(newUser: User) = viewModelScope.launch {
         usersCollectionRepository.updateUser(newUser)
+        setUser(newUser)
     }
 
     fun logOut() {

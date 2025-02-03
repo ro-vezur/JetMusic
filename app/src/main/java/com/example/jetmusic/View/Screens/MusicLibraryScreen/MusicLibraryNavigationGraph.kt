@@ -68,7 +68,18 @@ fun NavGraphBuilder.musicLibraryNavigationGraph(
 
         composable<ScreensRoutes.LibraryNavigationGraph.EditProfileRoute> {
             showBottomBar(false)
-            EditProfileScreen()
+
+            val userViewModel: UserViewModel = hiltViewModel(viewModelStoreOwner)
+            val user by userViewModel.user.collectAsStateWithLifecycle()
+
+            user?.let { checkedUser ->
+                EditProfileScreen(
+                    user = checkedUser,
+                    updateUser = { updatedUser ->
+                        userViewModel.updateUser(updatedUser)
+                    }
+                )
+            }
         }
 
         composable<ScreensRoutes.LibraryNavigationGraph.LikedSongsRoute> {
