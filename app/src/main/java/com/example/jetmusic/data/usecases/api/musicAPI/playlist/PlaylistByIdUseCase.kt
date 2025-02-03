@@ -1,4 +1,4 @@
-package com.example.jetmusic.domain.usecases.api.musicAPI.playlist
+package com.example.jetmusic.data.usecases.api.musicAPI.playlist
 
 import com.example.jetmusic.data.Remote.API.ApiService
 import javax.inject.Inject

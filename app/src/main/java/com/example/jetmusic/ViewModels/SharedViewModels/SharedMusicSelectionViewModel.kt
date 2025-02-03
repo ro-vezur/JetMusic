@@ -6,11 +6,11 @@ import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Detailed.DetailedArtistObje
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
 import com.example.jetmusic.data.DTOs.API.PlaylistDTOs.Detailed.DetailedPlaylistObject
 import com.example.jetmusic.data.DTOs.API.UnifiedData.MediaTypes
-import com.example.jetmusic.domain.usecases.musicController.music.SetMediaItemsUseCase
-import com.example.jetmusic.domain.usecases.musicController.music.PauseMusicUseCase
-import com.example.jetmusic.domain.usecases.musicController.music.PlayMusicUseCase
-import com.example.jetmusic.domain.usecases.musicController.music.ResumeMusicUseCase
-import com.example.jetmusic.domain.usecases.musicController.music.SetMediaItemUseCase
+import com.example.jetmusic.data.usecases.musicController.music.SetMediaItemsUseCase
+import com.example.jetmusic.data.usecases.musicController.music.PauseMusicUseCase
+import com.example.jetmusic.data.usecases.musicController.music.PlayMusicUseCase
+import com.example.jetmusic.data.usecases.musicController.music.ResumeMusicUseCase
+import com.example.jetmusic.data.usecases.musicController.music.SetMediaItemUseCase
 import com.example.jetmusic.other.events.MusicSelectionEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -3,7 +3,7 @@ package com.example.jetmusic.ViewModels.MainScreensViewModels.LibraryScreenViewM
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
-import com.example.jetmusic.domain.usecases.api.musicAPI.music.MusicByIdUseCase
+import com.example.jetmusic.data.usecases.api.musicAPI.music.MusicByIdUseCase
 import com.example.jetmusic.other.Resources.ResultResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

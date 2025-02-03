@@ -1,4 +1,4 @@
-package com.example.jetmusic.domain.usecases.musicController.music
+package com.example.jetmusic.data.usecases.musicController.music
 
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
 import com.example.jetmusic.domain.service.MusicController

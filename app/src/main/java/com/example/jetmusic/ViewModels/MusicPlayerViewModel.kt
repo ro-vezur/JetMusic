@@ -2,12 +2,12 @@ package com.example.jetmusic.ViewModels
 
 import androidx.lifecycle.ViewModel
 import com.example.jetmusic.other.events.MusicPlayerEvent
-import com.example.jetmusic.domain.usecases.musicController.music.PauseMusicUseCase
-import com.example.jetmusic.domain.usecases.musicController.music.PlayMusicUseCase
-import com.example.jetmusic.domain.usecases.musicController.music.ResumeMusicUseCase
-import com.example.jetmusic.domain.usecases.musicController.music.SeekMusicToPositionUseCase
-import com.example.jetmusic.domain.usecases.musicController.music.SkipToNextMusicUseCase
-import com.example.jetmusic.domain.usecases.musicController.music.SkipToPreviousMusicUseCase
+import com.example.jetmusic.data.usecases.musicController.music.PauseMusicUseCase
+import com.example.jetmusic.data.usecases.musicController.music.PlayMusicUseCase
+import com.example.jetmusic.data.usecases.musicController.music.ResumeMusicUseCase
+import com.example.jetmusic.data.usecases.musicController.music.SeekMusicToPositionUseCase
+import com.example.jetmusic.data.usecases.musicController.music.SkipToNextMusicUseCase
+import com.example.jetmusic.data.usecases.musicController.music.SkipToPreviousMusicUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

@@ -6,7 +6,7 @@ import com.example.jetmusic.View.Screens.HomeScreen.TabsCategories.TabsHomeCateg
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicResponse
 import com.example.jetmusic.data.Remote.API.WEEK_POPULARITY
 import com.example.jetmusic.other.Resources.ResultResource
-import com.example.jetmusic.domain.usecases.api.musicAPI.music.DiscoverSongsUseCase
+import com.example.jetmusic.data.usecases.api.musicAPI.music.DiscoverSongsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

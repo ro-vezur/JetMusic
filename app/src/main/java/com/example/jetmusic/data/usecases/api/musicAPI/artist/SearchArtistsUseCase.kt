@@ -1,4 +1,4 @@
-package com.example.jetmusic.domain.usecases.api.musicAPI.artist
+package com.example.jetmusic.data.usecases.api.musicAPI.artist
 
 import com.example.jetmusic.OFFSET_PER_PAGE
 import com.example.jetmusic.data.Remote.API.ApiService

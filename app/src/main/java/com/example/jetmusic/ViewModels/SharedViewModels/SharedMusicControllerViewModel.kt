@@ -6,9 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
-import com.example.jetmusic.domain.usecases.musicController.DestroyMediaControllerUseCase
-import com.example.jetmusic.domain.usecases.musicController.SetMediaControllerCallbackUseCase
-import com.example.jetmusic.domain.usecases.musicController.music.GetCurrentMusicPositionUseCase
+import com.example.jetmusic.data.usecases.musicController.DestroyMediaControllerUseCase
+import com.example.jetmusic.data.usecases.musicController.SetMediaControllerCallbackUseCase
+import com.example.jetmusic.data.usecases.musicController.music.GetCurrentMusicPositionUseCase
 import com.example.jetmusic.states.PlayerState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay

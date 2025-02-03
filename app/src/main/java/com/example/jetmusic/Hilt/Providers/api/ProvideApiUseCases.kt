@@ -1,14 +1,14 @@
 package com.example.jetmusic.Hilt.Providers.api
 
 import com.example.jetmusic.data.Remote.API.ApiService
-import com.example.jetmusic.domain.usecases.api.musicAPI.artist.ArtistByIdUseCase
-import com.example.jetmusic.domain.usecases.api.musicAPI.artist.SearchArtistsUseCase
-import com.example.jetmusic.domain.usecases.api.musicAPI.artist.TrendingArtistsUseCase
-import com.example.jetmusic.domain.usecases.api.musicAPI.music.DiscoverSongsUseCase
-import com.example.jetmusic.domain.usecases.api.musicAPI.music.MusicByIdUseCase
-import com.example.jetmusic.domain.usecases.api.musicAPI.music.SearchMusicUseCase
-import com.example.jetmusic.domain.usecases.api.musicAPI.playlist.PlaylistByIdUseCase
-import com.example.jetmusic.domain.usecases.api.musicAPI.playlist.SearchPlaylistsUseCase
+import com.example.jetmusic.data.usecases.api.musicAPI.artist.ArtistByIdUseCase
+import com.example.jetmusic.data.usecases.api.musicAPI.artist.SearchArtistsUseCase
+import com.example.jetmusic.data.usecases.api.musicAPI.artist.TrendingArtistsUseCase
+import com.example.jetmusic.data.usecases.api.musicAPI.music.DiscoverSongsUseCase
+import com.example.jetmusic.data.usecases.api.musicAPI.music.MusicByIdUseCase
+import com.example.jetmusic.data.usecases.api.musicAPI.music.SearchMusicUseCase
+import com.example.jetmusic.data.usecases.api.musicAPI.playlist.PlaylistByIdUseCase
+import com.example.jetmusic.data.usecases.api.musicAPI.playlist.SearchPlaylistsUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
