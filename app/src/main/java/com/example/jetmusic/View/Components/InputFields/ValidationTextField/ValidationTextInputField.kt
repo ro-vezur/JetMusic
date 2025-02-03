@@ -1,5 +1,6 @@
-package com.example.jetmusic.View.Components.InputFields
+package com.example.jetmusic.View.Components.InputFields.ValidationTextField
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -33,7 +34,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.nativeKeyCode
 import androidx.compose.ui.input.key.onKeyEvent
@@ -47,6 +47,8 @@ import ir.kaaveh.sdpcompose.sdp
 import ir.kaaveh.sdpcompose.ssp
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import com.example.jetmusic.BASE_BUTTON_HEIGHT
 import com.example.jetmusic.BASE_BUTTON_WIDTH
@@ -66,35 +68,75 @@ fun ValidationTextInputField(
     shape: RoundedCornerShape = RoundedCornerShape(25.sdp),
     background: Color = colorScheme.background,
     errorBorder: BorderStroke = BorderStroke(1.sdp, colorScheme.error),
-    unfocusedBorder: BorderStroke = BorderStroke(1.sdp,Color.White),
+    unfocusedBorder: BorderStroke = BorderStroke(1.sdp, Color.White),
     focusedBorder: BorderStroke = BorderStroke(1.sdp, tidalGradient),
     textPadding: PaddingValues = PaddingValues(),
     singleLine: Boolean = true,
     readOnly: Boolean = false,
     validationResults: ValidationResults = ValidationResults.NONE,
     placeHolder: String = "",
-    leadingIcon: ImageVector? = null,
-    trailingIcon: (@Composable () -> Unit)? = null,
+    leadingIcon: (@Composable (tint: Color) -> Unit)? = null,
+    trailingIcon: (@Composable (tint: Color) -> Unit)? = null,
+    checkIcon: (@Composable (tint: Color) -> Unit)? = {
+        Icon(
+            modifier = Modifier
+                .size(24.sdp),
+            imageVector = Icons.Default.Check,
+            contentDescription = "check",
+            tint = Color.Green
+        )
+    },
     visualTransformation: VisualTransformation = VisualTransformation.None,
-    keyboardOptions: KeyboardOptions = KeyboardOptions()
+    keyboardOptions: KeyboardOptions = KeyboardOptions(),
 ) {
+    val colorScheme = colorScheme
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    val isError = validationResults == ValidationResults.ERROR
-    val isCorrect = validationResults == ValidationResults.CORRECT
+    var isError by remember {
+        mutableStateOf(validationResults == ValidationResults.ERROR)
+    }
+    var isCorrect by remember {
+        mutableStateOf(validationResults == ValidationResults.CORRECT)
+    }
 
-    val contentColor = if(!readOnly) {
-        if (isError) colorScheme.error else {
-            if (isFocused) Color.White else Color.White.copy(0.85f)
+    var contentColor by remember { mutableStateOf(colorScheme.inversePrimary.copy(0.85f)) }
+    var border by remember { mutableStateOf(unfocusedBorder) }
+
+    fun onFocused() {
+        if(isFocused) {
+            contentColor = colorScheme.inversePrimary
+            border = focusedBorder
+        } else {
+            contentColor = colorScheme.inversePrimary.copy(0.85f)
+            border = unfocusedBorder
         }
-    } else Color.White
+    }
 
-    val border = if (isError) errorBorder
-    else { if (isFocused && !readOnly) focusedBorder else unfocusedBorder }
+    LaunchedEffect(isFocused) {
+        if(!isError) {
+            onFocused()
+        }
+    }
+
+    LaunchedEffect(validationResults) {
+        isCorrect = validationResults == ValidationResults.CORRECT
+        isError = validationResults == ValidationResults.ERROR
+
+        when(validationResults) {
+            ValidationResults.ERROR -> {
+                contentColor = colorScheme.error
+                border = errorBorder
+            }
+            ValidationResults.CORRECT -> {}
+            ValidationResults.NONE -> {
+                onFocused()
+            }
+        }
+    }
 
     Box(
         modifier = modifier
@@ -148,14 +190,7 @@ fun ValidationTextInputField(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     if (leadingIcon != null) {
-                        Icon(
-                            imageVector = leadingIcon,
-                            contentDescription = placeHolder,
-                            tint = contentColor,
-                            modifier = Modifier
-                                .padding(start = 12.sdp)
-                                .size(24.sdp)
-                        )
+                        leadingIcon(contentColor)
                     }
 
                     Box(
@@ -178,23 +213,16 @@ fun ValidationTextInputField(
 
                     Row(
                         modifier = Modifier
-                            .padding(end = 14.sdp),
+                            .padding(end = 12.sdp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(7.sdp)
                     ) {
                         if (trailingIcon != null) {
-                            trailingIcon()
+                            trailingIcon(contentColor)
                         }
 
-                        if(isCorrect) {
-                            Icon(
-                                imageVector = Icons.Default.Check,
-                                contentDescription = "check",
-                                tint = Color.Green,
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(10.sdp))
-                                    .size(24.sdp)
-                            )
+                        if(isCorrect && checkIcon != null) {
+                            checkIcon(Color.Green)
                         }
                     }
                 }
