@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -19,7 +18,6 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -45,7 +43,9 @@ import com.example.jetmusic.data.DTOs.UserDTOs.User
 import com.example.jetmusic.Helpers.Validation.Result.ValidationResults
 import com.example.jetmusic.View.Components.Buttons.TextButton
 import com.example.jetmusic.View.Components.Buttons.TurnBackButton
-import com.example.jetmusic.View.Components.InputFields.ValidationTextInputField
+import com.example.jetmusic.View.Components.InputFields.ValidationTextField.DefaultValidationLeadingIcon
+import com.example.jetmusic.View.Components.InputFields.ValidationTextField.DefaultValidationTrailingIcon
+import com.example.jetmusic.View.Components.InputFields.ValidationTextField.ValidationTextInputField
 import com.example.jetmusic.View.ScreensRoutes
 import com.example.jetmusic.ViewModels.StartScreenViewModels.LogInViewModel
 import com.example.jetmusic.ui.theme.tidalGradient
@@ -121,8 +121,16 @@ fun LogInScreen(
                 },
                 placeHolder = "Email",
                 validationResults = emailValidationResult,
-                leadingIcon = Icons.Filled.Email,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                leadingIcon = { tint ->
+                    DefaultValidationLeadingIcon(
+                        icon = Icons.Filled.Email,
+                        tint = tint,
+                    )
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email,
+                    showKeyboardOnFocus = true
+                )
             )
 
             ValidationTextInputField(
@@ -133,15 +141,19 @@ fun LogInScreen(
                 },
                 placeHolder = "Password",
                 validationResults = passwordValidationResult,
-                leadingIcon = Icons.Filled.Lock,
-                trailingIcon = {
-                    Icon(
-                        imageVector = if(showPassword) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                        contentDescription = "visibility",
+                leadingIcon = { tint ->
+                    DefaultValidationLeadingIcon(
+                        icon = Icons.Filled.Lock,
+                        tint = tint,
+                    )
+                },
+                trailingIcon = { tint ->
+                    DefaultValidationTrailingIcon(
                         modifier = Modifier
                             .clip(RoundedCornerShape(10.sdp))
-                            .size(24.sdp)
-                            .clickable { showPassword = !showPassword }
+                            .clickable { showPassword = !showPassword },
+                        icon = if(showPassword) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                        tint = tint,
                     )
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -196,13 +208,11 @@ fun LogInScreen(
                             }
                         }
 
-                        },
-                        text = "Sign up",
-                        style = typography().bodyLarge.copy(
-                            brush = tidalGradient
-                        ),
-                        textDecoration = TextDecoration.Underline
-                        )
-                    }
+                    },
+                text = "Sign up",
+                style = typography().bodyLarge.copy(brush = tidalGradient),
+                textDecoration = TextDecoration.Underline
+            )
+        }
     }
 }
