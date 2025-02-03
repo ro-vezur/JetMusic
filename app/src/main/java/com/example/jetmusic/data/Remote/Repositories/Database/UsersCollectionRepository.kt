@@ -55,7 +55,7 @@ class UsersCollectionRepository(
 
         val findEmail = documents.find {
             val user = it.toObject(User::class.java)
-            user?.email == email && user.customProviderUsed
+            user?.email == email
         }
 
         return findEmail != null

@@ -49,7 +49,9 @@ fun NavGraphBuilder.startScreensGraph(
         }
 
         composable<ScreensRoutes.StartScreens.ContinueWithPhoneNumber> {
-            PhoneNumberLogInScreen()
+            PhoneNumberLogInScreen(
+                navController = navController
+            )
         }
     }
 }

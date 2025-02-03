@@ -18,7 +18,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.JetMusic"
         android:usesCleartextTraffic="true"
+        android:hardwareAccelerated="true"
         tools:targetApi="31">
+
+        <profileable android:shell="true" />
+
         <service
             android:name=".data.Services.MusicService.MusicService"
             android:enabled="true"
