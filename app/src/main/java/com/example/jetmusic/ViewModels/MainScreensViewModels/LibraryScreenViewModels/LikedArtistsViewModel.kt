@@ -3,7 +3,7 @@ package com.example.jetmusic.ViewModels.MainScreensViewModels.LibraryScreenViewM
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Detailed.DetailedArtistObject
-import com.example.jetmusic.domain.usecases.api.musicAPI.artist.ArtistByIdUseCase
+import com.example.jetmusic.data.usecases.api.musicAPI.artist.ArtistByIdUseCase
 import com.example.jetmusic.other.Resources.ResultResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,7 +42,6 @@ class LikedArtistsViewModel @Inject constructor(
     }.catch { e ->
         emit(ResultResource.Error(message = e.message.toString()))
     }.collectLatest { result ->
-        Log.d("artist result",result.toString())
         _likedArtistsResult.emit(result)
     }
 }

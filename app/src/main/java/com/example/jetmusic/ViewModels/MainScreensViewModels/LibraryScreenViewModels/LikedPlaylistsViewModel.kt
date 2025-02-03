@@ -2,7 +2,7 @@ package com.example.jetmusic.ViewModels.MainScreensViewModels.LibraryScreenViewM
 
 import androidx.lifecycle.ViewModel
 import com.example.jetmusic.data.DTOs.API.PlaylistDTOs.Detailed.DetailedPlaylistObject
-import com.example.jetmusic.domain.usecases.api.musicAPI.playlist.PlaylistByIdUseCase
+import com.example.jetmusic.data.usecases.api.musicAPI.playlist.PlaylistByIdUseCase
 import com.example.jetmusic.other.Resources.ResultResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
