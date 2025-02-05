@@ -38,8 +38,7 @@ fun TopBarWithNavigateBack(
 
         IconButton(
             modifier = Modifier
-                .padding(start = 18.sdp)
-                .size(30.sdp),
+                .padding(start = 18.sdp),
             onClick = { turnBack() }
         ) {
             Icon(
