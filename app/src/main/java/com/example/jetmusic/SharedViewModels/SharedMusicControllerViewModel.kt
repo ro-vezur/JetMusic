@@ -1,4 +1,4 @@
-package com.example.jetmusic.ViewModels.SharedViewModels
+package com.example.jetmusic.SharedViewModels
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -12,6 +12,9 @@ import com.example.jetmusic.data.usecases.musicController.music.GetCurrentMusicP
 import com.example.jetmusic.states.PlayerState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
@@ -23,8 +26,10 @@ class SharedMusicControllerViewModel @Inject constructor(
     private val destroyMediaControllerUseCase: DestroyMediaControllerUseCase,
 ): ViewModel() {
 
-    var musicControllerUiState by mutableStateOf(MusicControllerUiState())
-        private set
+    private val _musicControllerUiState: MutableStateFlow<MusicControllerUiState> = MutableStateFlow(
+        MusicControllerUiState()
+    )
+    var musicControllerUiState: StateFlow<MusicControllerUiState> = _musicControllerUiState.asStateFlow()
 
     init {
         setMediaControllerCallback()
@@ -33,21 +38,27 @@ class SharedMusicControllerViewModel @Inject constructor(
     private fun setMediaControllerCallback() {
         setMediaControllerCallbackUseCase { playerState, currentSong, currentPosition, totalDuration,
                                             isShuffleEnabled, isRepeatOneEnabled ->
-            musicControllerUiState = musicControllerUiState.copy(
-                playerState = playerState,
-                currentMusic = currentSong,
-                currentPosition = currentPosition,
-                totalDuration = totalDuration,
-                isShuffleEnabled = isShuffleEnabled,
-                isRepeatOneEnabled = isRepeatOneEnabled
-            )
+            viewModelScope.launch {
+                _musicControllerUiState.emit(
+                    musicControllerUiState.value.copy(
+                        playerState = playerState,
+                        currentMusic = currentSong,
+                        currentPosition = currentPosition,
+                        totalDuration = totalDuration,
+                        isShuffleEnabled = isShuffleEnabled,
+                        isRepeatOneEnabled = isRepeatOneEnabled
+                    )
+                )
+            }
 
             if (playerState == PlayerState.PLAYING) {
                 viewModelScope.launch {
                     while (true) {
-                        delay(1.seconds)
-                        musicControllerUiState = musicControllerUiState.copy(
-                            currentPosition = getCurrentMusicPositionUseCase()
+                        delay(0.1.seconds)
+                        _musicControllerUiState.emit(
+                            musicControllerUiState.value.copy(
+                                currentPosition = getCurrentMusicPositionUseCase()
+                            )
                         )
                     }
                 }

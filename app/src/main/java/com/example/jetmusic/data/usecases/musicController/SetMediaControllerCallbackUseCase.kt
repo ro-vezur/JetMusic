@@ -1,6 +1,7 @@
 package com.example.jetmusic.data.usecases.musicController
 
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
+import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
 import com.example.jetmusic.domain.service.MusicController
 import com.example.jetmusic.states.PlayerState
 import javax.inject.Inject

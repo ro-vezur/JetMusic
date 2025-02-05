@@ -7,6 +7,8 @@ sealed class MusicSelectionEvent {
 
     data class SetMediaItems(val musicList: List<MusicObject>): MusicSelectionEvent()
 
+    object ClearMediaItems: MusicSelectionEvent()
+
     data class SelectMusic(val musicIndex: Int) : MusicSelectionEvent()
 
     object PauseMusic : MusicSelectionEvent()

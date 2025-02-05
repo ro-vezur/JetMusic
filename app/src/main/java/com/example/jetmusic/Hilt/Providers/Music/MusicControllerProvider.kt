@@ -12,7 +12,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object MediaControllerProvider {
+object MusicControllerProvider {
     @Singleton
     @Provides
     fun provideMusicController(@ApplicationContext context: Context): MusicController =

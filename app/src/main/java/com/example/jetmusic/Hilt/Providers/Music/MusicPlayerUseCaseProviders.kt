@@ -3,6 +3,7 @@ package com.example.jetmusic.Hilt.Providers.Music
 import com.example.jetmusic.domain.service.MusicController
 import com.example.jetmusic.data.usecases.musicController.DestroyMediaControllerUseCase
 import com.example.jetmusic.data.usecases.musicController.SetMediaControllerCallbackUseCase
+import com.example.jetmusic.data.usecases.musicController.music.ClearMediaItemsUseCase
 import com.example.jetmusic.data.usecases.musicController.music.SetMediaItemsUseCase
 import com.example.jetmusic.data.usecases.musicController.music.GetCurrentMusicPositionUseCase
 import com.example.jetmusic.data.usecases.musicController.music.PauseMusicUseCase
@@ -25,7 +26,7 @@ object MusicPlayerUseCaseProviders {
     @Provides
     @Singleton
     fun provideAddMediaItemUseCase(musicController: MusicController) =
-       SetMediaItemUseCase(musicController)
+        SetMediaItemUseCase(musicController)
 
     @Provides
     @Singleton
@@ -76,4 +77,10 @@ object MusicPlayerUseCaseProviders {
     @Singleton
     fun provideSetMediaControllerCallbackUseCase(musicController: MusicController) =
         SetMediaControllerCallbackUseCase(musicController)
+
+    @Provides
+    @Singleton
+    fun provideClearMediaItemsUseCase(musicController: MusicController) =
+        ClearMediaItemsUseCase(musicController)
+
 }

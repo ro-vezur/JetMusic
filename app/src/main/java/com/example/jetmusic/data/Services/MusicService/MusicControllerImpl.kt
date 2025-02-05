@@ -2,6 +2,7 @@ package com.example.jetmusic.data.Services.MusicService
 
 import android.content.ComponentName
 import android.content.Context
+import android.util.Log
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
@@ -12,6 +13,9 @@ import com.example.jetmusic.domain.service.MusicController
 import com.example.jetmusic.states.PlayerState
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.MoreExecutors
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MusicControllerImpl(context: Context) : MusicController {
 
@@ -43,6 +47,7 @@ class MusicControllerImpl(context: Context) : MusicController {
             object : Player.Listener {
                 override fun onEvents(player: Player, events: Player.Events) {
                     super.onEvents(player, events)
+                    CoroutineScope(Dispatchers.IO).launch {}
                     with(player) {
                         mediaControllerCallback?.invoke(
                             playbackState.toPlayerState(isPlaying),
@@ -67,6 +72,10 @@ class MusicControllerImpl(context: Context) : MusicController {
 
     override fun setMediaItem(musicObject: MusicObject) {
         mediaController?.setMediaItem(musicObject.toMediaItem())
+    }
+
+    override fun clearMediaItems() {
+        mediaController?.clearMediaItems()
     }
 
     override fun setMediaItems(musicList: List<MusicObject>) {

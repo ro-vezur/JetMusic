@@ -4,18 +4,18 @@ import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
 import com.example.jetmusic.states.PlayerState
 
 interface MusicController {
-    var mediaControllerCallback: (
-        (
+    var mediaControllerCallback: ((
         playerState: PlayerState,
         currentMusic: MusicObject?,
         currentPosition: Long,
         totalDuration: Long,
         isShuffleEnabled: Boolean,
         isRepeatOneEnabled: Boolean
-    ) -> Unit
-    )?
+    ) -> Unit)?
 
     fun setMediaItem(musicObject: MusicObject)
+
+    fun clearMediaItems()
 
     fun setMediaItems(musicList: List<MusicObject>)
 

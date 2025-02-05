@@ -1,4 +1,4 @@
-package com.example.jetmusic.ViewModels
+package com.example.jetmusic.SharedViewModels
 
 import androidx.lifecycle.ViewModel
 import com.example.jetmusic.other.events.MusicPlayerEvent

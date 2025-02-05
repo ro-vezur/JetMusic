@@ -1,4 +1,4 @@
-package com.example.jetmusic.ViewModels.SharedViewModels
+package com.example.jetmusic.SharedViewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -6,6 +6,7 @@ import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Detailed.DetailedArtistObje
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
 import com.example.jetmusic.data.DTOs.API.PlaylistDTOs.Detailed.DetailedPlaylistObject
 import com.example.jetmusic.data.DTOs.API.UnifiedData.MediaTypes
+import com.example.jetmusic.data.usecases.musicController.music.ClearMediaItemsUseCase
 import com.example.jetmusic.data.usecases.musicController.music.SetMediaItemsUseCase
 import com.example.jetmusic.data.usecases.musicController.music.PauseMusicUseCase
 import com.example.jetmusic.data.usecases.musicController.music.PlayMusicUseCase
@@ -26,6 +27,7 @@ class SharedMusicSelectionViewModel @Inject constructor(
     private val playMusicUseCase: PlayMusicUseCase,
     private val pauseMusicUseCase: PauseMusicUseCase,
     private val resumeMusicUseCase: ResumeMusicUseCase,
+    private val clearMediaItemsUseCase: ClearMediaItemsUseCase
 ): ViewModel() {
 
     private val _selectedMediaType: MutableStateFlow<MediaTypes> = MutableStateFlow(MediaTypes.MUSIC)
@@ -48,6 +50,8 @@ class SharedMusicSelectionViewModel @Inject constructor(
             MusicSelectionEvent.PauseMusic -> pauseMusicUseCase()
 
             MusicSelectionEvent.ResumeMusic -> resumeMusicUseCase()
+
+            MusicSelectionEvent.ClearMediaItems -> clearMediaItemsUseCase()
         }
     }
 
