@@ -25,8 +25,7 @@
 
         <service
             android:name=".data.Services.MusicService.MusicService"
-            android:enabled="true"
-            android:exported="false"
+            android:exported="true"
             android:foregroundServiceType="mediaPlayback">
             <intent-filter >
                 <action android:name="androidx.media3.session.MediaSessionService" />
