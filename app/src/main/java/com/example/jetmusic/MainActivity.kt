@@ -8,9 +8,13 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetmusic.View.Screens.MainScreen
-import com.example.jetmusic.ViewModels.SharedViewModels.SharedMusicControllerViewModel
+import com.example.jetmusic.SharedViewModels.SharedMusicControllerViewModel
+import com.example.jetmusic.SharedViewModels.UserViewModel
 import com.example.jetmusic.data.Services.MusicService.MusicService
 import com.example.jetmusic.ui.theme.JetMusicTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,15 +27,24 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val localUserViewModel = staticCompositionLocalOf<UserViewModel> {
+                error("No UserViewModel provided")
+            }
+
+            val userViewModel: UserViewModel = hiltViewModel()
+
             JetMusicTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                   MainScreen(
-                       sharedMusicControllerViewModel = sharedViewModel
-                   )
+                CompositionLocalProvider(localUserViewModel provides userViewModel) {
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        MainScreen(
+                            sharedMusicControllerViewModel = sharedViewModel
+                        )
+                    }
                 }
+
             }
         }
     }
