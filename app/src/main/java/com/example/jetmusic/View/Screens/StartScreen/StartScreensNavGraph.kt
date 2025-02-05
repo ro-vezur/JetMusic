@@ -5,10 +5,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.jetmusic.data.DTOs.UserDTOs.User
-import com.example.jetmusic.View.Screens.StartScreen.Screens.LogInScreen
-import com.example.jetmusic.View.Screens.StartScreen.Screens.PhoneNumberLogInScreen
-import com.example.jetmusic.View.Screens.StartScreen.Screens.SignUpScreen
-import com.example.jetmusic.View.Screens.StartScreen.Screens.WelcomeScreen
+import com.example.jetmusic.View.Screens.StartScreen.Screens.LogInScreen.LogInScreen
+import com.example.jetmusic.View.Screens.StartScreen.Screens.PhoneNumberScreen.PhoneNumberLogInScreen
+import com.example.jetmusic.View.Screens.StartScreen.Screens.SignUpScreen.SignUpScreen
+import com.example.jetmusic.View.Screens.StartScreen.Screens.WelcomeScreen.WelcomeScreen
 import com.example.jetmusic.View.ScreensRoutes
 
 fun NavGraphBuilder.startScreensGraph(

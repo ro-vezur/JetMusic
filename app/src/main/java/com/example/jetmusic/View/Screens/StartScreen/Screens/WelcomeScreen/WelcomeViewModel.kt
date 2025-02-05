@@ -1,4 +1,4 @@
-package com.example.jetmusic.ViewModels.StartScreenViewModels
+package com.example.jetmusic.View.Screens.StartScreen.Screens.WelcomeScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -25,22 +25,22 @@ class WelcomeViewModel @Inject constructor(
                 is ResultResource.Loading -> {}
                 is ResultResource.Success -> {
                     result.data?.user?.let { googleUser ->
-                        val findUser = getUser(googleUser.uid)
+                        getUser(googleUser.uid).collectLatest { findUser ->
+                            if(findUser == null) {
+                                val newUser = User.fromGoogleUser(firebaseUser = googleUser)
 
-                        if(findUser == null) {
-                            val newUser = User.fromGoogleUser(firebaseUser = googleUser)
-
-                            usersCollectionRepository.addUser(user = newUser).collectLatest { result ->
-                                when(result) {
-                                    is ResultResource.Loading -> {}
-                                    is ResultResource.Success -> {
-                                        result.data?.let(onSuccess)
+                                usersCollectionRepository.addUser(user = newUser).collectLatest { result ->
+                                    when(result) {
+                                        is ResultResource.Loading -> {}
+                                        is ResultResource.Success -> {
+                                            result.data?.let(onSuccess)
+                                        }
+                                        is ResultResource.Error -> {}
                                     }
-                                    is ResultResource.Error -> {}
                                 }
+                            } else {
+                                onSuccess(findUser)
                             }
-                        } else {
-                            onSuccess(findUser)
                         }
                     }
                 }
@@ -49,8 +49,7 @@ class WelcomeViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getUser(id: String): User? {
-        return usersCollectionRepository.getUser(id)
-    }
+    private fun getUser(id: String) = usersCollectionRepository.getUserFlow(id)
+
 
 }

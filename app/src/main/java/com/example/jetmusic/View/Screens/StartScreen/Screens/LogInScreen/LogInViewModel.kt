@@ -1,4 +1,4 @@
-package com.example.jetmusic.ViewModels.StartScreenViewModels
+package com.example.jetmusic.View.Screens.StartScreen.Screens.LogInScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,7 +7,7 @@ import com.example.jetmusic.domain.collections.UsersCollectionInterface
 import com.example.jetmusic.domain.auth.FirebaseAuthInterface
 import com.example.jetmusic.Helpers.Validation.Email.EmailValidation
 import com.example.jetmusic.Helpers.Validation.Password.PasswordValidation
-import com.example.jetmusic.Helpers.Validation.Result.ValidationResults
+import com.example.jetmusic.Helpers.Validation.ValidationResults
 import com.example.jetmusic.other.Resources.ResultResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,10 +23,12 @@ class LogInViewModel @Inject constructor(
     private val usersCollectionRepository: UsersCollectionInterface,
 ): ViewModel() {
 
-    private val _emailValidation: MutableStateFlow<ValidationResults> = MutableStateFlow(ValidationResults.NONE)
+    private val _emailValidation: MutableStateFlow<ValidationResults> = MutableStateFlow(
+        ValidationResults.NONE)
     val emailValidation: StateFlow<ValidationResults> = _emailValidation.asStateFlow()
 
-    private val _passwordValidation: MutableStateFlow<ValidationResults> = MutableStateFlow(ValidationResults.NONE)
+    private val _passwordValidation: MutableStateFlow<ValidationResults> = MutableStateFlow(
+        ValidationResults.NONE)
     val passwordValidation: StateFlow<ValidationResults> = _passwordValidation.asStateFlow()
 
     suspend fun isValid(
@@ -62,7 +64,9 @@ class LogInViewModel @Inject constructor(
                 is ResultResource.Loading -> {}
                 is ResultResource.Success -> {
                     result.data?.user?.let { firebaseUser ->
-                        getUser(firebaseUser.uid)?.let(onSuccess)
+                        getUser(firebaseUser.uid).collectLatest { user ->
+                            user?.let(onSuccess)
+                        }
                     }
                 }
                 is ResultResource.Error -> {}
@@ -78,9 +82,8 @@ class LogInViewModel @Inject constructor(
         _passwordValidation.emit(result)
     }
 
-    private suspend fun getUser(id: String): User? {
-        return usersCollectionRepository.getUser(id)
-    }
+    private fun getUser(id: String) = usersCollectionRepository.getUserFlow(id)
+
 
     private suspend fun checkIsEmailRegistered(email: String): Boolean {
         return usersCollectionRepository.checkIsEmailRegistered(email)
