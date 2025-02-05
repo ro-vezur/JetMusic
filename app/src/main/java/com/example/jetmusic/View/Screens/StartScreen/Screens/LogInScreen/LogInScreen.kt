@@ -1,4 +1,4 @@
-package com.example.jetmusic.View.Screens.StartScreen.Screens
+package com.example.jetmusic.View.Screens.StartScreen.Screens.LogInScreen
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -11,16 +11,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,15 +39,15 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.example.jetmusic.data.DTOs.UserDTOs.User
-import com.example.jetmusic.Helpers.Validation.Result.ValidationResults
+import com.example.jetmusic.Extensions.NavigateExtensions.singleTapNavigate
+import com.example.jetmusic.Helpers.Validation.ValidationResults
 import com.example.jetmusic.View.Components.Buttons.TextButton
 import com.example.jetmusic.View.Components.Buttons.TurnBackButton
 import com.example.jetmusic.View.Components.InputFields.ValidationTextField.DefaultValidationLeadingIcon
 import com.example.jetmusic.View.Components.InputFields.ValidationTextField.DefaultValidationTrailingIcon
 import com.example.jetmusic.View.Components.InputFields.ValidationTextField.ValidationTextInputField
 import com.example.jetmusic.View.ScreensRoutes
-import com.example.jetmusic.ViewModels.StartScreenViewModels.SignUpViewModel
+import com.example.jetmusic.data.DTOs.UserDTOs.User
 import com.example.jetmusic.ui.theme.tidalGradient
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
@@ -59,25 +56,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
-fun SignUpScreen(
+fun LogInScreen(
     navController: NavController,
     setUser: (newUser: User) -> Unit,
-    signUpViewModel: SignUpViewModel = hiltViewModel(),
+    logInViewModel: LogInViewModel = hiltViewModel(),
 ) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp
 
-    val nameValidationResult by signUpViewModel.nameValidation.collectAsStateWithLifecycle()
-    var fullName by remember { mutableStateOf("") }
-
-    val emailValidationResult by signUpViewModel.emailValidation.collectAsStateWithLifecycle()
+    val emailValidationResult by logInViewModel.emailValidation.collectAsStateWithLifecycle()
     var email by remember { mutableStateOf("") }
 
-    val passwordValidationResult by signUpViewModel.passwordValidation.collectAsStateWithLifecycle()
+    val passwordValidationResult by logInViewModel.passwordValidation.collectAsStateWithLifecycle()
     var password by remember { mutableStateOf("") }
-
-    val passwordConfirmValidationResult by signUpViewModel.passwordValidationConfirm.collectAsStateWithLifecycle()
-    var passwordConfirm by remember { mutableStateOf("") }
 
     var showPassword by remember { mutableStateOf(false) }
 
@@ -98,51 +89,35 @@ fun SignUpScreen(
                 border = BorderStroke(1.sdp, Color.White),
                 background = Color.Transparent,
                 iconColor = Color.White,
-                turnBack = {navController.navigate(ScreensRoutes.StartScreens.WelcomeRoute)}
+                turnBack = {navController.singleTapNavigate(ScreensRoutes.StartScreens.WelcomeRoute)}
             )
         }
 
         Text(
             modifier = Modifier
-                .padding(top = screenHeight.dp / 12),
-            text = "Sign Up",
+                .padding(top = screenHeight.dp / 8),
+            text = "Log In",
             style = typography().headlineMedium
         )
 
         Text(
             modifier = Modifier
                 .padding(top = 20.sdp),
-            text = "First Create Your Account",
+            text = "Enter Your Email and Password",
             style = typography().titleSmall,
             color = Color.LightGray.copy(0.85f)
         )
 
         Column(
             modifier = Modifier
-                .padding(top = screenHeight.dp / 16),
+                .padding(top = screenHeight.dp / 10),
             verticalArrangement = Arrangement.spacedBy(11.sdp)
         ){
-            ValidationTextInputField(
-                text = fullName,
-                onTextChange = { value ->
-                    fullName = value
-                    signUpViewModel.setNameResult(ValidationResults.NONE)
-                },
-                placeHolder = "Full Name",
-                validationResults = nameValidationResult,
-                leadingIcon = { tint ->
-                    DefaultValidationLeadingIcon(
-                        icon = Icons.Filled.Person,
-                        tint = tint,
-                    )
-                },
-            )
-
             ValidationTextInputField(
                 text = email,
                 onTextChange = { value ->
                     email = value
-                    signUpViewModel.setEmailResult(ValidationResults.NONE)
+                    logInViewModel.setEmailResult(ValidationResults.NONE)
                 },
                 placeHolder = "Email",
                 validationResults = emailValidationResult,
@@ -152,44 +127,20 @@ fun SignUpScreen(
                         tint = tint,
                     )
                 },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email,
+                    showKeyboardOnFocus = true
+                )
             )
 
             ValidationTextInputField(
                 text = password,
                 onTextChange = { value ->
                     password = value
-                    signUpViewModel.setPasswordResult(ValidationResults.NONE)
+                    logInViewModel.setPasswordResult(ValidationResults.NONE)
                 },
                 placeHolder = "Password",
                 validationResults = passwordValidationResult,
-                leadingIcon = { tint ->
-                    DefaultValidationLeadingIcon(
-                        icon = Icons.Filled.Lock,
-                        tint = tint,
-                    )
-                },
-                trailingIcon = { tint ->
-                    DefaultValidationTrailingIcon(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(10.sdp))
-                            .clickable { showPassword = !showPassword },
-                        icon = if(showPassword) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                        tint = tint,
-                    )
-                },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                visualTransformation = if(showPassword) VisualTransformation.None else PasswordVisualTransformation()
-            )
-
-            ValidationTextInputField(
-                text = passwordConfirm,
-                onTextChange = { value ->
-                    passwordConfirm = value
-                    signUpViewModel.setPasswordConfirmResult(ValidationResults.NONE)
-                },
-                placeHolder = "Password Confirm",
-                validationResults = passwordConfirmValidationResult,
                 leadingIcon = { tint ->
                     DefaultValidationLeadingIcon(
                         icon = Icons.Filled.Lock,
@@ -214,22 +165,21 @@ fun SignUpScreen(
 
         TextButton(
             modifier = Modifier,
-            text = "Sign Up",
+            text = "Log In",
             onClick = {
                 CoroutineScope(Dispatchers.IO).launch {
-                    val isValid = signUpViewModel.isValid(
-                        name = fullName,
+                    val isValid = logInViewModel.isValid(
                         email = email,
                         password = password,
-                        passwordConfirm = passwordConfirm,
                     )
 
-                    if (isValid) {
-                        signUpViewModel.signUp(
-                            name = fullName,
+                    if(isValid) {
+                        logInViewModel.logIn(
                             email = email,
                             password = password,
-                            onSuccess = setUser
+                            onSuccess = { newUser ->
+                                setUser(newUser)
+                            }
                         )
                     }
                 }
@@ -238,12 +188,12 @@ fun SignUpScreen(
 
         Row(
             modifier = Modifier
-                .padding(top = 8.sdp, bottom =  screenHeight.dp / 22),
+                .padding(top = 8.sdp, bottom = screenHeight.dp / 22),
             horizontalArrangement = Arrangement.spacedBy(5.sdp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "Already Have Account?",
+                text = "Don't Have Account?",
                 style = typography().bodyMedium,
                 fontWeight = FontWeight.Normal
             )
@@ -252,16 +202,17 @@ fun SignUpScreen(
                 modifier = Modifier
                     .clip(RoundedCornerShape(2.sdp))
                     .clickable {
-                        navController.navigate(ScreensRoutes.StartScreens.LogInRoute) {
-                            popUpTo(ScreensRoutes.StartScreens.SignUpRoute) {
+                        navController.navigate(ScreensRoutes.StartScreens.SignUpRoute) {
+                            launchSingleTop = true
+                            restoreState = true
+                            popUpTo(ScreensRoutes.StartScreens.LogInRoute) {
                                 inclusive = true
                             }
                         }
-                               },
-                text = "Log In",
-                style = typography().bodyLarge.copy(
-                    brush = tidalGradient
-                ),
+
+                    },
+                text = "Sign up",
+                style = typography().bodyLarge.copy(brush = tidalGradient),
                 textDecoration = TextDecoration.Underline
             )
         }

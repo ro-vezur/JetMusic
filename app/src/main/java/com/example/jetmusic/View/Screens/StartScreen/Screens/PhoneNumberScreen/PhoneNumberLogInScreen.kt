@@ -1,6 +1,5 @@
-package com.example.jetmusic.View.Screens.StartScreen.Screens
+package com.example.jetmusic.View.Screens.StartScreen.Screens.PhoneNumberScreen
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -12,39 +11,36 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.jetmusic.View.Components.Buttons.TurnBackButton
-import com.example.jetmusic.ui.theme.JetMusicTheme
-import ir.kaaveh.sdpcompose.sdp
-import androidx.compose.runtime.setValue
-import com.example.jetmusic.BASE_BUTTON_WIDTH
-import com.example.jetmusic.View.Components.InputFields.PhoneTextField
-import com.example.jetmusic.ui.theme.typography
-import java.util.Locale
-import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.jetmusic.BASE_BUTTON_HEIGHT
+import com.example.jetmusic.BASE_BUTTON_WIDTH
+import com.example.jetmusic.Extensions.NavigateExtensions.singleTapNavigate
 import com.example.jetmusic.Helpers.Context.findActivity
 import com.example.jetmusic.Helpers.CountryCodePicker.getPhoneCodeByCountryCode
 import com.example.jetmusic.View.Components.Buttons.TextButton
+import com.example.jetmusic.View.Components.Buttons.TurnBackButton
+import com.example.jetmusic.View.Components.InputFields.PhoneTextField
 import com.example.jetmusic.View.ScreensRoutes
-import com.example.jetmusic.ViewModels.StartScreenViewModels.PhoneNumberViewModel
+import com.example.jetmusic.ui.theme.typography
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
+import ir.kaaveh.sdpcompose.sdp
+import java.util.Locale
 
 @Composable
 fun PhoneNumberLogInScreen(
@@ -89,7 +85,7 @@ fun PhoneNumberLogInScreen(
                 background = Color.Transparent,
                 iconColor = Color.White,
                 turnBack = {
-                    navController.navigate(ScreensRoutes.StartScreens.WelcomeRoute)
+                    navController.singleTapNavigate(ScreensRoutes.StartScreens.WelcomeRoute)
                 }
             )
         }

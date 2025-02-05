@@ -29,6 +29,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.jetmusic.BOTTOM_NAVIGATION_BAR_HEIGHT
 import com.example.jetmusic.BOTTOM_NAVIGATION_BAR_ITEM_SIZE
+import com.example.jetmusic.Extensions.NavigateExtensions.singleTapNavigate
 import com.example.jetmusic.View.Components.Icons.SelectedAnimatedIcon
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
@@ -73,9 +74,7 @@ fun BottomNavigationBar(
                     selected = isItemSelected,
                     select = {
                         if(!isItemSelected) {
-                            navController.navigate(item.route) {
-                          //      popUpTo(item.route) { inclusive = true }
-                            }
+                            navController.singleTapNavigate(item.route)
                         }
                     }
                 )

@@ -1,4 +1,4 @@
-package com.example.jetmusic.View.Screens.StartScreen.Screens
+package com.example.jetmusic.View.Screens.StartScreen.Screens.SignUpScreen
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -16,6 +16,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.MaterialTheme
@@ -39,15 +40,15 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.example.jetmusic.data.DTOs.UserDTOs.User
-import com.example.jetmusic.Helpers.Validation.Result.ValidationResults
+import com.example.jetmusic.Extensions.NavigateExtensions.singleTapNavigate
+import com.example.jetmusic.Helpers.Validation.ValidationResults
 import com.example.jetmusic.View.Components.Buttons.TextButton
 import com.example.jetmusic.View.Components.Buttons.TurnBackButton
 import com.example.jetmusic.View.Components.InputFields.ValidationTextField.DefaultValidationLeadingIcon
 import com.example.jetmusic.View.Components.InputFields.ValidationTextField.DefaultValidationTrailingIcon
 import com.example.jetmusic.View.Components.InputFields.ValidationTextField.ValidationTextInputField
 import com.example.jetmusic.View.ScreensRoutes
-import com.example.jetmusic.ViewModels.StartScreenViewModels.LogInViewModel
+import com.example.jetmusic.data.DTOs.UserDTOs.User
 import com.example.jetmusic.ui.theme.tidalGradient
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
@@ -56,19 +57,25 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
-fun LogInScreen(
+fun SignUpScreen(
     navController: NavController,
     setUser: (newUser: User) -> Unit,
-    logInViewModel: LogInViewModel = hiltViewModel(),
+    signUpViewModel: SignUpViewModel = hiltViewModel(),
 ) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp
 
-    val emailValidationResult by logInViewModel.emailValidation.collectAsStateWithLifecycle()
+    val nameValidationResult by signUpViewModel.nameValidation.collectAsStateWithLifecycle()
+    var fullName by remember { mutableStateOf("") }
+
+    val emailValidationResult by signUpViewModel.emailValidation.collectAsStateWithLifecycle()
     var email by remember { mutableStateOf("") }
 
-    val passwordValidationResult by logInViewModel.passwordValidation.collectAsStateWithLifecycle()
+    val passwordValidationResult by signUpViewModel.passwordValidation.collectAsStateWithLifecycle()
     var password by remember { mutableStateOf("") }
+
+    val passwordConfirmValidationResult by signUpViewModel.passwordValidationConfirm.collectAsStateWithLifecycle()
+    var passwordConfirm by remember { mutableStateOf("") }
 
     var showPassword by remember { mutableStateOf(false) }
 
@@ -89,35 +96,51 @@ fun LogInScreen(
                 border = BorderStroke(1.sdp, Color.White),
                 background = Color.Transparent,
                 iconColor = Color.White,
-                turnBack = {navController.navigate(ScreensRoutes.StartScreens.WelcomeRoute)}
+                turnBack = {navController.singleTapNavigate(ScreensRoutes.StartScreens.WelcomeRoute)}
             )
         }
 
         Text(
             modifier = Modifier
-                .padding(top = screenHeight.dp / 8),
-            text = "Log In",
+                .padding(top = screenHeight.dp / 12),
+            text = "Sign Up",
             style = typography().headlineMedium
         )
 
         Text(
             modifier = Modifier
                 .padding(top = 20.sdp),
-            text = "Enter Your Email and Password",
+            text = "First Create Your Account",
             style = typography().titleSmall,
             color = Color.LightGray.copy(0.85f)
         )
 
         Column(
             modifier = Modifier
-                .padding(top = screenHeight.dp / 10),
+                .padding(top = screenHeight.dp / 16),
             verticalArrangement = Arrangement.spacedBy(11.sdp)
         ){
+            ValidationTextInputField(
+                text = fullName,
+                onTextChange = { value ->
+                    fullName = value
+                    signUpViewModel.setNameResult(ValidationResults.NONE)
+                },
+                placeHolder = "Full Name",
+                validationResults = nameValidationResult,
+                leadingIcon = { tint ->
+                    DefaultValidationLeadingIcon(
+                        icon = Icons.Filled.Person,
+                        tint = tint,
+                    )
+                },
+            )
+
             ValidationTextInputField(
                 text = email,
                 onTextChange = { value ->
                     email = value
-                    logInViewModel.setEmailResult(ValidationResults.NONE)
+                    signUpViewModel.setEmailResult(ValidationResults.NONE)
                 },
                 placeHolder = "Email",
                 validationResults = emailValidationResult,
@@ -127,20 +150,44 @@ fun LogInScreen(
                         tint = tint,
                     )
                 },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Email,
-                    showKeyboardOnFocus = true
-                )
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             )
 
             ValidationTextInputField(
                 text = password,
                 onTextChange = { value ->
                     password = value
-                    logInViewModel.setPasswordResult(ValidationResults.NONE)
+                    signUpViewModel.setPasswordResult(ValidationResults.NONE)
                 },
                 placeHolder = "Password",
                 validationResults = passwordValidationResult,
+                leadingIcon = { tint ->
+                    DefaultValidationLeadingIcon(
+                        icon = Icons.Filled.Lock,
+                        tint = tint,
+                    )
+                },
+                trailingIcon = { tint ->
+                    DefaultValidationTrailingIcon(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(10.sdp))
+                            .clickable { showPassword = !showPassword },
+                        icon = if(showPassword) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                        tint = tint,
+                    )
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                visualTransformation = if(showPassword) VisualTransformation.None else PasswordVisualTransformation()
+            )
+
+            ValidationTextInputField(
+                text = passwordConfirm,
+                onTextChange = { value ->
+                    passwordConfirm = value
+                    signUpViewModel.setPasswordConfirmResult(ValidationResults.NONE)
+                },
+                placeHolder = "Password Confirm",
+                validationResults = passwordConfirmValidationResult,
                 leadingIcon = { tint ->
                     DefaultValidationLeadingIcon(
                         icon = Icons.Filled.Lock,
@@ -165,21 +212,22 @@ fun LogInScreen(
 
         TextButton(
             modifier = Modifier,
-            text = "Log In",
+            text = "Sign Up",
             onClick = {
                 CoroutineScope(Dispatchers.IO).launch {
-                    val isValid = logInViewModel.isValid(
+                    val isValid = signUpViewModel.isValid(
+                        name = fullName,
                         email = email,
                         password = password,
+                        passwordConfirm = passwordConfirm,
                     )
 
-                    if(isValid) {
-                        logInViewModel.logIn(
+                    if (isValid) {
+                        signUpViewModel.signUp(
+                            name = fullName,
                             email = email,
                             password = password,
-                            onSuccess = { newUser ->
-                                setUser(newUser)
-                            }
+                            onSuccess = setUser
                         )
                     }
                 }
@@ -188,12 +236,12 @@ fun LogInScreen(
 
         Row(
             modifier = Modifier
-                .padding(top = 8.sdp, bottom = screenHeight.dp / 22),
+                .padding(top = 8.sdp, bottom =  screenHeight.dp / 22),
             horizontalArrangement = Arrangement.spacedBy(5.sdp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "Don't Have Account?",
+                text = "Already Have Account?",
                 style = typography().bodyMedium,
                 fontWeight = FontWeight.Normal
             )
@@ -202,15 +250,18 @@ fun LogInScreen(
                 modifier = Modifier
                     .clip(RoundedCornerShape(2.sdp))
                     .clickable {
-                        navController.navigate(ScreensRoutes.StartScreens.SignUpRoute) {
-                            popUpTo(ScreensRoutes.StartScreens.LogInRoute) {
+                        navController.navigate(ScreensRoutes.StartScreens.LogInRoute) {
+                            launchSingleTop = true
+                            restoreState = true
+                            popUpTo(ScreensRoutes.StartScreens.SignUpRoute) {
                                 inclusive = true
                             }
                         }
-
-                    },
-                text = "Sign up",
-                style = typography().bodyLarge.copy(brush = tidalGradient),
+                               },
+                text = "Log In",
+                style = typography().bodyLarge.copy(
+                    brush = tidalGradient
+                ),
                 textDecoration = TextDecoration.Underline
             )
         }

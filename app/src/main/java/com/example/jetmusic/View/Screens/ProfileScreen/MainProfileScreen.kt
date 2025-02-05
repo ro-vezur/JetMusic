@@ -22,24 +22,25 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.QueueMusic
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import com.example.jetmusic.View.Components.Buttons.TextButton
-import com.example.jetmusic.data.DTOs.UserDTOs.User
-import com.example.jetmusic.ui.theme.tidalGradient
-import com.example.jetmusic.ui.theme.typography
-import ir.kaaveh.sdpcompose.sdp
-import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
+import com.example.jetmusic.Extensions.NavigateExtensions.singleTapNavigate
+import com.example.jetmusic.View.Components.Buttons.TextButton
 import com.example.jetmusic.View.ScreensRoutes
+import com.example.jetmusic.data.DTOs.UserDTOs.User
+import com.example.jetmusic.ui.theme.tidalGradient
+import com.example.jetmusic.ui.theme.typography
+import ir.kaaveh.sdpcompose.sdp
 
 @Composable
 fun MainProfileScreen(
@@ -72,7 +73,7 @@ fun MainProfileScreen(
                     width = 75.sdp,
                     height = 24.sdp,
                     onClick = {
-                        navController.navigate(ScreensRoutes.LibraryNavigationGraph.EditProfileRoute)
+                        navController.singleTapNavigate(ScreensRoutes.LibraryNavigationGraph.EditProfileRoute)
                     },
                     leadingIcon = { modifier ->
                         Icon(
@@ -152,7 +153,7 @@ fun MainProfileScreen(
                     icon = Icons.Filled.FavoriteBorder,
                     shortInfo = "${user.likedSongsIds.size} songs",
                     onClick = {
-                        navController.navigate(ScreensRoutes.LibraryNavigationGraph.LikedSongsRoute)
+                        navController.singleTapNavigate(ScreensRoutes.LibraryNavigationGraph.LikedSongsRoute)
                     }
                 )
 
@@ -162,7 +163,7 @@ fun MainProfileScreen(
                     icon = Icons.Filled.QueueMusic,
                     shortInfo = "${user.likedPlaylistsIds.size} playlists",
                     onClick = {
-                        navController.navigate(ScreensRoutes.LibraryNavigationGraph.LikedPlaylistsRoute)
+                        navController.singleTapNavigate(ScreensRoutes.LibraryNavigationGraph.LikedPlaylistsRoute)
                     }
                 )
 
@@ -172,7 +173,7 @@ fun MainProfileScreen(
                     icon = Icons.Filled.Person,
                     shortInfo = "${user.likedArtistsIds.size} artists",
                     onClick = {
-                        navController.navigate(ScreensRoutes.LibraryNavigationGraph.LikedArtistsRoute)
+                        navController.singleTapNavigate(ScreensRoutes.LibraryNavigationGraph.LikedArtistsRoute)
                     }
                 )
             }

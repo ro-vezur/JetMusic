@@ -1,6 +1,5 @@
 package com.example.jetmusic.View.Screens.DetailedScreens.DetailedArtistScreen
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -38,7 +37,7 @@ import com.example.jetmusic.View.Components.Buttons.TextButton
 import com.example.jetmusic.View.Components.Cards.MusicCards.MusicCard
 import com.example.jetmusic.View.Components.Slider.MusicPlayerSlider
 import com.example.jetmusic.View.ScreensRoutes
-import com.example.jetmusic.ViewModels.MusicPlayerViewModel
+import com.example.jetmusic.SharedViewModels.MusicPlayerViewModel
 import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Detailed.DetailedArtistObject
 import com.example.jetmusic.data.DTOs.UserDTOs.User
 import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
@@ -48,6 +47,7 @@ import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
 import kotlinx.coroutines.delay
 import androidx.compose.material3.MaterialTheme.colorScheme
+import com.example.jetmusic.Extensions.NavigateExtensions.singleTapNavigate
 import com.example.jetmusic.Helpers.MusicHelper
 
 @Composable
@@ -196,7 +196,7 @@ fun ArtistMainInfoScreen(
                                         )
                                     }
 
-                                    navController.navigate(ScreensRoutes.DetailedScreens.DetailedMusicRoute)
+                                    navController.singleTapNavigate(ScreensRoutes.DetailedScreens.DetailedMusicRoute)
                                 },
                             contentAlignment = Alignment.Center,
                         ) {

@@ -1,4 +1,4 @@
-package com.example.jetmusic.View.Screens.StartScreen.Screens
+package com.example.jetmusic.View.Screens.StartScreen.Screens.WelcomeScreen
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -12,21 +12,21 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PhoneAndroid
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.jetmusic.data.DTOs.UserDTOs.User
+import com.example.jetmusic.Extensions.NavigateExtensions.singleTapNavigate
 import com.example.jetmusic.R
 import com.example.jetmusic.View.Components.Buttons.TextButton
 import com.example.jetmusic.View.ScreensRoutes
-import com.example.jetmusic.ViewModels.StartScreenViewModels.WelcomeViewModel
+import com.example.jetmusic.data.DTOs.UserDTOs.User
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
 
@@ -70,6 +70,8 @@ fun WelcomeScreen(
                 text = "Sign Up",
                 onClick = {
                     navController.navigate(ScreensRoutes.StartScreens.SignUpRoute) {
+                        launchSingleTop = true
+                        restoreState = true
                         popUpTo(ScreensRoutes.StartScreens.SignUpRoute) {
                             inclusive = true
                         }
@@ -80,7 +82,7 @@ fun WelcomeScreen(
             TextButton(
                 modifier = Modifier,
                 text = "Continue With Phone Number",
-                onClick = { navController.navigate(ScreensRoutes.StartScreens.ContinueWithPhoneNumber) },
+                onClick = { navController.singleTapNavigate(ScreensRoutes.StartScreens.ContinueWithPhoneNumber) },
                 background = Color.Transparent,
                 textColor = Color.White,
                 style = typography().bodyMedium.copy(
@@ -125,6 +127,8 @@ fun WelcomeScreen(
                 text = "Log In",
                 onClick = {
                     navController.navigate(ScreensRoutes.StartScreens.LogInRoute) {
+                        launchSingleTop = true
+                        restoreState = true
                         popUpTo(ScreensRoutes.StartScreens.LogInRoute) {
                             inclusive = true
                         }

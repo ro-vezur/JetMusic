@@ -23,22 +23,23 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.QueueMusic
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
-import com.example.jetmusic.ui.theme.typography
-import ir.kaaveh.sdpcompose.sdp
-import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.navigation.NavController
+import com.example.jetmusic.Extensions.NavigateExtensions.singleTapNavigate
 import com.example.jetmusic.View.ScreensRoutes
 import com.example.jetmusic.data.DTOs.UserDTOs.User
+import com.example.jetmusic.ui.theme.typography
+import ir.kaaveh.sdpcompose.sdp
 
 @Composable
 fun MainLibraryScreen(
@@ -82,7 +83,7 @@ fun MainLibraryScreen(
                         shortInfo = "${user.likedSongsIds.size} songs",
                         icon = Icons.Filled.FavoriteBorder,
                         onClick = {
-                            navController.navigate(ScreensRoutes.LibraryNavigationGraph.LikedSongsRoute)
+                            navController.singleTapNavigate(ScreensRoutes.LibraryNavigationGraph.LikedSongsRoute)
                         }
                     )
                 }
@@ -93,7 +94,7 @@ fun MainLibraryScreen(
                         shortInfo = "0 downloads",
                         icon = Icons.Filled.Download,
                         onClick = {
-                            navController.navigate(ScreensRoutes.LibraryNavigationGraph.DownloadsRoute)
+                            navController.singleTapNavigate(ScreensRoutes.LibraryNavigationGraph.DownloadsRoute)
                         }
                     )
                 }
@@ -104,7 +105,7 @@ fun MainLibraryScreen(
                         shortInfo = "${user.likedPlaylistsIds.size} playlists",
                         icon = Icons.Filled.QueueMusic,
                         onClick = {
-                            navController.navigate(ScreensRoutes.LibraryNavigationGraph.LikedPlaylistsRoute)
+                            navController.singleTapNavigate(ScreensRoutes.LibraryNavigationGraph.LikedPlaylistsRoute)
                         }
                     )
                 }
@@ -115,7 +116,7 @@ fun MainLibraryScreen(
                         shortInfo = "${user.likedArtistsIds.size} artists",
                         icon = Icons.Filled.Person,
                         onClick = {
-                            navController.navigate(ScreensRoutes.LibraryNavigationGraph.LikedArtistsRoute)
+                            navController.singleTapNavigate(ScreensRoutes.LibraryNavigationGraph.LikedArtistsRoute)
                         }
                     )
                 }

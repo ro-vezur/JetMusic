@@ -35,10 +35,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.jetmusic.Extensions.NavigateExtensions.singleTapNavigate
+import com.example.jetmusic.SharedViewModels.MusicPlayerViewModel
 import com.example.jetmusic.View.Components.Cards.MusicCards.MusicCard
 import com.example.jetmusic.View.Components.Slider.MusicPlayerSlider
 import com.example.jetmusic.View.ScreensRoutes
-import com.example.jetmusic.ViewModels.MusicPlayerViewModel
 import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Detailed.DetailedArtistObject
 import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
 import com.example.jetmusic.other.events.MusicPlayerEvent
@@ -151,7 +152,7 @@ fun MoreArtistMusicsScreen(
                                             )
                                         }
 
-                                        navController.navigate(ScreensRoutes.DetailedScreens.DetailedMusicRoute)
+                                        navController.singleTapNavigate(ScreensRoutes.DetailedScreens.DetailedMusicRoute)
                                     },
                                 contentAlignment = Alignment.Center,
                             ) {

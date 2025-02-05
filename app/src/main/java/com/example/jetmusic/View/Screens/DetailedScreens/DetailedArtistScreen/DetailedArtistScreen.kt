@@ -44,6 +44,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.jetmusic.Extensions.NavigateExtensions.singleTapNavigate
 import com.example.jetmusic.View.ScreensRoutes
 import com.example.jetmusic.data.DTOs.UserDTOs.User
 
@@ -198,7 +199,7 @@ fun DetailedArtistScreen(
                         user = user,
                         seeMoreTracks = {
                             showAllTracks = true
-                            innerNavController.navigate(ScreensRoutes.DetailedScreens.DetailedArtistRoute.Companion.ArtistMoreTracksRoute)
+                            innerNavController.singleTapNavigate(ScreensRoutes.DetailedScreens.DetailedArtistRoute.Companion.ArtistMoreTracksRoute)
                         },
                         updateUser = updateUser
                     )
