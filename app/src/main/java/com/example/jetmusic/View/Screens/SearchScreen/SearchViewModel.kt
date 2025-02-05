@@ -1,4 +1,4 @@
-package com.example.jetmusic.ViewModels.MainScreensViewModels
+package com.example.jetmusic.View.Screens.SearchScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -49,12 +49,6 @@ class SearchViewModel @Inject constructor(
         ResultResource.Loading())
     val trendingArtists: StateFlow<ResultResource<SimplifiedArtistResponse>> = _trendingArtists.asStateFlow()
 
-    private val _isRequestSent: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val isRequestSent: StateFlow<Boolean> = _isRequestSent.asStateFlow()
-
-    private val _searchText: MutableStateFlow<String> = MutableStateFlow("")
-    val searchText: StateFlow<String> = _searchText.asStateFlow()
-
     private val _searchedData: MutableStateFlow<PagingData<UnifiedData>> = MutableStateFlow(PagingData.empty())
     val searchedData: StateFlow<PagingData<UnifiedData>> = _searchedData.asStateFlow()
 
@@ -83,36 +77,28 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun setRequestStatus(status: Boolean) = viewModelScope.launch {
-        _isRequestSent.emit(status)
-    }
-
-    fun setSearchText(text: String) = viewModelScope.launch {
-        _searchText.emit(text)
-    }
-
-    fun setSearchedData(limit: Int = OFFSET_PER_PAGE) = viewModelScope.launch {
+    fun setSearchedData(searchQuery: String,limit: Int = OFFSET_PER_PAGE) = viewModelScope.launch {
 
 
         val paginatedData = Pager(PagingConfig(pageSize = PAGE_SIZE)) {
             UnifiedDataPagingSource(
                 getMusicResponse = { page ->
                     searchMusicUseCase(
-                        _searchText.value,
+                        searchQuery,
                         page * OFFSET_PER_PAGE,
                         limit
                     )
                 },
                 getArtistsResponse = { page ->
                     searchArtistsUseCase(
-                        _searchText.value,
+                        searchQuery,
                         page * OFFSET_PER_PAGE,
                         limit
                     )
                 },
                 getPlaylistResponse = { page ->
                     searchPlaylistsUseCase(
-                        _searchText.value,
+                        searchQuery,
                         page * OFFSET_PER_PAGE,
                         limit
                     )
@@ -151,10 +137,6 @@ class SearchViewModel @Inject constructor(
             .collectLatest { pagingData ->
                 _discoveredSongsByGenre.emit(pagingData)
             }
-    }
-
-    fun clearDiscoveredSongs() = viewModelScope.launch {
-        _discoveredSongsByGenre.emit(PagingData.empty())
     }
 
     suspend fun getMusicById(id: String) = musicByIdUseCase(id)

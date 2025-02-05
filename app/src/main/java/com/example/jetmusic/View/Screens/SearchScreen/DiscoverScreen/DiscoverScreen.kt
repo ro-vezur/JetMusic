@@ -2,6 +2,7 @@ package com.example.jetmusic.View.Screens.SearchScreen.DiscoverScreen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -26,14 +27,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import com.example.jetmusic.BOTTOM_MUSIC_PLAYER_HEIGHT
 import com.example.jetmusic.BOTTOM_NAVIGATION_BAR_HEIGHT
-import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Simplified.SimplifiedArtistResponse
-import com.example.jetmusic.data.enums.Genres.MusicGenres
-import com.example.jetmusic.other.Resources.ResultResource
 import com.example.jetmusic.View.Components.Cards.ArtistCards.ArtistCard
 import com.example.jetmusic.View.Components.Cards.MusicCards.MusicGenreCard
 import com.example.jetmusic.View.Screens.ResultScreens.ErrorScreen
 import com.example.jetmusic.View.Screens.ResultScreens.LoadingScreen
+import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Simplified.SimplifiedArtistResponse
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
+import com.example.jetmusic.data.enums.Genres.MusicGenres
+import com.example.jetmusic.other.Resources.ResultResource
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
 
@@ -47,9 +48,9 @@ fun DiscoverScreen(
     setDiscoveredSongsByGenre: (MusicGenres) -> Unit,
 ) {
 
-
     LazyColumn(
-        modifier = modifier
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
             Column {
@@ -94,16 +95,15 @@ fun DiscoverScreen(
 
                             trendingArtistsResult.data?.let { artists ->
                                 items(artists.results) { artist ->
-                                        ArtistCard(
-                                            modifier = Modifier
-                                                .height(85.sdp)
-                                                .width(50.sdp)
-                                                .clip(RoundedCornerShape(8.sdp))
-                                                .clickable { selectArtist(artist.id) },
-                                            artistImage = artist.image,
-                                            artistName = artist.name,
-                                        )
-
+                                    ArtistCard(
+                                        modifier = Modifier
+                                            .height(85.sdp)
+                                            .width(50.sdp)
+                                            .clip(RoundedCornerShape(8.sdp))
+                                            .clickable { selectArtist(artist.id) },
+                                        artistImage = artist.image,
+                                        artistName = artist.name,
+                                    )
                                 }
                             }
 
@@ -125,12 +125,17 @@ fun DiscoverScreen(
         }
 
         item {
-            Text(
+            Box(
                 modifier = Modifier
-                    .padding(start = 14.sdp, bottom = 13.sdp, top = 10.sdp),
-                text = "Browse",
-                style = typography().titleMedium,
-            )
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    modifier = Modifier
+                        .padding(start = 14.sdp, bottom = 13.sdp, top = 10.sdp),
+                    text = "Browse",
+                    style = typography().titleMedium,
+                )
+            }
         }
 
         item {

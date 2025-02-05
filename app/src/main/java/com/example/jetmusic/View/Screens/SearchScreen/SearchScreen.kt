@@ -1,8 +1,10 @@
 package com.example.jetmusic.View.Screens.SearchScreen
 
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,26 +22,23 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.jetmusic.ViewModels.MainScreensViewModels.SearchViewModel
-import com.example.jetmusic.ui.theme.typography
-import ir.kaaveh.sdpcompose.sdp
-import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -47,19 +46,22 @@ import androidx.navigation.toRoute
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.jetmusic.Extensions.NavigateExtensions.navigateBack
+import com.example.jetmusic.Extensions.NavigateExtensions.singleTapNavigate
 import com.example.jetmusic.NOT_REQUESTED_SEARCH_BAR_ICON_WIDTH
 import com.example.jetmusic.NOT_REQUESTED_SEARCH_BAR_WIDTH
 import com.example.jetmusic.REQUESTED_SEARCH_BAR_ICON_WIDTH
 import com.example.jetmusic.REQUESTED_SEARCH_BAR_WIDTH
 import com.example.jetmusic.View.Components.Buttons.TextButton
 import com.example.jetmusic.View.Components.InputFields.SearchField
-import com.example.jetmusic.View.ScreensRoutes
 import com.example.jetmusic.View.Screens.ResultScreens.LoadingScreen
 import com.example.jetmusic.View.Screens.SearchScreen.DiscoverScreen.BrowsedMusicList
 import com.example.jetmusic.View.Screens.SearchScreen.DiscoverScreen.DiscoverScreen
+import com.example.jetmusic.View.ScreensRoutes
 import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Detailed.DetailedArtistObject
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
 import com.example.jetmusic.data.DTOs.API.PlaylistDTOs.Detailed.DetailedPlaylistObject
+import com.example.jetmusic.ui.theme.typography
+import ir.kaaveh.sdpcompose.sdp
 import kotlinx.coroutines.launch
 
 @Composable
@@ -68,21 +70,21 @@ fun SearchScreen(
     selectMusic: (MusicObject) -> Unit,
     selectPlaylist: (DetailedPlaylistObject) -> Unit,
     selectArtist: (DetailedArtistObject) -> Unit,
-    searchViewModel: SearchViewModel,
+    searchViewModel: SearchViewModel = hiltViewModel(),
 ) {
 
     val focusManager = LocalFocusManager.current
-    val scope = rememberCoroutineScope()
 
     val innerNavController = rememberNavController()
+    val scope = rememberCoroutineScope()
 
-    val searchText by searchViewModel.searchText.collectAsStateWithLifecycle()
-    val isRequestSent by searchViewModel.isRequestSent.collectAsStateWithLifecycle()
+    var searchText by remember { mutableStateOf("") }
+    var isRequestSent by remember { mutableStateOf(false) }
 
-    var searchBarWidth by rememberSaveable {
+    var searchBarWidth by remember {
         mutableIntStateOf(NOT_REQUESTED_SEARCH_BAR_WIDTH)
     }
-    var searchBarTrailingIconWidth by rememberSaveable {
+    var searchBarTrailingIconWidth by remember {
         mutableIntStateOf(NOT_REQUESTED_SEARCH_BAR_ICON_WIDTH)
     }
     var showSearchBar by remember { mutableStateOf(true) }
@@ -100,21 +102,14 @@ fun SearchScreen(
     val searchFunction = {
         if (searchText.isNotBlank()) {
             focusManager.clearFocus()
-            searchViewModel.setRequestStatus(true)
-            searchViewModel.setSearchedData(limit = 5)
+            isRequestSent = true
+            searchViewModel.setSearchedData(searchText,limit = 5)
             innerNavController.navigate(ScreensRoutes.MainSearchRoute.SearchedMediaRoute) {
                 popUpTo(ScreensRoutes.MainSearchRoute.SearchedMediaRoute) {
                     inclusive = true
                 }
             }
         }
-    }
-
-    val initialRoute by remember {
-        mutableStateOf(
-            if(isRequestSent) ScreensRoutes.MainSearchRoute.SearchedMediaRoute
-            else ScreensRoutes.MainSearchRoute.DiscoverRoute
-        )
     }
 
     Scaffold(
@@ -132,7 +127,7 @@ fun SearchScreen(
                             .padding(start = 10.sdp),
                         text = searchText,
                         onTextChange = { value ->
-                            searchViewModel.setSearchText(value)
+                            searchText = value
                         },
                         width = animateIntAsState(searchBarWidth).value.sdp,
                         background = colorScheme.inversePrimary,
@@ -163,7 +158,7 @@ fun SearchScreen(
                                     .size(23.sdp)
                                     .clip(RoundedCornerShape(8.sdp))
                                     .clickable {
-                                        searchViewModel.setSearchText("")
+                                        searchText = ""
                                     }
                             )
                         }
@@ -196,9 +191,11 @@ fun SearchScreen(
                                 background = colorScheme.inversePrimary,
                                 borderStroke = BorderStroke(0.sdp, Color.Transparent),
                                 onClick = {
-                                    searchViewModel.setRequestStatus(false)
+                                    isRequestSent = false
                                     searchViewModel.clearSearchedData()
                                     innerNavController.navigate(ScreensRoutes.MainSearchRoute.DiscoverRoute) {
+                                        launchSingleTop = true
+                                        restoreState = true
                                         popUpTo(ScreensRoutes.MainSearchRoute.SearchedMediaRoute) {
                                             inclusive = true
                                         }
@@ -213,9 +210,9 @@ fun SearchScreen(
     ) { innerPadding ->
         NavHost(
             navController = innerNavController,
-            startDestination = initialRoute,
-            enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None },
+            startDestination = ScreensRoutes.MainSearchRoute.DiscoverRoute,
+            enterTransition = { fadeIn(animationSpec = tween(durationMillis = 250)) },
+            exitTransition = { fadeOut(animationSpec = tween(durationMillis = 250)) },
         ) {
             composable<ScreensRoutes.MainSearchRoute.DiscoverRoute> {
                 val trendingArtistsResult by searchViewModel.trendingArtists.collectAsStateWithLifecycle()
@@ -238,7 +235,7 @@ fun SearchScreen(
                     },
                     setDiscoveredSongsByGenre = { genre ->
                         searchViewModel.discoverSongs(genre.tag)
-                        innerNavController.navigate(
+                        innerNavController.singleTapNavigate(
                             ScreensRoutes.MainSearchRoute.BrowsedMusicListRoute(genre.displayName)
                         )
                     }
@@ -253,6 +250,13 @@ fun SearchScreen(
                 when {
                     searchedData.loadState.refresh is LoadState.Loading -> { LoadingScreen(Modifier.fillMaxSize()) }
                 }
+
+                BackHandler {
+                    innerNavController.navigateBack()
+                    searchText = ""
+                    isRequestSent = false
+                }
+
                 SearchedMediaScreen(
                     modifier = Modifier
                         .padding(innerPadding),
