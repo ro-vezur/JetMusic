@@ -1,4 +1,4 @@
-package com.example.jetmusic.ViewModels.StartScreenViewModels
+package com.example.jetmusic.View.Screens.StartScreen.Screens.PhoneNumberScreen
 
 import android.app.Activity
 import androidx.lifecycle.ViewModel

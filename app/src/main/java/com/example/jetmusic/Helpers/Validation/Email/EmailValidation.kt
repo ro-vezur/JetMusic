@@ -1,7 +1,7 @@
 package com.example.jetmusic.Helpers.Validation.Email
 
 import android.util.Patterns
-import com.example.jetmusic.Helpers.Validation.Result.ValidationResults
+import com.example.jetmusic.Helpers.Validation.ValidationResults
 
 class EmailValidation {
     companion object {
