@@ -1,6 +1,6 @@
 package com.example.jetmusic.Helpers.Validation.PasswordConfirmValidation
 
-import com.example.jetmusic.Helpers.Validation.Result.ValidationResults
+import com.example.jetmusic.Helpers.Validation.ValidationResults
 
 class PasswordConfirmValidation {
     companion object {

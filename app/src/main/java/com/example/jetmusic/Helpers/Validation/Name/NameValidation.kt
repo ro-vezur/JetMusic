@@ -1,7 +1,7 @@
 package com.example.jetmusic.Helpers.Validation.Name
 
 import com.example.jetmusic.Helpers.String.Counters.countSpaces
-import com.example.jetmusic.Helpers.Validation.Result.ValidationResults
+import com.example.jetmusic.Helpers.Validation.ValidationResults
 
 class NameValidation {
     companion object {

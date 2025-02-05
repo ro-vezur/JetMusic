@@ -3,7 +3,7 @@ package com.example.jetmusic.Helpers.Validation.Password
 import com.example.jetmusic.Helpers.String.Checkers.containsNumbers
 import com.example.jetmusic.Helpers.String.Checkers.containsLowerCase
 import com.example.jetmusic.Helpers.String.Checkers.containsUpperCases
-import com.example.jetmusic.Helpers.Validation.Result.ValidationResults
+import com.example.jetmusic.Helpers.Validation.ValidationResults
 
 class PasswordValidation {
     companion object {

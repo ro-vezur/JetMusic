@@ -1,4 +1,4 @@
-package com.example.jetmusic.Helpers.Validation.Result
+package com.example.jetmusic.Helpers.Validation
 
 enum class ValidationResults {
     NONE,
