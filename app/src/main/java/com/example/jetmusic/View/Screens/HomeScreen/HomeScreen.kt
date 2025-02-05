@@ -22,12 +22,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,14 +40,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.example.jetmusic.data.DTOs.UserDTOs.User
-import com.example.jetmusic.other.Resources.ResultResource
+import com.example.jetmusic.Extensions.NavigateExtensions.singleTapNavigate
 import com.example.jetmusic.View.Components.Cards.MusicCards.MusicCard
 import com.example.jetmusic.View.Components.TabsRow.CustomScrollableTabRow
 import com.example.jetmusic.View.Screens.HomeScreen.TabsCategories.TabsHomeCategories
+import com.example.jetmusic.View.Screens.ResultScreens.ErrorScreen
+import com.example.jetmusic.View.Screens.ResultScreens.LoadingScreen
 import com.example.jetmusic.View.ScreensRoutes
-import com.example.jetmusic.ViewModels.MainScreensViewModels.HomeViewModel
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
+import com.example.jetmusic.data.DTOs.UserDTOs.User
+import com.example.jetmusic.other.Resources.ResultResource
 import com.example.jetmusic.ui.theme.tidalGradient
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
@@ -57,8 +61,8 @@ fun HomeScreen(
     selectMusic: (MusicObject) -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
-    val selectedTabIndex by homeViewModel.selectedTabIndex.collectAsStateWithLifecycle()
-    val musicOfWeek by homeViewModel.musicOfWeek.collectAsStateWithLifecycle()
+    var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
+    val musicOfWeekResult by homeViewModel.musicOfWeek.collectAsStateWithLifecycle()
 
     Column(
         modifier = Modifier
@@ -98,7 +102,7 @@ fun HomeScreen(
                     .size(42.sdp)
                     .clip(CircleShape)
                     .border(BorderStroke(1.sdp, tidalGradient), CircleShape)
-                    .clickable { navController.navigate(ScreensRoutes.LibraryNavigationGraph.ProfileRoute) },
+                    .clickable { navController.singleTapNavigate(ScreensRoutes.LibraryNavigationGraph.ProfileRoute) },
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
@@ -118,10 +122,12 @@ fun HomeScreen(
             items = TabsHomeCategories.entries.map { it.title },
             textColor = Color.Gray,
             onClick = { index ->
-                homeViewModel.setTabIndex(index)
-                homeViewModel.getMusicOfWeek(
-                    tags = TabsHomeCategories.entries[index].genreId.toString(),
-                )
+                if(musicOfWeekResult !is ResultResource.Loading && selectedTabIndex != index) {
+                    selectedTabIndex = index
+                    homeViewModel.getMusicOfWeek(
+                        tags = TabsHomeCategories.entries[index].genreId.toString(),
+                    )
+                }
             }
         )
 
@@ -140,19 +146,13 @@ fun HomeScreen(
                     )
                 )
         ) {
-            when (musicOfWeek) {
+            when (musicOfWeekResult) {
                 is ResultResource.Loading -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ){
-                        CircularProgressIndicator()
-                    }
+                    LoadingScreen(modifier = Modifier.fillMaxSize())
                 }
 
                 is ResultResource.Success -> {
-                    musicOfWeek.data?.let { musicResponse ->
+                    musicOfWeekResult.data?.let { musicResponse ->
 
                         LazyColumn(
                             modifier = Modifier
@@ -181,13 +181,7 @@ fun HomeScreen(
                 }
 
                 is ResultResource.Error -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = "error")
-                    }
+                    ErrorScreen(modifier = Modifier.fillMaxSize(),errorText = "error")
                 }
             }
         }
