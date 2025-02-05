@@ -1,5 +1,6 @@
 package com.example.jetmusic.View.Components.Slider
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,12 +11,18 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Slider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import com.example.jetmusic.other.events.MusicPlayerEvent
 import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
+import com.example.jetmusic.states.PlayerState
 import ir.kaaveh.sdpcompose.sdp
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -24,13 +31,57 @@ fun MusicPlayerSlider(
     modifier: Modifier = Modifier,
     musicControllerUiState: MusicControllerUiState,
     onEvent: (MusicPlayerEvent) -> Unit,
+    onScrollAdditional: () -> Unit = {},
+    onReleaseAdditional: () -> Unit = {},
 ) {
+    var positionUpdatesCounter by remember { mutableStateOf(0) }
+
+    var position by remember {
+        mutableStateOf(musicControllerUiState.currentPosition.toFloat())
+    }
+    val totalDuration by remember(musicControllerUiState.totalDuration) {
+       mutableStateOf(musicControllerUiState.totalDuration.toFloat())
+    }
+
+    var wasPlayingBefore by remember {
+        mutableStateOf(musicControllerUiState.playerState == PlayerState.PLAYING)
+    }
+
+    LaunchedEffect(musicControllerUiState.currentPosition) {
+        if(positionUpdatesCounter <= 0) {
+            position = musicControllerUiState.currentPosition.toFloat()
+        }
+    }
+
     Slider(
-        value = musicControllerUiState.currentPosition.toFloat(),
+        value = position,
         modifier = modifier,
-        valueRange = 0f..musicControllerUiState.totalDuration.toFloat(),
+        valueRange = 0f..totalDuration,
         onValueChange = { newPosition ->
-            onEvent(MusicPlayerEvent.SeekSongToPosition(newPosition.toLong()))
+            if(positionUpdatesCounter == 0) {
+                wasPlayingBefore = musicControllerUiState.playerState == PlayerState.PLAYING
+
+            }
+
+            if(musicControllerUiState.playerState == PlayerState.PLAYING) {
+                onEvent(MusicPlayerEvent.PauseMusic)
+            }
+
+            position = newPosition
+            Log.d("new position",newPosition.toString())
+
+            if(positionUpdatesCounter <= 0) {
+                positionUpdatesCounter++
+            }
+
+        },
+        onValueChangeFinished = {
+            onEvent(MusicPlayerEvent.SeekSongToPosition(position.toLong()))
+            if(wasPlayingBefore) {
+                onEvent(MusicPlayerEvent.ResumeMusic)
+            }
+
+            positionUpdatesCounter = 0
         },
         track = { sliderState ->
             Box(modifier = Modifier.fillMaxWidth()){
@@ -43,7 +94,7 @@ fun MusicPlayerSlider(
 
                 Box(
                     Modifier
-                        .fillMaxWidth(musicControllerUiState.currentPosition.toFloat() / musicControllerUiState.totalDuration.toFloat())
+                        .fillMaxWidth(position / totalDuration)
                         .height(2.sdp)
                         .background(Color.White, CircleShape)
                 )

@@ -1,22 +1,20 @@
 package com.example.jetmusic.View.Components.BottomBar.MusicBar
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,9 +25,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.example.jetmusic.View.Components.Slider.MusicPlayerSlider
 import com.example.jetmusic.other.events.MusicPlayerEvent
-import com.example.jetmusic.ViewModels.MusicPlayerViewModel
+import com.example.jetmusic.SharedViewModels.MusicPlayerViewModel
+import com.example.jetmusic.View.Components.Slider.MusicPlayerSlider
 import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
 import com.example.jetmusic.states.PlayerState
 import com.example.jetmusic.ui.theme.typography
@@ -41,8 +39,6 @@ fun MusicBottomBar(
     musicControllerUiState: MusicControllerUiState,
     musicDetailedViewModel: MusicPlayerViewModel = hiltViewModel(),
 ) {
-    val imageSize = 38.sdp
-    val scrollState = rememberScrollState()
 
     musicControllerUiState.currentMusic?.let { musicObject ->
 
@@ -56,28 +52,26 @@ fun MusicBottomBar(
             Row(
                 modifier = Modifier
                     .padding(horizontal = 11.sdp, vertical = 5.sdp)
+                    .height(38.sdp)
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 AsyncImage(
                     model = musicObject.image,
                     contentDescription = "music image",
-                    contentScale = ContentScale.Crop,
+                    contentScale = ContentScale.FillHeight,
                     modifier = Modifier
-                        .size(imageSize)
+                        .fillMaxHeight()
                         .clip(RoundedCornerShape(8.sdp))
                 )
 
                 Row(
                     modifier = Modifier
                         .width(185.sdp)
-                        .height(imageSize)
-                        .horizontalScroll(scrollState),
                 ){
                     Column(
                         modifier = Modifier
-                            .padding(top = 1.sdp, start = 11.sdp)
-                            .height(imageSize),
+                            .padding(top = 1.sdp, start = 11.sdp),
                         verticalArrangement = Arrangement.spacedBy(2.sdp)
                     ) {
                         Text(
@@ -89,7 +83,7 @@ fun MusicBottomBar(
                             Text(
                                 text = musicObject.artist_name.toString(),
                                 fontSize = typography().bodyMedium.fontSize,
-                                color = Color.Gray
+                                color = Color.Gray,
                             )
                         }
                     }
