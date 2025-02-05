@@ -1,6 +1,5 @@
 package com.example.jetmusic.View.Screens.DetailedScreens.DetailedMusicScreen
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -47,7 +46,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetmusic.Helpers.MusicHelper
 import com.example.jetmusic.Helpers.TimeHelper
 import com.example.jetmusic.View.Components.Slider.MusicPlayerSlider
-import com.example.jetmusic.ViewModels.MusicPlayerViewModel
+import com.example.jetmusic.SharedViewModels.MusicPlayerViewModel
 import com.example.jetmusic.data.DTOs.UserDTOs.User
 import com.example.jetmusic.data.Services.MusicService.MusicControllerUiState
 import com.example.jetmusic.other.events.MusicPlayerEvent

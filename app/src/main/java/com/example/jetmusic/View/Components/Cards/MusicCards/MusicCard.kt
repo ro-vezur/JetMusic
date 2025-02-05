@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextOverflow
 import coil.compose.AsyncImage
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
 import com.example.jetmusic.ui.theme.typography
@@ -51,8 +52,7 @@ fun MusicCard(
             Row(
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxHeight()
-                    .horizontalScroll(rememberScrollState()),
+                    .fillMaxHeight(),
             ) {
                 Column(
                     modifier = Modifier
@@ -65,7 +65,8 @@ fun MusicCard(
                             .padding(bottom = 4.sdp),
                         text = musicObject.name,
                         fontSize = typography().bodyMedium.fontSize / 1.04f,
-                        maxLines = 1
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                     )
 
                     if(musicObject.artist_name != "null" && !musicObject.artist_name.isNullOrBlank()) {
@@ -75,7 +76,8 @@ fun MusicCard(
                             text = musicObject.artist_name,
                             fontSize = typography().bodySmall.fontSize * 1.05f,
                             color = Color.Gray,
-                            maxLines = 1
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
                         )
                     }
                 }
