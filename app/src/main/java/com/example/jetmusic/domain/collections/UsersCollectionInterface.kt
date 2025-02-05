@@ -6,11 +6,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface UsersCollectionInterface {
 
-    suspend fun addUser(user: User): Flow<ResultResource<User>>
+    fun addUser(user: User): Flow<ResultResource<User>>
 
     suspend fun updateUser(user: User)
 
-    suspend fun getUser(id: String): User?
+    fun getUserFlow(id: String): Flow<User?>
 
     suspend fun checkIsEmailRegistered(email: String): Boolean
 

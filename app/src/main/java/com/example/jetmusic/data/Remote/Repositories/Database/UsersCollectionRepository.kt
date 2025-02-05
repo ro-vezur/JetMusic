@@ -17,7 +17,7 @@ class UsersCollectionRepository(
 
     private val collection = db.collection(USERS_COLLECTION)
 
-    override suspend fun addUser(user: User) = flow {
+    override fun addUser(user: User) = flow {
         emit(ResultResource.Loading())
         val userDocument = collection.document(user.id).get().await()
 
@@ -40,14 +40,17 @@ class UsersCollectionRepository(
         }
     }
 
-    override suspend fun getUser(id: String): User? {
+    override fun getUserFlow(id: String) = flow {
+
         val userDocument = collection.document(id).get().await()
 
         if (userDocument.exists()) {
-            return userDocument.toObject(User::class.java)
+            emit(userDocument.toObject(User::class.java))
+        } else {
+            emit(null)
         }
-
-        return null
+    }.catch {
+        emit(null)
     }
 
     override suspend fun checkIsEmailRegistered(email: String): Boolean {

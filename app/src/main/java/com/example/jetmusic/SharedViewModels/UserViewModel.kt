@@ -1,15 +1,17 @@
-package com.example.jetmusic.ViewModels.SharedViewModels
+package com.example.jetmusic.SharedViewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jetmusic.data.DTOs.UserDTOs.User
 import com.example.jetmusic.domain.collections.UsersCollectionInterface
+import com.example.jetmusic.other.Resources.ResultResource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,7 +29,9 @@ class UserViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            setUser(usersCollectionRepository.getUser(_firebaseUser.value?.uid.toString()))
+            usersCollectionRepository.getUserFlow(_firebaseUser.value?.uid.toString()).collectLatest { userToSet ->
+                _user.emit(userToSet)
+            }
         }
     }
 
