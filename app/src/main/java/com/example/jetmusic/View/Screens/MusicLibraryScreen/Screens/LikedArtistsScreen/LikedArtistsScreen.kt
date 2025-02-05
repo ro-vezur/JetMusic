@@ -1,4 +1,4 @@
-package com.example.jetmusic.View.Screens.MusicLibraryScreen.Screens
+package com.example.jetmusic.View.Screens.MusicLibraryScreen.Screens.LikedArtistsScreen
 
 import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Detailed.DetailedArtistObject
 import androidx.compose.foundation.BorderStroke
@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search

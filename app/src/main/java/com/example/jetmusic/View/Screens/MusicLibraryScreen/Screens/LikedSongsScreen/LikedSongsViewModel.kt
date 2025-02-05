@@ -1,7 +1,6 @@
-package com.example.jetmusic.ViewModels.MainScreensViewModels.LibraryScreenViewModels
+package com.example.jetmusic.View.Screens.MusicLibraryScreen.Screens.LikedSongsScreen
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
 import com.example.jetmusic.data.usecases.api.musicAPI.music.MusicByIdUseCase
 import com.example.jetmusic.other.Resources.ResultResource
@@ -12,7 +11,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel

@@ -1,6 +1,5 @@
-package com.example.jetmusic.ViewModels.MainScreensViewModels.LibraryScreenViewModels
+package com.example.jetmusic.View.Screens.MusicLibraryScreen.Screens.LikedArtistsScreen
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.jetmusic.data.DTOs.API.ArtistDTOs.Detailed.DetailedArtistObject
 import com.example.jetmusic.data.usecases.api.musicAPI.artist.ArtistByIdUseCase

@@ -1,23 +1,22 @@
-package com.example.jetmusic.View.Screens.MusicLibraryScreen.Screens
+package com.example.jetmusic.View.Screens.MusicLibraryScreen.Screens.LikedPlaylistsScreen
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -32,37 +31,35 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
 import com.example.jetmusic.BOTTOM_MUSIC_PLAYER_HEIGHT
 import com.example.jetmusic.BOTTOM_NAVIGATION_BAR_HEIGHT
 import com.example.jetmusic.Extensions.NavigateExtensions.navigateBack
-import com.example.jetmusic.View.Components.Cards.MusicCards.MusicCard
+import com.example.jetmusic.View.Components.Cards.PlaylistCards.PlaylistCard
 import com.example.jetmusic.View.Components.InputFields.SearchField
 import com.example.jetmusic.View.Components.TopBars.TopBarWithNavigateBack
 import com.example.jetmusic.View.Screens.ResultScreens.ErrorScreen
 import com.example.jetmusic.View.Screens.ResultScreens.LoadingScreen
 import com.example.jetmusic.data.DTOs.API.MusicDTOs.MusicObject
+import com.example.jetmusic.data.DTOs.API.PlaylistDTOs.Detailed.DetailedPlaylistObject
 import com.example.jetmusic.other.Resources.ResultResource
 import com.example.jetmusic.ui.theme.typography
 import ir.kaaveh.sdpcompose.sdp
 
 @Composable
-fun LikedSongsScreen(
+fun LikedPlaylistsScreen(
     navController: NavController,
     currentMusicObject: MusicObject?,
-    likedSongsCount: Int,
-    likedMusicResult: ResultResource<List<MusicObject>>,
-    selectMusic: (MusicObject) -> Unit,
-) {
-
+    likedPlaylistsCount: Int,
+    likedPlaylistsResult: ResultResource<List<DetailedPlaylistObject>>,
+    selectPlaylist: (DetailedPlaylistObject) -> Unit,
+    ) {
     var searchText by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = {
             TopBarWithNavigateBack(
-                title = "Liked Songs",
+                title = "Liked Playlists",
                 turnBack = { navController.navigateBack() }
             )
         }
@@ -70,27 +67,26 @@ fun LikedSongsScreen(
         Column(
             modifier = Modifier
                 .padding(innerPadding)
-                .fillMaxSize(),
+                .fillMaxSize()
         ) {
-
-            when(likedMusicResult){
+            when(likedPlaylistsResult) {
                 is ResultResource.Loading -> { LoadingScreen(Modifier.fillMaxSize()) }
                 is ResultResource.Success -> {
-                    likedMusicResult.data?.let { data ->
+                    likedPlaylistsResult.data?.let { data ->
                         val sortedData = remember(data,searchText) {
                             data.filter { it.name.contains(searchText,true) }
                         }
                         Text(
                             modifier = Modifier
                                 .padding(start = 16.sdp,top = 4.sdp),
-                            text = "$likedSongsCount Songs",
+                            text = "$likedPlaylistsCount Playlists",
                             style = typography().titleSmall,
                             color = Color.Gray
                         )
 
                         Box(
                             modifier = Modifier
-                                .padding(top = 12.sdp)
+                                .padding(top = 12.sdp, bottom = 10.sdp)
                                 .fillMaxWidth(),
                             contentAlignment = Alignment.Center,
                         ) {
@@ -99,7 +95,7 @@ fun LikedSongsScreen(
                                 background = MaterialTheme.colorScheme.inversePrimary,
                                 textColor = MaterialTheme.colorScheme.background,
                                 focusedBorder = BorderStroke(0.sdp, Color.Transparent),
-                                unfocusedBorder = BorderStroke(0.sdp,Color.Transparent),
+                                unfocusedBorder = BorderStroke(0.sdp, Color.Transparent),
                                 onTextChange = { value ->
                                     searchText = value
                                 },
@@ -120,26 +116,26 @@ fun LikedSongsScreen(
                             )
                         }
 
-                        LazyColumn(
+                        LazyVerticalGrid(
                             modifier = Modifier
-                                .padding(top = 10.sdp)
-                                .fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(8.sdp)
+                                .padding(horizontal = 12.sdp),
+                            columns = GridCells.Fixed(2),
+                            horizontalArrangement = Arrangement.spacedBy(14.sdp),
+                            verticalArrangement = Arrangement.spacedBy(14.sdp),
                         ) {
-                            items(sortedData) { music ->
-                                MusicCard(
+                            items(sortedData) { playlist ->
+                                PlaylistCard(
                                     modifier = Modifier
-                                        .padding(start = 10.sdp)
-                                        .height(42.sdp)
-                                        .fillMaxWidth()
-                                        .clickable { selectMusic(music) },
-                                    musicObject = music
+                                        .width(132.sdp),
+                                    playlistObject = playlist,
+                                    onClick = {
+                                        selectPlaylist(playlist)
+                                    }
                                 )
                             }
 
-                            item {
-                                if (currentMusicObject == null) {
+                            item(span = { GridItemSpan(maxLineSpan) } ) {
+                                if(currentMusicObject == null) {
                                     Spacer(modifier = Modifier.height((BOTTOM_NAVIGATION_BAR_HEIGHT + 15).sdp))
                                 } else {
                                     Spacer(
@@ -154,7 +150,7 @@ fun LikedSongsScreen(
                 is ResultResource.Error -> {
                     ErrorScreen(
                         modifier = Modifier.fillMaxSize(),
-                        errorText = likedMusicResult.message.toString()
+                        errorText = likedPlaylistsResult.message.toString()
                     )
                 }
             }
